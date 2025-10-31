@@ -1,8 +1,10 @@
-name: Checks
+name: Checks (Sudoku Editor)
 
 on:
   push:
     branches: ["main"]
+    # paths:
+    #   - 'packages/sudoku-editor/**'
   pull_request: {}
 
 jobs:
@@ -19,9 +21,9 @@ jobs:
         pnpm setup
     - name: Lint
       run: |
-        pnpm install --frozen-lockfile
-        pnpm run format-check
-        pnpm run lint
+        pnpm --filter sudoku-editor install --frozen-lockfile
+        pnpm --filter sudoku-editor run format-check
+        pnpm --filter sudoku-editor run lint
   test:
     runs-on: ubuntu-latest
     steps:
@@ -35,5 +37,5 @@ jobs:
         pnpm setup
     - name: Test
       run: |
-        pnpm install --frozen-lockfile
-        pnpm run test
+        pnpm --filter sudoku-editor install --frozen-lockfile
+        pnpm --filter sudoku-editor run test
