@@ -1,0 +1,28 @@
+.ruleBox {
+  margin: 5px;
+  border: 1px solid black;
+}
+
+.ruleTitle {
+  width: 100%;
+  cursor: pointer;
+}
+
+.selectedRuleTitle {
+  background-color: lightblue;
+}
+
+.ruleContainerOuter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.ruleContainerInner {
+  border-top: 3px solid rgb(144, 144, 144);
+  overflow-y: scroll;
+  flex-grow: 1;
+  width: 100%;
+}

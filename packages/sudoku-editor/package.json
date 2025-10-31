@@ -1,0 +1,45 @@
+{
+  "name": "sudoku-editor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build-solver": "cd solver && cargo build --release --lib --target wasm32-unknown-emscripten && cd .. && mkdir -p src/solver && cp solver/target/wasm32-unknown-emscripten/release/deps/sudoku_variants_solver.js src/solver/sudoku_variants_solver.js",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "format": "npx prettier --write src/ && cd solver && cargo fmt",
+    "format-check": "npx prettier --check src/ && cd solver && cargo fmt --check",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
+    "i18next": "^25.0.1",
+    "js-base64": "^3.7.8",
+    "lz-string": "^1.5.0",
+    "pako": "^2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.5.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vitest": "^3.2.4"
+  }
+}

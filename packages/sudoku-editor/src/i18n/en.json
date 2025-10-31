@@ -1,0 +1,127 @@
+{
+  "ui": {
+    "autoSolver": "Auto Solver",
+    "newBoard": "New Board",
+    "boardSize": "Board Size",
+    "blockSize": "Block Size",
+    "noBlocks": "No blocks",
+    "load": "Load",
+    "save": "Save",
+    "export": "Export",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "close": "Close",
+    "copyToClipboard": "Copy to Clipboard",
+    "saveDialogNote": "Note: data for unselected rules will be lost.",
+    "openInPenpa": "Open in penpa-editor",
+    "exportAnswer": {
+      "title": "Exporting answer for automatic check by penpa-edit",
+      "none": "Do not export answer",
+      "manual": "Export answer set in 'Edit Answer'",
+      "solver": "Export answer by solver",
+      "noAnswer": "No answer exists. Answer data is not exported.",
+      "notUnique": "Multiple answers exist. Only decided numbers are exported."
+    },
+    "exportConflicts": "Conflicts occurred in the board elements during export. The output may be incorrect.",
+    "undo": "Undo",
+    "redo": "Redo",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "keypad": "Toggle Keypad",
+    "help": "Help"
+  },
+  "help": {
+    "usage": {
+      "title": "Usage",
+      "content1": "You can edit the elements of the board by enabling the rules (checking the checkbox) and selecting the rules. Please check the explanation of each rule for editing methods.",
+      "content2": "If you disable a rule (uncheck the checkbox), that rule will be ignored and will not be drawn on the board. If you enable the rule again, the state before disabling it will be restored. However, data related to disabled rules will not be reflected when saving.",
+      "content3": "The solver uses your machine's CPU to perform calculations for answers. Therefore, please note that your machine may slow down during solving. On the other hand, this solver does not send any information about the problems solved to the server. Also, some rules may take time to solve."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "content": "The author shall not be liable for any problem caused by using this tool."
+    },
+    "versions": "Version information",
+    "buildDate": "Build date",
+    "licenses": "Licenses"
+  },
+  "rule": {
+    "answer": {
+      "title": "Edit Answer",
+      "explanation": "You can input the answer numbers."
+    },
+    "givenNumbers": {
+      "title": "Given Numbers",
+      "explanation": "Already given numbers as clues."
+    },
+    "blocks": {
+      "title": "Blocks",
+      "explanation": "In each block, the numbers from 1 to the size of the board must appear exactly once. Blocks that do not match the size of the board will be ignored."
+    },
+    "extraRegions": {
+      "title": "Extra Regions",
+      "explanation": "In each region, the same number can only appear at most once. This also applies to regions smaller than the size of the board. Left click and drag to create a region. Right click to remove a region. You can add or remove cells from the selected region by clicking on the cells while holding down the Shift key."
+    },
+    "oddEven": {
+      "title": "Odd/Even",
+      "explanation": "Numbers in cells with circles must be odd. Numbers in cells with squares must be even."
+    },
+    "nonConsecutive": {
+      "title": "Non-Consecutive",
+      "explanation": "Numbers in adjacent cells cannot differ by 1."
+    },
+    "xv": {
+      "title": "XV Sudoku",
+      "explanation": "Adjacent cells with numbers summing 10 are marked with X. Adjacent cells with numbers summing 5 are marked with V.",
+      "allShown": "All applicable marks are shown: if there is no marker, the sum of the numbers is not 5 or 10."
+    },
+    "diagonal": {
+      "title": "Diagonal",
+      "explanation": "In diagonals, the numbers from 1 to the size of the board must appear exactly once.",
+      "mainDiagonal": "Applicable to the main diagonal (from the top left to the bottom right)",
+      "antiDiagonal": "Applicable to the anti diagonal (from the top right to the bottom left)"
+    },
+    "arrow": {
+      "title": "Arrow",
+      "explanation": "Numbers in cells with circles must be equal to the sum of the numbers in the cells that the adjoining arrows pass through. Left click and drag to create an arrow. Right click to remove an arrow."
+    },
+    "thermo": {
+      "title": "Thermo",
+      "explanation": "In each thermometer, the numbers must strictly increase from the bulb to the tip. Left click and drag to create a thermometer. Right click to remove a thermometer."
+    },
+    "killer": {
+      "title": "Killer (Sum)",
+      "explanation": "In region, the numbers must sum to the given total. Left click and drag to create a region. Right click to remove a region. You can add or remove cells from the selected region by clicking on the cells while holding down the Shift key. Use number keys to input the total value.",
+      "distinct": "In each region, the same number can only appear at most once."
+    },
+    "consecutive": {
+      "title": "Consecutive",
+      "explanation": "Numbers in cells separated by a gray bar must differ by 1.",
+      "allShown": "For adjacent cells which are not separated by a gray bar, the difference is not 1."
+    },
+    "skyscrapers": {
+      "title": "Skyscrapers",
+      "explanation": "The numbers in the outside must be the number of the 'skyscrapers' that can be seen from that side. A skyscraper corresponds to a number, and it can be seen if and only if there is no taller skyscraper (larger number) in front of it."
+    },
+    "xSums": {
+      "title": "X-Sums",
+      "explanation": "The numbers in the outside must be equal to the sum of the first X cells in that direction, where X is the first number in that direction."
+    },
+    "palindrome": {
+      "title": "Palindrome",
+      "explanation": "The numbers in the cells on each line must be the same when read from both ends."
+    },
+    "forbiddenCandidates": {
+      "title": "Forbidden Candidates",
+      "explanation": "Forbidden candidates indicate numbers that cannot be placed in a specific cell. Left click to select a cell. Use number keys to toggle whether that number is a forbidden candidate. Numbers 10 and above can be entered using the A, B, C, ... keys. BackSpace / Delete will remove the forbidden candidates from the selected cell."
+    },
+    "antiKnight": {
+      "title": "Anti-Knight",
+      "explanation": "Numbers in cells that are a knight's move away from each other cannot be the same."
+    },
+    "noTouch": {
+      "title": "No Touch",
+      "explanation": "Numbers in cells that are adjacent (sharing a corner) cannot be the same."
+    }
+  }
+}
