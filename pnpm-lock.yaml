@@ -24,8 +24,8 @@ importers:
         specifier: ^25.6.0
         version: 25.6.0(typescript@5.6.3)
       puzzle-board:
-        specifier: link:packages/puzzle-board
-        version: link:packages/puzzle-board
+        specifier: workspace:*
+        version: link:../puzzle-board
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -72,6 +72,21 @@ importers:
       vite-plugin-static-copy:
         specifier: ^2.1.0
         version: 2.3.2(vite@5.4.21)
+
+  packages/puzzle-board:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.26
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.26)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      typescript:
+        specifier: ~5.6.2
+        version: 5.6.3
 
   packages/sudoku-editor:
     dependencies:
