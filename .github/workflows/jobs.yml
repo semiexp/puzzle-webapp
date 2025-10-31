@@ -1,8 +1,10 @@
-name: Checks
+name: Checks (Sudoku Editor)
 
 on:
   push:
     branches: ["main"]
+    paths:
+      - 'packages/sudoku-editor/**'
   pull_request: {}
 
 jobs:
