@@ -1,5 +1,6 @@
-import { Rule, PRIORITY_DIAGNOAL } from "../rule";
+import { Rule, PRIORITY_DIAGNOAL, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type DiagonalState = object;
 type DiagonalData = {
@@ -60,6 +61,38 @@ export const diagonalRule: Rule<DiagonalState, DiagonalData> = {
       {
         priority: PRIORITY_DIAGNOAL,
         item: <g>{items}</g>,
+      },
+    ];
+  },
+  render2: (_state, data, options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    const { boardSize } = options;
+    if (data.mainDiagonal) {
+      for (let i = 0; i < boardSize; ++i) {
+        items.push({
+          y: i * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: "dottedBackslash",
+        });
+      }
+    }
+    if (data.antiDiagonal) {
+      for (let i = 0; i < boardSize; ++i) {
+        items.push({
+          y: i * 2 + 1,
+          x: (boardSize - i - 1) * 2 + 1,
+          color: "black",
+          item: "dottedSlash",
+        });
+      }
+    }
+
+    return [
+      {
+        priority: PRIORITY_DIAGNOAL,
+        item: items,
       },
     ];
   },
