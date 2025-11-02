@@ -1,9 +1,17 @@
-import { useEffect, useState } from "react";
-import { MultipleAnswers, Result, renderBoard } from "puzzle-board";
+import { ReactElement, useEffect, useState} from "react";
+import { Board, MultipleAnswers, Result, renderBoardItems } from "puzzle-board";
 
 type AnswerViewerProps = {
   result: Result,    
 };
+
+function renderBoard(boards: Board[]): ReactElement {
+  const { svgHeight, svgWidth, component } = renderBoardItems(boards, { margin: 30, unitSize: 30 });
+
+  return <svg height={svgHeight} width={svgWidth} style={{backgroundColor: "#ffffff"}}>
+    {component}
+  </svg>;
+}
 
 const MultipleAnswerViewer = (result: MultipleAnswers) => {
   const [pos, setPos] = useState(0);
