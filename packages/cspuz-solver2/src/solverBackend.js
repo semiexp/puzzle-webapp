@@ -14,7 +14,7 @@ export function solveProblem(url, numAnswers) {
         status: "error",
         url,
         error: "solver already running",
-      })
+      });
     });
   }
   currentUrl = url;
@@ -43,7 +43,7 @@ export function solveProblem(url, numAnswers) {
         });
       }
     };
-    worker.postMessage({url, numAnswers});
+    worker.postMessage({ url, numAnswers });
     currentResolve = resolve;
   });
 }

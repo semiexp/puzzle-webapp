@@ -3,7 +3,22 @@ import { useTranslation } from "react-i18next";
 import { solveProblem, terminateWorker, SolverResult } from "./solverBackend";
 import { AnswerViewer } from "./answerViewer";
 import { Usage } from "./usage";
-import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Fab, List, ListItem, ListItemButton, Popover, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  CircularProgress,
+  Fab,
+  List,
+  ListItem,
+  ListItemButton,
+  Popover,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { ExpandMore, Help, Settings } from "@mui/icons-material";
 
@@ -13,7 +28,9 @@ export const PuzzleSolver = () => {
   const { t, i18n } = useTranslation();
   const [problemUrl, setProblemUrl] = React.useState("");
   const [solverRunning, setSolverRunning] = React.useState(false);
-  const [result, setResult] = React.useState<SolverResult | undefined>(undefined);
+  const [result, setResult] = React.useState<SolverResult | undefined>(
+    undefined,
+  );
   const [history, setHistory] = React.useState<SolverResult[]>([]);
   const [numMaxAnswer, setNumMaxAnswer] = React.useState(100);
 
@@ -26,7 +43,11 @@ export const PuzzleSolver = () => {
       setNumMaxAnswer(n);
     }
   };
-  const solve = async (url: string, enumerateAnswers: boolean, keep?: boolean) => {
+  const solve = async (
+    url: string,
+    enumerateAnswers: boolean,
+    keep?: boolean,
+  ) => {
     if (keep === undefined || !keep) {
       setResult(undefined);
     }
@@ -46,7 +67,7 @@ export const PuzzleSolver = () => {
     setSolverRunning(false);
   };
   const stop = () => {
-      terminateWorker();
+    terminateWorker();
   };
   const selectFromHistory = (i: number) => {
     if (solverRunning) {
@@ -81,12 +102,18 @@ export const PuzzleSolver = () => {
   if (result !== undefined && result.status === "success") {
     message = t("puzzleSolver.solved", { elapsed: result.elapsed });
   }
-  const [configAnchorEl, setConfigAnchorEl] = React.useState<null | HTMLButtonElement>(null);
-  const handleConfigButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [configAnchorEl, setConfigAnchorEl] =
+    React.useState<null | HTMLButtonElement>(null);
+  const handleConfigButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     setConfigAnchorEl(event.currentTarget);
   };
-  const [helpAnchorEl, setHelpAnchorEl] = React.useState<null | HTMLButtonElement>(null);
-  const handleHelpButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [helpAnchorEl, setHelpAnchorEl] =
+    React.useState<null | HTMLButtonElement>(null);
+  const handleHelpButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     setHelpAnchorEl(event.currentTarget);
   };
 
@@ -149,51 +176,87 @@ export const PuzzleSolver = () => {
 
   return (
     <>
-      <div style={{width: "100%"}}>
-        <div style={{width: "100%", maxWidth: "800px"}}>
-          <Grid container sx={{display: "flex", width: "100%"}}>
-            <Grid size={9} sx={{display: "flex", alignItems: "center"}}>
-              <Fab color="default" size="small" sx={{marginRight: 1}} onClick={handleHelpButtonClick}>
+      <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", maxWidth: "800px" }}>
+          <Grid container sx={{ display: "flex", width: "100%" }}>
+            <Grid size={9} sx={{ display: "flex", alignItems: "center" }}>
+              <Fab
+                color="default"
+                size="small"
+                sx={{ marginRight: 1 }}
+                onClick={handleHelpButtonClick}
+              >
                 <Help />
               </Fab>
-              <Fab color="default" size="small" sx={{marginRight: 1}} onClick={handleConfigButtonClick}>
+              <Fab
+                color="default"
+                size="small"
+                sx={{ marginRight: 1 }}
+                onClick={handleConfigButtonClick}
+              >
                 <Settings />
               </Fab>
-              <TextField label={t("puzzleSolver.problemUrl")} value={problemUrl} onChange={changeUrl} sx={{flexGrow: 1}} />
+              <TextField
+                label={t("puzzleSolver.problemUrl")}
+                value={problemUrl}
+                onChange={changeUrl}
+                sx={{ flexGrow: 1 }}
+              />
             </Grid>
-            {
-              solverRunning ? (
-                <Grid size={3}>
-                  <Button variant="outlined" color="error" size="large" onClick={stop} sx={{width: "100%", height: "100%"}}>
-                    <CircularProgress size={24} sx={{marginRight: 1}} />
-                    {t("puzzleSolver.stop")}
-                  </Button>
-                </Grid>
-              ) : (<>
+            {solverRunning ? (
+              <Grid size={3}>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="large"
+                  onClick={stop}
+                  sx={{ width: "100%", height: "100%" }}
+                >
+                  <CircularProgress size={24} sx={{ marginRight: 1 }} />
+                  {t("puzzleSolver.stop")}
+                </Button>
+              </Grid>
+            ) : (
+              <>
                 <Grid size={1.5}>
-                  <Button variant="outlined" size="large" onClick={() => solve(problemUrl, false)} sx={{width: "100%", height: "100%"}}>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => solve(problemUrl, false)}
+                    sx={{ width: "100%", height: "100%" }}
+                  >
                     {t("puzzleSolver.solve")}
                   </Button>
                 </Grid>
                 <Grid size={1.5}>
-                  <Button variant="outlined" size="large" onClick={() => solve(problemUrl, true)} sx={{width: "100%", height: "100%"}}>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => solve(problemUrl, true)}
+                    sx={{ width: "100%", height: "100%" }}
+                  >
                     {t("puzzleSolver.list")}
                   </Button>
                 </Grid>
-              </>)
-            }
+              </>
+            )}
           </Grid>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMore />}>
               <Typography>{t("puzzleSolver.history")}</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{maxHeight: "300px", overflowY: "auto"}}>
+            <AccordionDetails sx={{ maxHeight: "300px", overflowY: "auto" }}>
               <List>
                 {history.map((r, i) => (
                   <ListItemButton
                     key={i}
                     onClick={() => selectFromHistory(i)}
-                    sx={{overflow: "hidden", textWrap: "nowrap", textOverflow: "ellipsis", whiteSpace: "nowrap"}}
+                    sx={{
+                      overflow: "hidden",
+                      textWrap: "nowrap",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     <Typography>{r.url}</Typography>
                   </ListItemButton>
@@ -203,26 +266,24 @@ export const PuzzleSolver = () => {
           </Accordion>
         </div>
         <div>
-        {
-          error &&
-          <span style={{color: "red"}}>Error: {error}</span>
-        }
-        {
-          message &&
-          <span style={{color: "black"}}>{message}</span>
-        }
-        {
-          isUnique === true &&
-          <span style={{color: "blue"}}> {t("puzzleSolver.uniqueAnswer")}</span>
-        }
-        {
-          isUnique === false &&
-          <span style={{color: "red"}}> {t("puzzleSolver.multipleAnswers")}</span>
-        }
+          {error && <span style={{ color: "red" }}>Error: {error}</span>}
+          {message && <span style={{ color: "black" }}>{message}</span>}
+          {isUnique === true && (
+            <span style={{ color: "blue" }}>
+              {" "}
+              {t("puzzleSolver.uniqueAnswer")}
+            </span>
+          )}
+          {isUnique === false && (
+            <span style={{ color: "red" }}>
+              {" "}
+              {t("puzzleSolver.multipleAnswers")}
+            </span>
+          )}
         </div>
-        {
-          result && result.status === "success" && <AnswerViewer result={result.result} />
-        }
+        {result && result.status === "success" && (
+          <AnswerViewer result={result.result} />
+        )}
       </div>
       <Popover
         open={configAnchorEl !== null}
@@ -235,11 +296,13 @@ export const PuzzleSolver = () => {
       >
         <List>
           <ListItem>
-            <Typography sx={{paddingRight: 1}}>Language: </Typography>
+            <Typography sx={{ paddingRight: 1 }}>Language: </Typography>
             <ToggleButtonGroup
               color="primary"
               value={i18n.language}
-              onChange={(_, value) => { if (value !== null) i18n.changeLanguage(value) } }
+              onChange={(_, value) => {
+                if (value !== null) i18n.changeLanguage(value);
+              }}
               exclusive
             >
               <ToggleButton value="ja">日本語</ToggleButton>
@@ -247,14 +310,14 @@ export const PuzzleSolver = () => {
             </ToggleButtonGroup>
           </ListItem>
           <ListItem>
-            <Typography sx={{paddingRight: 1}}>
+            <Typography sx={{ paddingRight: 1 }}>
               {t("puzzleSolver.maxAnswers")}
             </Typography>
             <TextField
               type="number"
               value={numMaxAnswer}
               onChange={changeNumMaxAnswer}
-              slotProps={{htmlInput: {size: 6}}}
+              slotProps={{ htmlInput: { size: 6 } }}
             />
           </ListItem>
         </List>
@@ -271,5 +334,5 @@ export const PuzzleSolver = () => {
         <Usage />
       </Popover>
     </>
-  )
+  );
 };
