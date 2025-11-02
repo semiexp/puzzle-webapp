@@ -1,5 +1,6 @@
-import { Rule, PRIORITY_ODD_EVEN } from "../rule";
+import { Rule, PRIORITY_ODD_EVEN, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type OddEvenState = object;
 
@@ -68,6 +69,36 @@ export const oddEvenRule: Rule<OddEvenState, OddEvenData> = {
       {
         priority: PRIORITY_ODD_EVEN,
         item: <g>{items}</g>,
+      },
+    ];
+  },
+  render2: (_state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    for (let y = 0; y < data.cellKind.length; ++y) {
+      for (let x = 0; x < data.cellKind[y].length; ++x) {
+        if (data.cellKind[y][x] === 1) {
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgba(128, 128, 128, 0.5)",
+            item: "filledCircle",
+          });
+        } else if (data.cellKind[y][x] === 2) {
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgba(128, 128, 128, 0.5)",
+            item: "block",
+          });
+        }
+      }
+    }
+
+    return [
+      {
+        priority: PRIORITY_ODD_EVEN,
+        item: items,
       },
     ];
   },
