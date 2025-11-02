@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
-import { Rule, PRIORITY_KILLER } from "../rule";
-import { reducerForRegions, rendererForRegions } from "./regionsUtil";
+import { Rule, PRIORITY_KILLER, RenderOptions2 } from "../rule";
+import { reducerForRegions, rendererForRegions, rendererForRegions2 } from "./regionsUtil";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type Region = { cells: { y: number; x: number }[]; extraValue?: number | null };
 
@@ -106,6 +107,51 @@ export const killerRule: Rule<KillerState, KillerData> = {
     ret.push({
       priority: PRIORITY_KILLER,
       item: <g>{items}</g>,
+    });
+    return ret;
+  },
+  render2: (state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    const addRegion = (region: Region, color: string) => {
+      let smallestCell = region.cells[0];
+
+      for (const cell of region.cells) {
+        if (
+          cell.y < smallestCell.y ||
+          (cell.y === smallestCell.y && cell.x < smallestCell.x)
+        ) {
+          smallestCell = cell;
+        }
+      }
+
+      if (region.extraValue !== null && region.extraValue !== undefined) {
+        items.push({
+          y: smallestCell.y * 2 + 1,
+          x: smallestCell.x * 2 + 1,
+          color: color,
+          item: {
+            kind: "text",
+            data: String(region.extraValue),
+            pos: "upperLeft",
+            size: 0.5,
+          },
+        });
+      }
+    };
+
+    for (let i = 0; i < data.regions.length; ++i) {
+      const region = data.regions[i];
+      addRegion(region, i === state?.selectedRegionId ? "red" : "black");
+    }
+    if (state !== null && state.currentRegion) {
+      addRegion(state.currentRegion, "rgb(255, 168, 168)");
+    }
+
+    const ret = rendererForRegions2(state, data, _options, null, PRIORITY_KILLER);
+    ret.push({
+      priority: PRIORITY_KILLER,
+      item: items,
     });
     return ret;
   },

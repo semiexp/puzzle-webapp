@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
 
 import { EditorEvent } from "../events";
-import { ReducerInfo, RenderOptions } from "../rule";
+import { ReducerInfo, RenderOptions, RenderOptions2 } from "../rule";
+import { BoardItem } from "puzzle-board";
 
 type Pos = { x: number; y: number };
 type Region<T> = { cells: Pos[]; extraValue?: T };
@@ -281,6 +282,93 @@ export const rendererForRegions = <
     ret.push({
       priority: borderPriority,
       item: <g key="extra-regions-border">{borderItems}</g>,
+    });
+  }
+  return ret;
+};
+
+export const rendererForRegions2 = <
+  T,
+  S extends {
+    currentRegion: Region<T> | null;
+    selectedRegionId: number | null;
+  },
+  D extends { regions: Region<T>[] },
+>(
+  state: S | null,
+  data: D,
+  _options: RenderOptions2,
+  cellPriority: number | null,
+  borderPriority: number | null,
+): {
+  priority: number;
+  item: BoardItem[];
+}[] => {
+  const cellItems: BoardItem[] = [];
+  const borderItems: BoardItem[] = [];
+
+  const addRegion = (
+    region: Region<T>,
+    cellColor: string,
+    borderColor: string,
+  ) => {
+    if (cellPriority !== null) {
+      for (const cell of region.cells) {
+        cellItems.push({
+          y: cell.y * 2 + 1,
+          x: cell.x * 2 + 1,
+          color: cellColor,
+          item: "fill",
+        });
+      }
+    }
+
+    if (borderPriority !== null) {
+      const cells = region.cells.map((cell) => ({
+        y: cell.y * 2 + 1,
+        x: cell.x * 2 + 1,
+      }));
+
+      if (cells.length > 0) {
+        borderItems.push({
+          y: cells[0].y,
+          x: cells[0].x,
+          color: borderColor,
+          item: {
+            kind: "regionBorder",
+            cells: cells,
+          },
+        });
+      }
+    }
+  };
+
+  for (let i = 0; i < data.regions.length; ++i) {
+    const region = data.regions[i];
+    addRegion(
+      region,
+      i === state?.selectedRegionId
+        ? "rgb(255, 206, 206)"
+        : "rgb(216, 216, 216)",
+      i === state?.selectedRegionId ? "red" : "black",
+    );
+  }
+  if (state !== null && state.currentRegion) {
+    addRegion(state.currentRegion, "rgb(255, 206, 206)", "red");
+  }
+
+  const ret = [];
+
+  if (cellPriority !== null) {
+    ret.push({
+      priority: cellPriority,
+      item: cellItems,
+    });
+  }
+  if (borderPriority !== null) {
+    ret.push({
+      priority: borderPriority,
+      item: borderItems,
     });
   }
   return ret;
