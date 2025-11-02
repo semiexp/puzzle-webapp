@@ -2,8 +2,10 @@ import {
   Rule,
   PRIORITY_FORBIDDEN_CANDIDATES,
   PRIORITY_SELECTED_CELL_MARKER,
+  RenderOptions2,
 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type ForbiddenCandidatesState = {
   selectedCell: { y: number; x: number } | null;
@@ -182,6 +184,64 @@ export const forbiddenCandidatesRule: Rule<
     });
 
     return items;
+  },
+  render2: (state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+    const backgroundItems: BoardItem[] = [];
+
+    if (state !== null && state.selectedCell !== null) {
+      const { selectedCell } = state;
+      const { y, x } = selectedCell;
+
+      backgroundItems.push({
+        y: y * 2 + 1,
+        x: x * 2 + 1,
+        color: "rgb(255, 216, 216)",
+        item: "fill",
+      });
+    }
+
+    const w = Math.ceil(Math.sqrt(data.isForbidden.length));
+
+    for (let y = 0; y < data.isForbidden.length; ++y) {
+      for (let x = 0; x < data.isForbidden[y].length; ++x) {
+        const forbiddenValues: number[] = [];
+        for (let n = 0; n < data.isForbidden[y][x].length; ++n) {
+          if (data.isForbidden[y][x][n]) {
+            forbiddenValues.push(n + 1);
+          }
+        }
+
+        if (forbiddenValues.length > 0) {
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "black",
+            item: {
+              kind: "sudokuForbiddenCandidateMarker",
+              size: w,
+              values: forbiddenValues,
+            },
+          });
+        }
+      }
+    }
+
+    const result = [
+      {
+        priority: PRIORITY_FORBIDDEN_CANDIDATES,
+        item: items,
+      },
+    ];
+
+    if (backgroundItems.length > 0) {
+      result.push({
+        priority: PRIORITY_SELECTED_CELL_MARKER,
+        item: backgroundItems,
+      });
+    }
+
+    return result;
   },
   exportToPenpa: (data) => {
     const items: Item[] = [];
