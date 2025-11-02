@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
-import { Rule, PRIORITY_XV } from "../rule";
+import { Rule, PRIORITY_XV, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type XVState = object;
 
@@ -121,6 +122,68 @@ export const xvRule: Rule<XVState, XVData> = {
       {
         priority: PRIORITY_XV,
         item: <g>{items}</g>,
+      },
+    ];
+  },
+  render2: (_state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    for (let y = 0; y < data.horizontalBorder.length; ++y) {
+      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
+        if (data.horizontalBorder[y][x] !== 0) {
+          const edgeY = (y + 1) * 2;
+          const edgeX = x * 2 + 1;
+
+          items.push({
+            y: edgeY,
+            x: edgeX,
+            color: "white",
+            item: "middleFilledCircle",
+          });
+          items.push({
+            y: edgeY,
+            x: edgeX,
+            color: "black",
+            item: {
+              kind: "text",
+              data: data.horizontalBorder[y][x] === 1 ? "X" : "V",
+              size: 0.5,
+            },
+          });
+        }
+      }
+    }
+
+    for (let y = 0; y < data.verticalBorder.length; ++y) {
+      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
+        if (data.verticalBorder[y][x] !== 0) {
+          const edgeY = y * 2 + 1;
+          const edgeX = (x + 1) * 2;
+
+          items.push({
+            y: edgeY,
+            x: edgeX,
+            color: "white",
+            item: "middleFilledCircle",
+          });
+          items.push({
+            y: edgeY,
+            x: edgeX,
+            color: "black",
+            item: {
+              kind: "text",
+              data: data.verticalBorder[y][x] === 1 ? "X" : "V",
+              size: 0.5,
+            },
+          });
+        }
+      }
+    }
+
+    return [
+      {
+        priority: PRIORITY_XV,
+        item: items,
       },
     ];
   },

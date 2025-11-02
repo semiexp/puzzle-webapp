@@ -29,6 +29,7 @@ export type Item =
   | "filledCircle"
   | "smallCircle"
   | "smallFilledCircle"
+  | "middleFilledCircle"
   | "sideArrowUp"
   | "sideArrowDown"
   | "sideArrowLeft"
@@ -72,7 +73,7 @@ export type Item =
   | "firewalkCellUlDr"
   | "firewalkCellUrDl"
   | { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number }
-  | { kind: "text"; data: string; pos?: string }
+  | { kind: "text"; data: string; pos?: string; size?: number }
   | { kind: "compass"; up: number; down: number; left: number; right: number }
   | { kind: "tapaClue"; value: number[] }
   | { kind: "sudokuCandidateSet"; size: number; values: number[] }
@@ -394,6 +395,16 @@ function renderItem(
           fill={color}
         />
       );
+    } else if (item === "middleFilledCircle") {
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={env.unitSize * 0.2}
+          stroke={color}
+          fill={color}
+        />
+      );
     } else if (typeof item === "string" && item.startsWith("firewalkCell")) {
       const items = [];
 
@@ -457,6 +468,7 @@ function renderItem(
       throw new Error("unsupported item: " + item);
     } else if ("kind" in item) {
       if (item.kind === "text") {
+        const sizeMultiplier = item.size !== undefined ? item.size : 1.0;
         if (item.pos) {
           let xRatio = 0;
           let yRatio = 0;
@@ -479,7 +491,7 @@ function renderItem(
               y={centerY + unitSize * yRatio}
               dominantBaseline="central"
               textAnchor="middle"
-              style={{ fontSize: unitSize * 0.5 }}
+              style={{ fontSize: unitSize * 0.5 * sizeMultiplier }}
               fill={color}
             >
               {item.data}
@@ -492,7 +504,7 @@ function renderItem(
               y={centerY}
               dominantBaseline="central"
               textAnchor="middle"
-              style={{ fontSize: unitSize * 0.8 }}
+              style={{ fontSize: unitSize * 0.8 * sizeMultiplier }}
               fill={color}
             >
               {item.data}
@@ -984,6 +996,50 @@ function renderItem(
           stroke={color}
           fill={color}
         />
+      );
+    } else if (item === "middleFilledCircle") {
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.2}
+          stroke={color}
+          fill={color}
+        />
+      );
+    } else if (item === "circle") {
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.4}
+          stroke={color}
+          fill="none"
+        />
+      );
+    } else if (item === "filledCircle") {
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.4}
+          stroke={color}
+          fill={color}
+        />
+      );
+    } else if (typeof item !== "string" && item.kind === "text") {
+      const sizeMultiplier = item.size !== undefined ? item.size : 1.0;
+      return (
+        <text
+          x={centerX}
+          y={centerY}
+          dominantBaseline="central"
+          textAnchor="middle"
+          style={{ fontSize: unitSize * 0.8 * sizeMultiplier }}
+          fill={color}
+        >
+          {item.data}
+        </text>
       );
     }
     throw new Error("unsupported item: " + item);

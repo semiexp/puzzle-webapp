@@ -861,6 +861,7 @@ export const Editor = (props: EditorProps) => {
               fontFamily: "sans-serif",
               border: "1px solid black",
               margin: "5px",
+              userSelect: "none",
             }}
           >
             {useNewRenderer ? renderResults2 : renderResults}
