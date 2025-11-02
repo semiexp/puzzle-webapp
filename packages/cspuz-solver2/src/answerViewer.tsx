@@ -26,7 +26,7 @@ const MultipleAnswerViewer = (result: MultipleAnswers) => {
   const [pos, setPos] = useState(0);
   useEffect(() => setPos(0), [result]);
 
-  let numAnswers = result.answers.length;
+  const numAnswers = result.answers.length;
   return (
     <div>
       <div>
