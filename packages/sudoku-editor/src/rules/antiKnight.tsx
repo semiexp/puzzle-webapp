@@ -16,6 +16,9 @@ export const antiKnightRule: Rule<AntiKnightState, AntiKnightData> = {
   render: () => {
     return [];
   },
+  render2: () => {
+    return [];
+  },
   exportToPenpa: () => {
     return { items: [], margin: 0 };
   },
