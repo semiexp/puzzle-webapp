@@ -4,7 +4,7 @@ import {
   PRIORITY_EXTRA_REGION_BORDER,
   RenderOptions,
 } from "../rule";
-import { reducerForRegions, rendererForRegions2 } from "./regionsUtil";
+import { reducerForRegions, rendererForRegions } from "./regionsUtil";
 import { Item } from "../penpaExporter";
 
 type Region = { cells: { y: number; x: number }[] };
@@ -29,7 +29,7 @@ export const extraRegionsRule: Rule<ExtraRegionsState, ExtraRegionsData> = {
     return reducerForRegions(state, data, event, info, true, info.boardSize);
   },
   render: (state, data, options: RenderOptions) => {
-    return rendererForRegions2(
+    return rendererForRegions(
       state,
       data,
       options,

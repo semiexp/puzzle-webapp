@@ -52,7 +52,7 @@ export type EditorProps = {
   onChangeProblem: (problem: Problem) => void;
 };
 
-const defaultBorders2 = (options: RenderOptions): BoardItem[] => {
+const defaultBorders = (options: RenderOptions): BoardItem[] => {
   const ret: BoardItem[] = [];
 
   const { boardSize } = options;
@@ -80,7 +80,7 @@ const defaultBorders2 = (options: RenderOptions): BoardItem[] => {
   return ret;
 };
 
-const autoSolverItems2 = (
+const autoSolverItems = (
   problem: Problem,
   answer: Answer,
   _options: RenderOptions,
@@ -342,7 +342,7 @@ const useEventDispatcher = (
   return dispatchEventRef;
 };
 
-const render2 = (
+const render = (
   problem: Problem,
   autoSolverAnswer: Answer,
   selectedRuleIndex: number,
@@ -368,13 +368,13 @@ const render2 = (
 
   renderResults.push({
     priority: 0,
-    item: defaultBorders2({
+    item: defaultBorders({
       boardSize: problem.size,
     }),
   });
   renderResults.push({
     priority: 100,
-    item: autoSolverItems2(problem, autoSolverAnswer, {
+    item: autoSolverItems(problem, autoSolverAnswer, {
       boardSize: problem.size,
     }),
   });
@@ -426,7 +426,7 @@ export const Editor = (props: EditorProps) => {
     cellSize: cellSize,
     margin: margin,
   };
-  const renderResults2 = render2(
+  const renderResults2 = render(
     problem,
     autoSolverAnswer,
     ruleState.selectedRuleIndex,

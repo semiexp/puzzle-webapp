@@ -161,7 +161,7 @@ export const reducerForRegions = <
   return {};
 };
 
-export const rendererForRegions2 = <
+export const rendererForRegions = <
   T,
   S extends {
     currentRegion: Region<T> | null;

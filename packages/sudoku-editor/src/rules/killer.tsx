@@ -1,5 +1,5 @@
 import { Rule, PRIORITY_KILLER, RenderOptions } from "../rule";
-import { reducerForRegions, rendererForRegions2 } from "./regionsUtil";
+import { reducerForRegions, rendererForRegions } from "./regionsUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -96,7 +96,7 @@ export const killerRule: Rule<KillerState, KillerData> = {
       addRegion(state.currentRegion, "rgb(255, 168, 168)");
     }
 
-    const ret = rendererForRegions2(state, data, _options, null, PRIORITY_KILLER);
+    const ret = rendererForRegions(state, data, _options, null, PRIORITY_KILLER);
     ret.push({
       priority: PRIORITY_KILLER,
       item: items,
