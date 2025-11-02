@@ -10,7 +10,7 @@ import {
   handleMouseUp,
   useKeyDown,
 } from "./events";
-import { RenderOptions, Rule } from "./rule";
+import { RenderOptions, RenderOptions2, Rule } from "./rule";
 import { allRules } from "./rules/rules";
 import { solve } from "./solver";
 import { Answer, Problem, defaultProblem } from "./puzzle";
@@ -44,6 +44,8 @@ import { HelpDialog } from "./dialogs/helpDialog";
 import { openDialog } from "./dialogs/dialog";
 import { NumberKeypad } from "./components/NumberKeypad";
 import "./editor.css";
+
+import { Board as PuzzleBoard, BoardItem, renderBoardItems } from "puzzle-board";
 
 export type EditorProps = {
   problem: Problem;
@@ -84,6 +86,34 @@ const defaultBorders = (options: RenderOptions) => {
       />,
     );
   }
+  return ret;
+};
+
+const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
+  const ret: BoardItem[] = [];
+
+  const { boardSize } = options;
+  for (let y = 0; y < boardSize; ++y) {
+    for (let x = 0; x <= boardSize; ++x) {
+      ret.push({
+        y: y * 2 + 3,
+        x: x * 2 + 2,
+        color: "black",
+        item: (x === 0 || x === boardSize) ? "boldWall" : "wall",
+      });
+    }
+  }
+  for (let y = 0; y <= boardSize; ++y) {
+    for (let x = 0; x < boardSize; ++x) {
+      ret.push({
+        y: y * 2 + 2,
+        x: x * 2 + 3,
+        color: "black",
+        item: (y === 0 || y === boardSize) ? "boldWall" : "wall",
+      });
+    }
+  }
+
   return ret;
 };
 
@@ -187,6 +217,91 @@ const autoSolverItems = (
               </text>,
             );
           }
+        }
+      }
+    }
+  }
+
+  return items;
+};
+
+const autoSolverItems2 = (
+  problem: Problem,
+  answer: Answer,
+  _options: RenderOptions2,
+): BoardItem[] => {
+  if (answer === null) {
+    return [];
+  }
+
+  const size = problem.size;
+
+  if (answer.decidedNumbers.length !== size) {
+    return [];
+  }
+
+  const hasClue = [];
+  const givenNumbersRule: any = problem.ruleData.get("givenNumbers"); // eslint-disable-line @typescript-eslint/no-explicit-any
+  for (let y = 0; y < size; ++y) {
+    const row = [];
+    for (let x = 0; x < size; ++x) {
+      row.push(givenNumbersRule.numbers[y][x] !== null);
+    }
+    hasClue.push(row);
+  }
+
+  const answerRule: any = problem.ruleData.get("answer"); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const answerNumbers: (number | null)[][] = answerRule.numbers; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const items: BoardItem[] = [];
+  for (let y = 0; y < size; ++y) {
+    for (let x = 0; x < size; ++x) {
+      if (hasClue[y][x]) {
+        continue;
+      }
+
+      let hasMismatch = false;
+      const answerNum = answerNumbers[y][x];
+      if (answerNum !== null) {
+        for (let i = 0; i < size; ++i) {
+          if (answer.candidates[y][x][i] !== (answerNum - 1 === i)) {
+            hasMismatch = true;
+          }
+        }
+        if (hasMismatch) {
+          items.push({
+            y: y * 2 + 3,
+            x: x * 2 + 3,
+            color: "rgba(255, 0, 255, 0.3)",
+            item: "fill",
+          });
+        }
+      }
+      if (answer.decidedNumbers[y][x] !== null) {
+        if (answerNum !== answer.decidedNumbers[y][x]) {
+          items.push({
+            y: y * 2 + 3,
+            x: x * 2 + 3,
+            color: "rgb(64, 128, 255)",
+            item: { kind: "text", data: String(answer.decidedNumbers[y][x]) },
+          });
+        }
+      } else {
+        const candidates = answer.candidates[y][x];
+        const candidateValues: number[] = [];
+        for (let i = 0; i < size; ++i) {
+          if (candidates[i]) {
+            candidateValues.push(i + 1);
+          }
+        }
+        if (candidateValues.length > 0) {
+          const w = Math.ceil(Math.sqrt(size));
+          items.push({
+            y: y * 2 + 3,
+            x: x * 2 + 3,
+            color: "rgb(64, 128, 255)",
+            item: { kind: "sudokuCandidateSet", size: w, values: candidateValues },
+          });
         }
       }
     }
@@ -418,6 +533,67 @@ const render = (
   return renderResults.map((c) => c.item);
 };
 
+const render2 = (
+  problem: Problem,
+  autoSolverAnswer: Answer,
+  selectedRuleIndex: number,
+  ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  options: RenderOptions,
+): ReactElement[] => {
+  const renderResults: { priority: number; item: BoardItem[] }[] = [];
+
+  // TODO
+  for (let i = 0; i < allRules.length; ++i) {
+    const rule = allRules[i];
+    const state = i === selectedRuleIndex ? ruleState : null;
+    const data = problem.ruleData.get(rule.name);
+
+    // check if the rule is enabled
+    if (problem.enabledRules.indexOf(rule.name) < 0) {
+      continue;
+    }
+
+    if (rule.render2 === undefined) {
+      continue;
+    }
+
+    const renderResult = rule.render2(state, data, options);
+    renderResults.push(...renderResult);
+  }
+
+  renderResults.push({
+    priority: 0,
+    item: defaultBorders2({
+      boardSize: problem.size,
+    }),
+  });
+  renderResults.push({
+    priority: 100,
+    item: autoSolverItems2(problem, autoSolverAnswer, {
+      boardSize: problem.size,
+    }),
+  });
+
+  renderResults.sort((a, b) => a.priority - b.priority);
+  const boardItems = renderResults.map((c) => c.item);
+  const boardItemsFlat = ([] as BoardItem[]).concat(...boardItems);
+
+  const board: PuzzleBoard = {
+    kind: "grid",
+    height: problem.size + 2,
+    width: problem.size + 2,
+    defaultStyle: "empty",
+    data: boardItemsFlat,
+  };
+  const renderConfig = {
+    margin: options.margin,
+    unitSize: options.cellSize,
+  };
+  const rendered = renderBoardItems([board], renderConfig);
+
+  return [rendered.component];
+};
+
 export const Editor = (props: EditorProps) => {
   const problem = props.problem;
   const size = problem.size;
@@ -452,6 +628,18 @@ export const Editor = (props: EditorProps) => {
     ruleState.ruleState,
     renderOptions,
   );
+  const renderResults2 = render2(
+    problem,
+    autoSolverAnswer,
+    ruleState.selectedRuleIndex,
+    ruleState.ruleState,
+    {
+      boardSize: size,
+      cellSize,
+      margin: margin - cellSize,
+    },
+  );
+  const useNewRenderer = true;
 
   useEffect(() => {
     if (enableSolver) {
@@ -679,7 +867,7 @@ export const Editor = (props: EditorProps) => {
               margin: "5px",
             }}
           >
-            {renderResults}
+            {useNewRenderer ? renderResults2 : renderResults}
           </svg>
         </Box>
         <Box sx={{ height: svgContainerHeight, width: "100%" }}>

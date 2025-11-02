@@ -19,6 +19,14 @@ export const answerRule: Rule<CellNumbersState, CellNumbersData> = {
       "rgb(0, 128, 0)",
       PRIORITY_ANSWER,
     ),
+  render2: (state, data, options) =>
+    cellNumbersRule.render2(
+      state,
+      data,
+      options,
+      "rgb(0, 128, 0)",
+      PRIORITY_ANSWER,
+    ),
   exportToPenpa: () => {
     return { items: [], margin: 0 };
   },

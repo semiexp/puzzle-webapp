@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { EditorEvent, EditorEventType } from "../events";
-import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions } from "../rule";
+import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions, RenderOptions2 } from "../rule";
+import { BoardItem } from "puzzle-board";
 
 export type CellNumbersState = {
   selectedCell: { y: number; x: number } | null;
@@ -164,5 +165,60 @@ export const cellNumbersRule = {
       });
     }
     return items;
+  },
+  render2: (
+    state: CellNumbersState | null,
+    data: CellNumbersData,
+    _options: RenderOptions2,
+    textColor: string,
+    numberPriority: number,
+  ) => {
+    const items: BoardItem[] = [];
+
+    if (state !== null && state.selectedCell) {
+      const { x, y } = state.selectedCell;
+
+      items.push({
+        y: y * 2 + 3,
+        x: x * 2 + 3,
+        color: "rgb(255, 216, 216)",
+        item: "fill",
+      });
+    }
+
+    for (let y = 0; y < data.numbers.length; y++) {
+      for (let x = 0; x < data.numbers[y].length; x++) {
+        const number = data.numbers[y][x];
+        if (number !== null) {
+          items.push({
+            y: y * 2 + 3,
+            x: x * 2 + 3,
+            color: textColor,
+            item: { kind: "text", data: String(number) },
+          });
+        }
+      }
+    }
+
+    const result = [
+      {
+        priority: numberPriority,
+        item: items.filter(
+          (item) => typeof item.item !== "string" || item.item !== "fill",
+        ),
+      },
+    ];
+
+    const backgroundItems = items.filter(
+      (item) => typeof item.item === "string" && item.item === "fill",
+    );
+    if (backgroundItems.length > 0) {
+      result.push({
+        priority: PRIORITY_SELECTED_CELL_MARKER,
+        item: backgroundItems,
+      });
+    }
+
+    return result;
   },
 };

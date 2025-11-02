@@ -20,6 +20,14 @@ export const givenNumbersRule: Rule<CellNumbersState, CellNumbersData> = {
       "black",
       PRIORITY_CLUE_NUMBERS,
     ),
+  render2: (state, data, options) =>
+    cellNumbersRule.render2(
+      state,
+      data,
+      options,
+      "black",
+      PRIORITY_CLUE_NUMBERS,
+    ),
   exportToPenpa: (data) => {
     const items: Item[] = [];
     for (let y = 0; y < data.numbers.length; y++) {

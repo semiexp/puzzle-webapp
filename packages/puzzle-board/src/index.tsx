@@ -7,7 +7,7 @@ export type Board = {
   kind: "grid";
   height: number;
   width: number;
-  defaultStyle: "outer_grid" | "grid" | "dots";
+  defaultStyle: "outer_grid" | "grid" | "dots" | "empty";
   data: BoardItem[];
   isUnique?: boolean;
 };
