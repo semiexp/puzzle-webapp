@@ -635,7 +635,8 @@ export const Editor = (props: EditorProps) => {
     ruleState.ruleState,
     renderOptions,
   );
-  const useNewRenderer = true;
+  // TODO: Remove this state after migration is complete
+  const [useNewRenderer, setUseNewRenderer] = useState(true);
 
   useEffect(() => {
     if (enableSolver) {
@@ -826,10 +827,20 @@ export const Editor = (props: EditorProps) => {
         >
           <AutoFixHighIcon />
         </TooltipButton>
+        {/* TODO: Remove this toggle after migration is complete */}
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={useNewRenderer}
+              onChange={(e) => setUseNewRenderer(e.target.checked)}
+            />
+          }
+          label="New Renderer"
+          sx={{ ml: "auto" }}
+        />
         <Select
           value={i18n.language}
           onChange={(e) => i18n.changeLanguage(e.target.value)}
-          sx={{ ml: "auto" }}
         >
           <MenuItem value="en">English</MenuItem>
           <MenuItem value="ja">日本語</MenuItem>
