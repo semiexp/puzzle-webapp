@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_ARROW, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_ARROW, RenderOptions } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -23,7 +23,7 @@ export const arrowRule: Rule<ArrowState, ArrowData> = {
   reducer: (state, data, event, info) => {
     return reducerForLines(state, data, "currentArrow", "arrows", event, info);
   },
-  render: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     const addArrow = (arrow: Arrow, color: string) => {

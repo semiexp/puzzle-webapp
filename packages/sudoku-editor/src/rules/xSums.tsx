@@ -2,7 +2,7 @@ import {
   Rule,
   PRIORITY_SELECTED_CELL_MARKER,
   PRIORITY_XSUMS_NUMBERS,
-  RenderOptions2,
+  RenderOptions,
 } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -53,7 +53,7 @@ export const xSumsRule: Rule<xSumsState, xSumsData> = {
     }
     return reducerForOutsideCell(state, event, info);
   },
-  render: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
     const backgroundItems: BoardItem[] = [];
 

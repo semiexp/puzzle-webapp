@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_KILLER, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_KILLER, RenderOptions } from "../rule";
 import { reducerForRegions, rendererForRegions2 } from "./regionsUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -58,7 +58,7 @@ export const killerRule: Rule<KillerState, KillerData> = {
 
     return reducerForRegions(state, data, event, info, true);
   },
-  render: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     const addRegion = (region: Region, color: string) => {

@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_XV, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_XV, RenderOptions } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -74,7 +74,7 @@ export const xvRule: Rule<XVState, XVData> = {
     }
     return {};
   },
-  render: (_state, data, _options: RenderOptions2) => {
+  render: (_state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.horizontalBorder.length; ++y) {

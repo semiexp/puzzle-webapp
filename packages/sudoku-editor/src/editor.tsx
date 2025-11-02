@@ -10,7 +10,7 @@ import {
   handleMouseUp,
   useKeyDown,
 } from "./events";
-import { RenderOptions2, Rule } from "./rule";
+import { RenderOptions, Rule } from "./rule";
 import { allRules } from "./rules/rules";
 import { solve } from "./solver";
 import { Answer, Problem, defaultProblem } from "./puzzle";
@@ -52,7 +52,7 @@ export type EditorProps = {
   onChangeProblem: (problem: Problem) => void;
 };
 
-const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
+const defaultBorders2 = (options: RenderOptions): BoardItem[] => {
   const ret: BoardItem[] = [];
 
   const { boardSize } = options;
@@ -83,7 +83,7 @@ const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
 const autoSolverItems2 = (
   problem: Problem,
   answer: Answer,
-  _options: RenderOptions2,
+  _options: RenderOptions,
 ): BoardItem[] => {
   if (answer === null) {
     return [];

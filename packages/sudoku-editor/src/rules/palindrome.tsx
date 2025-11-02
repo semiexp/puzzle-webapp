@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_PALINDROME, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_PALINDROME, RenderOptions } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -30,7 +30,7 @@ export const palindromeRule: Rule<PalindromeState, PalindromeData> = {
       info,
     );
   },
-  render: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     const addPalindrome = (palindrome: Palindrome, color: string) => {

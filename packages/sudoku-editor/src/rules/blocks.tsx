@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_BORDER, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_BORDER, RenderOptions } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -84,7 +84,7 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
     }
     return {};
   },
-  render: (_state, data, _options: RenderOptions2) => {
+  render: (_state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.horizontalBorder.length; ++y) {

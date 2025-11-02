@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_DIAGNOAL, RenderOptions2 } from "../rule";
+import { Rule, PRIORITY_DIAGNOAL, RenderOptions } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -20,7 +20,7 @@ export const diagonalRule: Rule<DiagonalState, DiagonalData> = {
   reducer: () => {
     return {};
   },
-  render: (_state, data, options: RenderOptions2) => {
+  render: (_state, data, options: RenderOptions) => {
     const items: BoardItem[] = [];
 
     const { boardSize } = options;

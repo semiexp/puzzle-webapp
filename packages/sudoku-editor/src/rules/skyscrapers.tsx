@@ -2,7 +2,7 @@ import {
   Rule,
   PRIORITY_SELECTED_CELL_MARKER,
   PRIORITY_SKYSCRAPERS_NUMBERS,
-  RenderOptions2,
+  RenderOptions,
 } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -53,7 +53,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
     }
     return reducerForOutsideCell(state, event, info);
   },
-  render: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions) => {
     const items: BoardItem[] = [];
     const backgroundItems: BoardItem[] = [];
 

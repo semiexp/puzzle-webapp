@@ -1,5 +1,5 @@
 import { EditorEvent, EditorEventType } from "../events";
-import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions2 } from "../rule";
+import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions } from "../rule";
 import { BoardItem } from "puzzle-board";
 
 export type CellNumbersState = {
@@ -99,7 +99,7 @@ export const cellNumbersRule = {
   render2: (
     state: CellNumbersState | null,
     data: CellNumbersData,
-    _options: RenderOptions2,
+    _options: RenderOptions,
     textColor: string,
     numberPriority: number,
   ) => {

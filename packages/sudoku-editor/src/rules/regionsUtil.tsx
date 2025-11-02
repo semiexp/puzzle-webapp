@@ -1,5 +1,5 @@
 import { EditorEvent } from "../events";
-import { ReducerInfo, RenderOptions2 } from "../rule";
+import { ReducerInfo, RenderOptions } from "../rule";
 import { BoardItem } from "puzzle-board";
 
 type Pos = { x: number; y: number };
@@ -171,7 +171,7 @@ export const rendererForRegions2 = <
 >(
   state: S | null,
   data: D,
-  _options: RenderOptions2,
+  _options: RenderOptions,
   cellPriority: number | null,
   borderPriority: number | null,
 ): {

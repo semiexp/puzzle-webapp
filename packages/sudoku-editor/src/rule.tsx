@@ -3,7 +3,7 @@ import { BoardData } from "./penpaExporter";
 
 import { BoardItem } from "puzzle-board";
 
-export type RenderOptions2 = {
+export type RenderOptions = {
   boardSize: number;
 };
 
@@ -29,7 +29,7 @@ export interface Rule<State, Data> {
   render: (
     state: State | null,
     data: Data,
-    options: RenderOptions2,
+    options: RenderOptions,
   ) => {
     priority: number;
     item: BoardItem[];
