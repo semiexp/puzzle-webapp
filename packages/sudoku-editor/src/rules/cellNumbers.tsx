@@ -194,7 +194,7 @@ export const cellNumbersRule = {
             y: y * 2 + 1,
             x: x * 2 + 1,
             color: textColor,
-            item: { kind: "text", data: String(number) },
+            item: { kind: "text", data: String(number), size: 7.0 / 8.0 },
           });
         }
       }

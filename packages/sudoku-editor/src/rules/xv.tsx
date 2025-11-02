@@ -147,7 +147,7 @@ export const xvRule: Rule<XVState, XVData> = {
             item: {
               kind: "text",
               data: data.horizontalBorder[y][x] === 1 ? "X" : "V",
-              size: 0.5,
+              size: 0.375,
             },
           });
         }
@@ -173,7 +173,7 @@ export const xvRule: Rule<XVState, XVData> = {
             item: {
               kind: "text",
               data: data.verticalBorder[y][x] === 1 ? "X" : "V",
-              size: 0.5,
+              size: 0.375,
             },
           });
         }

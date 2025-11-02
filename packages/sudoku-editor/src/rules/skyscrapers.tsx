@@ -173,7 +173,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
           y: -1 * 2 + 1,
           x: i * 2 + 1,
           color: "black",
-          item: { kind: "text", data: String(data.up[i]) },
+          item: { kind: "text", data: String(data.up[i]), size: 7.0 / 8.0 },
         });
       }
     }
@@ -184,7 +184,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
           y: data.down.length * 2 + 1,
           x: i * 2 + 1,
           color: "black",
-          item: { kind: "text", data: String(data.down[i]) },
+          item: { kind: "text", data: String(data.down[i]), size: 7.0 / 8.0 },
         });
       }
     }
@@ -195,7 +195,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
           y: i * 2 + 1,
           x: -1 * 2 + 1,
           color: "black",
-          item: { kind: "text", data: String(data.left[i]) },
+          item: { kind: "text", data: String(data.left[i]), size: 7.0 / 8.0 },
         });
       }
     }
@@ -206,7 +206,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
           y: i * 2 + 1,
           x: data.right.length * 2 + 1,
           color: "black",
-          item: { kind: "text", data: String(data.right[i]) },
+          item: { kind: "text", data: String(data.right[i]), size: 7.0 / 8.0 },
         });
       }
     }
