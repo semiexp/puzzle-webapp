@@ -22,6 +22,7 @@ function renderBoard(boards: Board[]): ReactElement {
   );
 }
 
+// viewer
 const MultipleAnswerViewer = (result: MultipleAnswers) => {
   const [pos, setPos] = useState(0);
   useEffect(() => setPos(0), [result]);
