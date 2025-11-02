@@ -96,7 +96,13 @@ export const killerRule: Rule<KillerState, KillerData> = {
       addRegion(state.currentRegion, "rgb(255, 168, 168)");
     }
 
-    const ret = rendererForRegions(state, data, _options, null, PRIORITY_KILLER);
+    const ret = rendererForRegions(
+      state,
+      data,
+      _options,
+      null,
+      PRIORITY_KILLER,
+    );
     ret.push({
       priority: PRIORITY_KILLER,
       item: items,

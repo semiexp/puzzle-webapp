@@ -45,7 +45,11 @@ import { openDialog } from "./dialogs/dialog";
 import { NumberKeypad } from "./components/NumberKeypad";
 import "./editor.css";
 
-import { Board as PuzzleBoard, BoardItem, renderBoardItems } from "puzzle-board";
+import {
+  Board as PuzzleBoard,
+  BoardItem,
+  renderBoardItems,
+} from "puzzle-board";
 
 export type EditorProps = {
   problem: Problem;
@@ -62,7 +66,7 @@ const defaultBorders = (options: RenderOptions): BoardItem[] => {
         y: y * 2 + 1,
         x: x * 2,
         color: "black",
-        item: (x === 0 || x === boardSize) ? "boldWall" : "wall",
+        item: x === 0 || x === boardSize ? "boldWall" : "wall",
       });
     }
   }
@@ -72,7 +76,7 @@ const defaultBorders = (options: RenderOptions): BoardItem[] => {
         y: y * 2,
         x: x * 2 + 1,
         color: "black",
-        item: (y === 0 || y === boardSize) ? "boldWall" : "wall",
+        item: y === 0 || y === boardSize ? "boldWall" : "wall",
       });
     }
   }
@@ -138,7 +142,11 @@ const autoSolverItems = (
             y: y * 2 + 1,
             x: x * 2 + 1,
             color: "rgb(64, 128, 255)",
-            item: { kind: "text", data: String(answer.decidedNumbers[y][x]), size: 7.0 / 8.0 },
+            item: {
+              kind: "text",
+              data: String(answer.decidedNumbers[y][x]),
+              size: 7.0 / 8.0,
+            },
           });
         }
       } else {
@@ -155,7 +163,11 @@ const autoSolverItems = (
             y: y * 2 + 1,
             x: x * 2 + 1,
             color: "rgb(64, 128, 255)",
-            item: { kind: "sudokuCandidateSet", size: w, values: candidateValues },
+            item: {
+              kind: "sudokuCandidateSet",
+              size: w,
+              values: candidateValues,
+            },
           });
         }
       }
@@ -347,7 +359,7 @@ const render = (
   autoSolverAnswer: Answer,
   selectedRuleIndex: number,
   ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  options: { boardSize: number; cellSize: number; margin: number; },
+  options: { boardSize: number; cellSize: number; margin: number },
 ): ReactElement[] => {
   const renderResults: { priority: number; item: BoardItem[] }[] = [];
 
