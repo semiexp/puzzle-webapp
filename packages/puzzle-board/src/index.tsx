@@ -140,12 +140,12 @@ function renderItem(
         />
       );
     } else if (item === "triangle") {
-      let shape = [
+      const shape = [
         [0.2, 0.8],
         [0.5, 0.2],
         [0.8, 0.8],
       ];
-      let points: string[] = [];
+      const points: string[] = [];
       for (let i = 0; i < shape.length; ++i) {
         let dx = shape[i][0];
         let dy = shape[i][1];
@@ -176,7 +176,7 @@ function renderItem(
       item === "arrowLeft" ||
       item === "arrowRight"
     ) {
-      let shape = [
+      const shape = [
         [0.1, 0.1],
         [0.5, 0.1],
         [0.5, 0.05],
@@ -185,7 +185,7 @@ function renderItem(
         [0.5, 0.15],
         [0.1, 0.15],
       ];
-      let points: string[] = [];
+      const points: string[] = [];
       for (let i = 0; i < shape.length; ++i) {
         let dx = shape[i][0];
         let dy = shape[i][1];
@@ -208,7 +208,7 @@ function renderItem(
           item === "arrowUp" ||
           item === "arrowDown"
         ) {
-          let tmp = dx;
+          const tmp = dx;
           dx = dy;
           dy = tmp;
         }
@@ -391,7 +391,7 @@ function renderItem(
         />
       );
     } else if (typeof item === "string" && item.startsWith("firewalkCell")) {
-      let items = [];
+      const items = [];
 
       items.push(
         <polygon
@@ -565,7 +565,7 @@ function renderItem(
           </g>
         );
       } else if (item.kind === "tapaClue") {
-        let values: string[] = [];
+        const values: string[] = [];
         for (let i = 0; i < item.value.length; ++i) {
           if (item.value[i] === -2) {
             values.push("?");
@@ -693,7 +693,7 @@ function renderItem(
           );
         }
       } else if (item.kind === "sudokuCandidateSet") {
-        let items: ReactElement[] = [];
+        const items: ReactElement[] = [];
         for (let i = 0; i < item.values.length; ++i) {
           const n = item.values[i];
           const gx = (n - 1) % item.size;
@@ -965,7 +965,7 @@ function aboloPoints(
   unitSize: number,
   skip: number,
 ): string {
-  let ret: string[] = [];
+  const ret: string[] = [];
   if (skip !== 0) {
     ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
   }
@@ -987,7 +987,7 @@ function pencilPoints(
   unitSize: number,
   start: number,
 ): string {
-  let ret = [`${centerX},${centerY}`];
+  const ret = [`${centerX},${centerY}`];
   if (start === 3 || start === 0) {
     ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
   }
