@@ -844,7 +844,7 @@ function renderItem(
             stroke={color}
             fill={color}
             strokeWidth={3}
-          />
+          />,
         );
 
         // Draw lines connecting to cells
@@ -866,7 +866,7 @@ function renderItem(
               stroke={color}
               strokeWidth={env.unitSize * 0.25}
               strokeLinecap="round"
-            />
+            />,
           );
 
           prevY = cellY;
@@ -887,7 +887,7 @@ function renderItem(
             stroke={color}
             fill="none"
             strokeWidth={3}
-          />
+          />,
         );
 
         // Draw lines connecting to cells
@@ -925,7 +925,7 @@ function renderItem(
               stroke={color}
               strokeWidth={3}
               strokeLinecap="round"
-            />
+            />,
           );
 
           prevY = cellY;
@@ -938,7 +938,8 @@ function renderItem(
           const lastY = env.offsetY + env.unitSize * (last.y / 2);
           const lastX = env.offsetX + env.unitSize * (last.x / 2);
 
-          let dy = 0, dx = 0;
+          let dy = 0,
+            dx = 0;
           if (item.cells.length >= 2) {
             const secondLast = item.cells[item.cells.length - 2];
             const secondLastY = env.offsetY + env.unitSize * (secondLast.y / 2);
@@ -969,7 +970,7 @@ function renderItem(
               stroke={color}
               strokeWidth={3}
               strokeLinecap="round"
-            />
+            />,
           );
           elements.push(
             <line
@@ -981,7 +982,7 @@ function renderItem(
               stroke={color}
               strokeWidth={3}
               strokeLinecap="round"
-            />
+            />,
           );
         }
 
@@ -1005,7 +1006,7 @@ function renderItem(
 
             // Check if the neighbor cell is part of the region
             const hasNeighbor = item.cells.some(
-              (c) => c.y === neighborY && c.x === neighborX
+              (c) => c.y === neighborY && c.x === neighborX,
             );
 
             if (!hasNeighbor) {
@@ -1033,7 +1034,7 @@ function renderItem(
                   stroke={color}
                   strokeWidth={1}
                   strokeDasharray={strokeDasharray}
-                />
+                />,
               );
             }
           }
