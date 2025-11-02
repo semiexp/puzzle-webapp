@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'packages/sudoku-editor/**'
+      - 'packages/puzzle-board/**'
 
 jobs:
   lint:

@@ -22,6 +22,7 @@
     "js-base64": "^3.7.8",
     "lz-string": "^1.5.0",
     "pako": "^2.1.0",
+    "puzzle-board": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.5.1"
