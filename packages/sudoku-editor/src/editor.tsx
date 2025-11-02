@@ -356,7 +356,7 @@ const render = (
   selectedRuleIndex: number,
   ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   options: { boardSize: number; cellSize: number; margin: number },
-): ReactElement[] => {
+): { svgHeight: number; svgWidth: number; component: ReactElement } => {
   const renderResults: { priority: number; item: BoardItem[] }[] = [];
 
   // TODO
@@ -391,8 +391,8 @@ const render = (
 
   const board: PuzzleBoard = {
     kind: "grid",
-    height: problem.size + 2,
-    width: problem.size + 2,
+    height: problem.size,
+    width: problem.size,
     defaultStyle: "empty",
     data: boardItemsFlat,
   };
@@ -402,7 +402,7 @@ const render = (
   };
   const rendered = renderBoardItems([board], renderConfig);
 
-  return [rendered.component];
+  return rendered;
 };
 
 export const Editor = (props: EditorProps) => {
@@ -425,7 +425,6 @@ export const Editor = (props: EditorProps) => {
   const problemHistory = useHistory(problem, props.onChangeProblem);
 
   const margin = cellSize + 10;
-  const svgSize = margin * 2 + cellSize * props.problem.size;
 
   const renderOptions = {
     boardSize: size,
@@ -649,8 +648,8 @@ export const Editor = (props: EditorProps) => {
       <Box sx={{ display: "flex" }}>
         <Box ref={svgContainerRef}>
           <svg
-            width={svgSize}
-            height={svgSize}
+            width={renderResults.svgHeight}
+            height={renderResults.svgWidth}
             onMouseDown={(e) =>
               handleMouseDown(e, cellSize, margin, dispatchEventRef.current)
             }
@@ -667,7 +666,7 @@ export const Editor = (props: EditorProps) => {
               userSelect: "none",
             }}
           >
-            {renderResults}
+            {renderResults.component}
           </svg>
         </Box>
         <Box sx={{ height: svgContainerHeight, width: "100%" }}>
