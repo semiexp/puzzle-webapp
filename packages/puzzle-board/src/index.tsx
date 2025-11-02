@@ -123,10 +123,10 @@ function renderItem(
     } else if (item === "block") {
       return (
         <rect
-          x={centerX - unitSize * 0.45}
-          y={centerY - unitSize * 0.45}
-          width={unitSize * 0.9}
-          height={unitSize * 0.9}
+          x={centerX - unitSize * 0.4}
+          y={centerY - unitSize * 0.4}
+          width={unitSize * 0.8}
+          height={unitSize * 0.8}
           fill={color}
         />
       );
