@@ -283,7 +283,7 @@ const autoSolverItems2 = (
             y: y * 2 + 1,
             x: x * 2 + 1,
             color: "rgb(64, 128, 255)",
-            item: { kind: "text", data: String(answer.decidedNumbers[y][x]) },
+            item: { kind: "text", data: String(answer.decidedNumbers[y][x]), size: 7.0 / 8.0 },
           });
         }
       } else {
