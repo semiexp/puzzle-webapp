@@ -52,43 +52,6 @@ export type EditorProps = {
   onChangeProblem: (problem: Problem) => void;
 };
 
-const defaultBorders = (options: RenderOptions) => {
-  const { boardSize, cellSize, margin } = options;
-
-  const ret = [];
-  for (let i = 0; i <= boardSize; ++i) {
-    // horizontal lines
-    const width = i === 0 || i === boardSize ? 3 : 1;
-    ret.push(
-      <line
-        key={`h-${i}`}
-        x1={margin - width * 0.5}
-        y1={margin + i * cellSize}
-        x2={margin + boardSize * cellSize + width * 0.5}
-        y2={margin + i * cellSize}
-        stroke="black"
-        strokeWidth={width}
-      />,
-    );
-  }
-  for (let i = 0; i <= boardSize; ++i) {
-    // vertical lines
-    const width = i === 0 || i === boardSize ? 3 : 1;
-    ret.push(
-      <line
-        key={`v-${i}`}
-        x1={margin + i * cellSize}
-        y1={margin - width * 0.5}
-        x2={margin + i * cellSize}
-        y2={margin + boardSize * cellSize + width * 0.5}
-        stroke="black"
-        strokeWidth={width}
-      />,
-    );
-  }
-  return ret;
-};
-
 const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
   const ret: BoardItem[] = [];
 
@@ -115,114 +78,6 @@ const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
   }
 
   return ret;
-};
-
-const autoSolverItems = (
-  problem: Problem,
-  answer: Answer,
-  options: RenderOptions,
-) => {
-  if (answer === null) {
-    return [];
-  }
-
-  const size = problem.size;
-
-  if (answer.decidedNumbers.length !== size) {
-    return [];
-  }
-
-  const hasClue = [];
-  const givenNumbersRule: any = problem.ruleData.get("givenNumbers"); // eslint-disable-line @typescript-eslint/no-explicit-any
-  for (let y = 0; y < size; ++y) {
-    const row = [];
-    for (let x = 0; x < size; ++x) {
-      row.push(givenNumbersRule.numbers[y][x] !== null);
-    }
-    hasClue.push(row);
-  }
-
-  const answerRule: any = problem.ruleData.get("answer"); // eslint-disable-line @typescript-eslint/no-explicit-any
-  const answerNumbers: (number | null)[][] = answerRule.numbers; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-  const { cellSize, margin } = options;
-  const items = [];
-  for (let y = 0; y < size; ++y) {
-    for (let x = 0; x < size; ++x) {
-      if (hasClue[y][x]) {
-        continue;
-      }
-
-      let hasMismatch = false;
-      const answerNum = answerNumbers[y][x];
-      if (answerNum !== null) {
-        for (let i = 0; i < size; ++i) {
-          if (answer.candidates[y][x][i] !== (answerNum - 1 === i)) {
-            hasMismatch = true;
-          }
-        }
-        if (hasMismatch) {
-          items.push(
-            <rect
-              key={`auto-solver-${y}-${x}-mismatch`}
-              x={margin + x * cellSize + 2}
-              y={margin + y * cellSize + 2}
-              width={cellSize - 4}
-              height={cellSize - 4}
-              strokeWidth={2}
-              stroke="rgba(255, 0, 0)"
-              fill="rgba(255, 0, 255, 0.3)"
-            />,
-          );
-        }
-      }
-      if (answer.decidedNumbers[y][x] !== null) {
-        if (answerNum !== answer.decidedNumbers[y][x]) {
-          items.push(
-            <text
-              key={`auto-solver-${y}-${x}`}
-              x={margin + x * cellSize + cellSize * 0.5}
-              y={margin + y * cellSize + cellSize * 0.5}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={cellSize * 0.7}
-              style={{ userSelect: "none" }}
-              fill="rgb(64, 128, 255)"
-            >
-              {answer.decidedNumbers[y][x]}
-            </text>,
-          );
-        }
-      } else {
-        const candidates = answer.candidates[y][x];
-        const w = Math.ceil(Math.sqrt(size));
-        for (let i = 0; i < size; ++i) {
-          if (candidates[i]) {
-            items.push(
-              <text
-                key={`auto-solver-candidate-${y}-${x}-${i}`}
-                x={margin + x * cellSize + (((i % w) + 0.5) / w) * cellSize}
-                y={
-                  margin +
-                  y * cellSize +
-                  ((Math.floor(i / w) + 0.5) / w) * cellSize
-                }
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={(cellSize / w) * 0.9}
-                style={{ userSelect: "none" }}
-                fill="rgb(64, 128, 255)"
-              >
-                {i + 1}
-              </text>,
-            );
-          }
-        }
-      }
-    }
-  }
-
-  return items;
 };
 
 const autoSolverItems2 = (
@@ -487,52 +342,6 @@ const useEventDispatcher = (
   return dispatchEventRef;
 };
 
-const render = (
-  problem: Problem,
-  autoSolverAnswer: Answer,
-  selectedRuleIndex: number,
-  ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  options: RenderOptions,
-): ReactElement[] => {
-  const renderResults: { priority: number; item: ReactElement }[] = [];
-
-  for (let i = 0; i < allRules.length; ++i) {
-    const rule = allRules[i];
-    const state = i === selectedRuleIndex ? ruleState : null;
-    const data = problem.ruleData.get(rule.name);
-
-    // check if the rule is enabled
-    if (problem.enabledRules.indexOf(rule.name) < 0) {
-      continue;
-    }
-
-    const renderResult = rule.render(state, data, options);
-    for (let j = 0; j < renderResult.length; ++j) {
-      renderResults.push({
-        priority: renderResult[j].priority,
-        item: <g key={`rule-${i}-${j}`}>{renderResult[j].item}</g>,
-      });
-    }
-  }
-
-  renderResults.push({
-    priority: 0,
-    item: <g key="defaultBorders">{defaultBorders(options)}</g>,
-  });
-  renderResults.push({
-    priority: 100,
-    item: (
-      <g key="autoSolverItems">
-        {autoSolverItems(problem, autoSolverAnswer, options)}
-      </g>
-    ),
-  });
-
-  renderResults.sort((a, b) => a.priority - b.priority);
-
-  return renderResults.map((c) => c.item);
-};
-
 const render2 = (
   problem: Problem,
   autoSolverAnswer: Answer,
@@ -621,13 +430,6 @@ export const Editor = (props: EditorProps) => {
     cellSize: cellSize,
     margin: margin,
   };
-  const renderResults = render(
-    problem,
-    autoSolverAnswer,
-    ruleState.selectedRuleIndex,
-    ruleState.ruleState,
-    renderOptions,
-  );
   const renderResults2 = render2(
     problem,
     autoSolverAnswer,
@@ -635,8 +437,6 @@ export const Editor = (props: EditorProps) => {
     ruleState.ruleState,
     renderOptions,
   );
-  // TODO: Remove this state after migration is complete
-  const [useNewRenderer, setUseNewRenderer] = useState(true);
 
   useEffect(() => {
     if (enableSolver) {
@@ -827,20 +627,10 @@ export const Editor = (props: EditorProps) => {
         >
           <AutoFixHighIcon />
         </TooltipButton>
-        {/* TODO: Remove this toggle after migration is complete */}
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={useNewRenderer}
-              onChange={(e) => setUseNewRenderer(e.target.checked)}
-            />
-          }
-          label="New Renderer"
-          sx={{ ml: "auto" }}
-        />
         <Select
           value={i18n.language}
           onChange={(e) => i18n.changeLanguage(e.target.value)}
+          sx={{ ml: "auto" }}
         >
           <MenuItem value="en">English</MenuItem>
           <MenuItem value="ja">日本語</MenuItem>
@@ -875,7 +665,7 @@ export const Editor = (props: EditorProps) => {
               userSelect: "none",
             }}
           >
-            {useNewRenderer ? renderResults2 : renderResults}
+            {renderResults2}
           </svg>
         </Box>
         <Box sx={{ height: svgContainerHeight, width: "100%" }}>
