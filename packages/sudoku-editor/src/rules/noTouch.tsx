@@ -13,9 +13,6 @@ export const noTouchRule: Rule<NoTouchState, NoTouchData> = {
   reducer: () => {
     return {};
   },
-  render: () => {
-    return [];
-  },
   render2: () => {
     return [];
   },

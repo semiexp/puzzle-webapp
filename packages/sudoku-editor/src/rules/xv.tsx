@@ -75,56 +75,6 @@ export const xvRule: Rule<XVState, XVData> = {
     }
     return {};
   },
-  render: (_state, data, options) => {
-    const items: ReactElement[] = [];
-
-    const addItem = (y: number, x: number, val: number) => {
-      items.push(
-        <rect
-          key={`xv-${y}-${x}`}
-          x={options.margin + (x - 0.2) * options.cellSize}
-          y={options.margin + (y - 0.2) * options.cellSize}
-          width={options.cellSize * 0.4}
-          height={options.cellSize * 0.4}
-          fill="white"
-        />,
-      );
-      items.push(
-        <text
-          key={`xv-text-${y}-${x}`}
-          x={options.margin + x * options.cellSize}
-          y={options.margin + y * options.cellSize}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={options.cellSize * 0.3}
-          style={{ userSelect: "none" }}
-        >
-          {val === 1 ? "X" : "V"}
-        </text>,
-      );
-    };
-
-    for (let y = 0; y < data.horizontalBorder.length; ++y) {
-      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
-        if (data.horizontalBorder[y][x] !== 0) {
-          addItem(y + 1, x + 0.5, data.horizontalBorder[y][x]);
-        }
-      }
-    }
-    for (let y = 0; y < data.verticalBorder.length; ++y) {
-      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
-        if (data.verticalBorder[y][x] !== 0) {
-          addItem(y + 0.5, x + 1, data.verticalBorder[y][x]);
-        }
-      }
-    }
-    return [
-      {
-        priority: PRIORITY_XV,
-        item: <g>{items}</g>,
-      },
-    ];
-  },
   render2: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 

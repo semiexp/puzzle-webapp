@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_CONSECUTIVE, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -73,52 +72,6 @@ export const consecutiveRule: Rule<ConsecutiveState, ConsecutiveData> = {
       }
     }
     return {};
-  },
-  render: (_state, data, options) => {
-    const items: ReactElement[] = [];
-
-    for (let y = 0; y < data.horizontalBorder.length; ++y) {
-      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
-        if (data.horizontalBorder[y][x]) {
-          items.push(
-            <rect
-              key={`consecutive-${y}-${x}`}
-              x={options.margin + (x + 0.2) * options.cellSize}
-              y={options.margin + (y + 0.9) * options.cellSize}
-              width={options.cellSize * 0.6}
-              height={options.cellSize * 0.2}
-              fill="rgb(192, 192, 192)"
-              stroke="black"
-              strokeWidth={1}
-            />,
-          );
-        }
-      }
-    }
-    for (let y = 0; y < data.verticalBorder.length; ++y) {
-      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
-        if (data.verticalBorder[y][x]) {
-          items.push(
-            <rect
-              key={`consecutive-${y}-${x}`}
-              x={options.margin + (x + 0.9) * options.cellSize}
-              y={options.margin + (y + 0.2) * options.cellSize}
-              width={options.cellSize * 0.2}
-              height={options.cellSize * 0.6}
-              fill="rgb(192, 192, 192)"
-              stroke="black"
-              strokeWidth={1}
-            />,
-          );
-        }
-      }
-    }
-    return [
-      {
-        priority: PRIORITY_CONSECUTIVE,
-        item: <g>{items}</g>,
-      },
-    ];
   },
   render2: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];

@@ -12,14 +12,6 @@ export const givenNumbersRule: Rule<CellNumbersState, CellNumbersData> = {
   initialData: cellNumbersRule.initialData,
   eventTypes: cellNumbersRule.eventTypes,
   reducer: cellNumbersRule.reducer,
-  render: (state, data, options) =>
-    cellNumbersRule.render(
-      state,
-      data,
-      options,
-      "black",
-      PRIORITY_CLUE_NUMBERS,
-    ),
   render2: (state, data, options) =>
     cellNumbersRule.render2(
       state,

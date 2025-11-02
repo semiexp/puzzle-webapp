@@ -33,45 +33,6 @@ export const oddEvenRule: Rule<OddEvenState, OddEvenData> = {
     }
     return {};
   },
-  render: (_state, data, options) => {
-    const { cellSize, margin } = options;
-    const items = [];
-
-    for (let y = 0; y < data.cellKind.length; ++y) {
-      for (let x = 0; x < data.cellKind[y].length; ++x) {
-        if (data.cellKind[y][x] === 1) {
-          items.push(
-            <circle
-              key={`odd-${y}-${x}`}
-              cx={margin + (x + 0.5) * cellSize}
-              cy={margin + (y + 0.5) * cellSize}
-              r={cellSize * 0.4}
-              fill="rgb(128, 128, 128)"
-              fillOpacity={0.5}
-            />,
-          );
-        } else if (data.cellKind[y][x] === 2) {
-          items.push(
-            <rect
-              key={`even-${y}-${x}`}
-              x={margin + x * cellSize + cellSize * 0.1}
-              y={margin + y * cellSize + cellSize * 0.1}
-              width={cellSize * 0.8}
-              height={cellSize * 0.8}
-              fill="rgb(128, 128, 128)"
-              fillOpacity={0.5}
-            />,
-          );
-        }
-      }
-    }
-    return [
-      {
-        priority: PRIORITY_ODD_EVEN,
-        item: <g>{items}</g>,
-      },
-    ];
-  },
   render2: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 

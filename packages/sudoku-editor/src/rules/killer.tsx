@@ -1,6 +1,5 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_KILLER, RenderOptions2 } from "../rule";
-import { reducerForRegions, rendererForRegions, rendererForRegions2 } from "./regionsUtil";
+import { reducerForRegions, rendererForRegions2 } from "./regionsUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -58,57 +57,6 @@ export const killerRule: Rule<KillerState, KillerData> = {
     }
 
     return reducerForRegions(state, data, event, info, true);
-  },
-  render: (state, data, options) => {
-    const items: ReactElement[] = [];
-
-    const addRegion = (region: Region, i: number, color: string) => {
-      let smallestCell = region.cells[0];
-
-      for (const cell of region.cells) {
-        if (
-          cell.y < smallestCell.y ||
-          (cell.y === smallestCell.y && cell.x < smallestCell.x)
-        ) {
-          smallestCell = cell;
-        }
-      }
-
-      if (region.extraValue !== null) {
-        const textY =
-          options.margin + (smallestCell.y + 0.28) * options.cellSize;
-        const textX =
-          options.margin + (smallestCell.x + 0.28) * options.cellSize;
-        items.push(
-          <text
-            key={`killer-number-${i}`}
-            x={textX}
-            y={textY}
-            fontSize={options.cellSize * 0.25}
-            fill={color}
-            textAnchor="middle"
-            dominantBaseline="middle"
-          >
-            {region.extraValue}
-          </text>,
-        );
-      }
-    };
-
-    for (let i = 0; i < data.regions.length; ++i) {
-      const region = data.regions[i];
-      addRegion(region, i, i === state?.selectedRegionId ? "red" : "black");
-    }
-    if (state !== null && state.currentRegion) {
-      addRegion(state.currentRegion, -1, "rgb(255, 168, 168)");
-    }
-
-    const ret = rendererForRegions(state, data, options, null, PRIORITY_KILLER);
-    ret.push({
-      priority: PRIORITY_KILLER,
-      item: <g>{items}</g>,
-    });
-    return ret;
   },
   render2: (state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];

@@ -13,9 +13,6 @@ export const antiKnightRule: Rule<AntiKnightState, AntiKnightData> = {
   reducer: () => {
     return {};
   },
-  render: () => {
-    return [];
-  },
   render2: () => {
     return [];
   },

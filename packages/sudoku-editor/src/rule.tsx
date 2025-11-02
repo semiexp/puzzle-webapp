@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { EditorEvent, EditorEventType } from "./events";
 import { BoardData } from "./penpaExporter";
 
@@ -33,14 +32,6 @@ export interface Rule<State, Data> {
     state?: State;
     data?: Data;
   };
-  render: (
-    state: State | null,
-    data: Data,
-    options: RenderOptions,
-  ) => {
-    priority: number;
-    item: ReactElement;
-  }[];
   render2?: (
     state: State | null,
     data: Data,

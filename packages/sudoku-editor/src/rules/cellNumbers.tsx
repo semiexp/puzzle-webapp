@@ -1,6 +1,5 @@
-import { ReactElement } from "react";
 import { EditorEvent, EditorEventType } from "../events";
-import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions, RenderOptions2 } from "../rule";
+import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions2 } from "../rule";
 import { BoardItem } from "puzzle-board";
 
 export type CellNumbersState = {
@@ -96,75 +95,6 @@ export const cellNumbersRule = {
       }
     }
     return {};
-  },
-  render: (
-    state: CellNumbersState | null,
-    data: CellNumbersData,
-    options: RenderOptions,
-    textColor: string,
-    numberPriority: number,
-  ) => {
-    let background: ReactElement | undefined = undefined;
-
-    if (state !== null && state.selectedCell) {
-      const { x, y } = state.selectedCell;
-      const cellSize = options.cellSize;
-      const margin = options.margin;
-      const rectX = x * cellSize + margin;
-      const rectY = y * cellSize + margin;
-
-      background = (
-        <rect
-          x={rectX}
-          y={rectY}
-          width={cellSize}
-          height={cellSize}
-          fill="rgb(255, 216, 216)"
-        />
-      );
-    }
-
-    const foregroundItems = [];
-    for (let y = 0; y < data.numbers.length; y++) {
-      for (let x = 0; x < data.numbers[y].length; x++) {
-        const number = data.numbers[y][x];
-        if (number !== null) {
-          const cellSize = options.cellSize;
-          const margin = options.margin;
-          const rectX = x * cellSize + margin;
-          const rectY = y * cellSize + margin;
-
-          foregroundItems.push(
-            <text
-              key={`${y}-${x}`}
-              x={rectX + cellSize / 2}
-              y={rectY + cellSize / 2}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={cellSize * 0.7}
-              fill={textColor}
-              style={{ userSelect: "none" }}
-            >
-              {number}
-            </text>,
-          );
-        }
-      }
-    }
-
-    const items = [
-      {
-        priority: numberPriority,
-        item: <g>{foregroundItems}</g>,
-      },
-    ];
-    if (background) {
-      items.push({
-        priority: PRIORITY_SELECTED_CELL_MARKER,
-        item: <g>{background}</g>,
-      });
-    }
-    return items;
   },
   render2: (
     state: CellNumbersState | null,

@@ -84,49 +84,6 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
     }
     return {};
   },
-  render: (_state, data, options) => {
-    const backgroundItems = [];
-    for (let y = 0; y < data.horizontalBorder.length; ++y) {
-      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
-        if (data.horizontalBorder[y][x]) {
-          backgroundItems.push(
-            <line
-              key={`horizontal-${y}-${x}`}
-              x1={options.margin + options.cellSize * x}
-              y1={options.margin + options.cellSize * (y + 1)}
-              x2={options.margin + options.cellSize * (x + 1)}
-              y2={options.margin + options.cellSize * (y + 1)}
-              stroke="black"
-              strokeWidth={3}
-            />,
-          );
-        }
-      }
-    }
-    for (let y = 0; y < data.verticalBorder.length; ++y) {
-      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
-        if (data.verticalBorder[y][x]) {
-          backgroundItems.push(
-            <line
-              key={`vertical-${y}-${x}`}
-              x1={options.margin + options.cellSize * (x + 1)}
-              y1={options.margin + options.cellSize * y}
-              x2={options.margin + options.cellSize * (x + 1)}
-              y2={options.margin + options.cellSize * (y + 1)}
-              stroke="black"
-              strokeWidth={3}
-            />,
-          );
-        }
-      }
-    }
-    return [
-      {
-        priority: PRIORITY_BORDER,
-        item: <g>{backgroundItems}</g>,
-      },
-    ];
-  },
   render2: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 
