@@ -134,8 +134,8 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
       for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
         if (data.horizontalBorder[y][x]) {
           items.push({
-            y: (y + 1) * 2 + 2,
-            x: x * 2 + 3,
+            y: (y + 1) * 2,
+            x: x * 2 + 1,
             color: "black",
             item: "boldWall",
           });
@@ -147,8 +147,8 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
       for (let x = 0; x < data.verticalBorder[y].length; ++x) {
         if (data.verticalBorder[y][x]) {
           items.push({
-            y: y * 2 + 3,
-            x: (x + 1) * 2 + 2,
+            y: y * 2 + 1,
+            x: (x + 1) * 2,
             color: "black",
             item: "boldWall",
           });

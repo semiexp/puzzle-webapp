@@ -179,8 +179,8 @@ export const cellNumbersRule = {
       const { x, y } = state.selectedCell;
 
       items.push({
-        y: y * 2 + 3,
-        x: x * 2 + 3,
+        y: y * 2 + 1,
+        x: x * 2 + 1,
         color: "rgb(255, 216, 216)",
         item: "fill",
       });
@@ -191,8 +191,8 @@ export const cellNumbersRule = {
         const number = data.numbers[y][x];
         if (number !== null) {
           items.push({
-            y: y * 2 + 3,
-            x: x * 2 + 3,
+            y: y * 2 + 1,
+            x: x * 2 + 1,
             color: textColor,
             item: { kind: "text", data: String(number) },
           });

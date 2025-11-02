@@ -96,8 +96,8 @@ const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
   for (let y = 0; y < boardSize; ++y) {
     for (let x = 0; x <= boardSize; ++x) {
       ret.push({
-        y: y * 2 + 3,
-        x: x * 2 + 2,
+        y: y * 2 + 1,
+        x: x * 2,
         color: "black",
         item: (x === 0 || x === boardSize) ? "boldWall" : "wall",
       });
@@ -106,8 +106,8 @@ const defaultBorders2 = (options: RenderOptions2): BoardItem[] => {
   for (let y = 0; y <= boardSize; ++y) {
     for (let x = 0; x < boardSize; ++x) {
       ret.push({
-        y: y * 2 + 2,
-        x: x * 2 + 3,
+        y: y * 2,
+        x: x * 2 + 1,
         color: "black",
         item: (y === 0 || y === boardSize) ? "boldWall" : "wall",
       });
@@ -270,8 +270,8 @@ const autoSolverItems2 = (
         }
         if (hasMismatch) {
           items.push({
-            y: y * 2 + 3,
-            x: x * 2 + 3,
+            y: y * 2 + 1,
+            x: x * 2 + 1,
             color: "rgba(255, 0, 255, 0.3)",
             item: "fill",
           });
@@ -280,8 +280,8 @@ const autoSolverItems2 = (
       if (answer.decidedNumbers[y][x] !== null) {
         if (answerNum !== answer.decidedNumbers[y][x]) {
           items.push({
-            y: y * 2 + 3,
-            x: x * 2 + 3,
+            y: y * 2 + 1,
+            x: x * 2 + 1,
             color: "rgb(64, 128, 255)",
             item: { kind: "text", data: String(answer.decidedNumbers[y][x]) },
           });
@@ -297,8 +297,8 @@ const autoSolverItems2 = (
         if (candidateValues.length > 0) {
           const w = Math.ceil(Math.sqrt(size));
           items.push({
-            y: y * 2 + 3,
-            x: x * 2 + 3,
+            y: y * 2 + 1,
+            x: x * 2 + 1,
             color: "rgb(64, 128, 255)",
             item: { kind: "sudokuCandidateSet", size: w, values: candidateValues },
           });
@@ -633,11 +633,7 @@ export const Editor = (props: EditorProps) => {
     autoSolverAnswer,
     ruleState.selectedRuleIndex,
     ruleState.ruleState,
-    {
-      boardSize: size,
-      cellSize,
-      margin: margin - cellSize,
-    },
+    renderOptions,
   );
   const useNewRenderer = true;
 
