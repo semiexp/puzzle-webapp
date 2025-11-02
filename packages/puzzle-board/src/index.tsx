@@ -1,22 +1,21 @@
 import { ReactElement } from "react";
 
-export type MultipleAnswers = { common: Board, answers: Board[] };
+export type MultipleAnswers = { common: Board; answers: Board[] };
 export type Result = Board | MultipleAnswers;
 
-export type Board = 
-  | {
-    kind: "grid",
-    height: number,
-    width: number,
-    defaultStyle: "outer_grid" | "grid" | "dots",
-    data: {
-      y: number,
-      x: number,
-      color: string,
-      item: Item,
-    }[],
-    isUnique?: boolean,
-  };
+export type Board = {
+  kind: "grid";
+  height: number;
+  width: number;
+  defaultStyle: "outer_grid" | "grid" | "dots";
+  data: {
+    y: number;
+    x: number;
+    color: string;
+    item: Item;
+  }[];
+  isUnique?: boolean;
+};
 
 export type Item =
   | "dot"
@@ -69,25 +68,31 @@ export type Item =
   | "firewalkCellDr"
   | "firewalkCellUlDr"
   | "firewalkCellUrDl"
-  | { kind: "firefly", dot: "up" | "down" | "left" | "right", value: number }
-  | { kind: "text", data: string, pos?: string }
-  | { kind: "compass", up: number, down: number, left: number, right: number }
-  | { kind: "tapaClue", value: number[] }
-  | { kind: "sudokuCandidateSet", size: number, values: number[] }
-  | { kind: "lineTo", destY: number, destX: number };
+  | { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number }
+  | { kind: "text"; data: string; pos?: string }
+  | { kind: "compass"; up: number; down: number; left: number; right: number }
+  | { kind: "tapaClue"; value: number[] }
+  | { kind: "sudokuCandidateSet"; size: number; values: number[] }
+  | { kind: "lineTo"; destY: number; destX: number };
 
 type RenderEnv = {
-  offsetY: number,
-  offsetX: number,
-  unitSize: number,
+  offsetY: number;
+  offsetX: number;
+  unitSize: number;
 };
 
-function renderItem(env: RenderEnv, y: number, x: number, color: string, item: Item): ReactElement {
-  const isVertex = (y % 2 === 0 && x % 2 === 0);
-  const isCell = (y % 2 === 1 && x % 2 === 1);
+function renderItem(
+  env: RenderEnv,
+  y: number,
+  x: number,
+  color: string,
+  item: Item,
+): ReactElement {
+  const isVertex = y % 2 === 0 && x % 2 === 0;
+  const isCell = y % 2 === 1 && x % 2 === 1;
   const isEdge = !(isVertex || isCell);
 
-  const unitSize = isVertex ? (env.unitSize * 0.7) : env.unitSize;
+  const unitSize = isVertex ? env.unitSize * 0.7 : env.unitSize;
 
   if (typeof item !== "string" && item.kind === "lineTo") {
     const y1 = env.offsetY + env.unitSize * (y / 2);
@@ -95,25 +100,52 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
     const y2 = env.offsetY + env.unitSize * (item.destY / 2);
     const x2 = env.offsetX + env.unitSize * (item.destX / 2);
 
-    return <line x1={x1} y1={y1} x2={x2} y2={y2} strokeWidth={2} stroke={color} />;
+    return (
+      <line x1={x1} y1={y1} x2={x2} y2={y2} strokeWidth={2} stroke={color} />
+    );
   }
   if (isVertex || isCell) {
     const centerY = env.offsetY + env.unitSize * (y / 2);
     const centerX = env.offsetX + env.unitSize * (x / 2);
 
     if (item === "dot") {
-      return <rect x={centerX - unitSize * 0.1} y={centerY - unitSize * 0.1} width={unitSize * 0.2} height={unitSize * 0.2} fill={color} />;
+      return (
+        <rect
+          x={centerX - unitSize * 0.1}
+          y={centerY - unitSize * 0.1}
+          width={unitSize * 0.2}
+          height={unitSize * 0.2}
+          fill={color}
+        />
+      );
     } else if (item === "block") {
-      return <rect x={centerX - unitSize * 0.45} y={centerY - unitSize * 0.45} width={unitSize * 0.9} height={unitSize * 0.9} fill={color} />;
+      return (
+        <rect
+          x={centerX - unitSize * 0.45}
+          y={centerY - unitSize * 0.45}
+          width={unitSize * 0.9}
+          height={unitSize * 0.9}
+          fill={color}
+        />
+      );
     } else if (item === "square") {
-      return <rect x={centerX - unitSize * 0.3} y={centerY - unitSize * 0.3} width={unitSize * 0.6} height={unitSize * 0.6} stroke={color} fill="none" />;
+      return (
+        <rect
+          x={centerX - unitSize * 0.3}
+          y={centerY - unitSize * 0.3}
+          width={unitSize * 0.6}
+          height={unitSize * 0.6}
+          stroke={color}
+          fill="none"
+        />
+      );
     } else if (item === "triangle") {
-      let shape = [
+      const shape = [
         [0.2, 0.8],
         [0.5, 0.2],
         [0.8, 0.8],
       ];
-      let points: string[] = [];
+      const points: string[] = [];
       for (let i = 0; i < shape.length; ++i) {
         let dx = shape[i][0];
         let dy = shape[i][1];
@@ -123,20 +155,37 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
         dy = centerY + unitSize * (dy - 0.5);
         points.push(String(dx) + "," + String(dy));
       }
-      return <polygon points={points.join(" ")} stroke={color} fill="none" />
+      return <polygon points={points.join(" ")} stroke={color} fill="none" />;
     } else if (item === "fill") {
-      return <rect x={centerX - unitSize * 0.5} y={centerY - unitSize * 0.5} width={unitSize} height={unitSize} fill={color} />;
-    } else if (item === "sideArrowUp" || item === "sideArrowDown" || item === "sideArrowLeft" || item === "sideArrowRight" || item === "arrowUp" || item === "arrowDown" || item === "arrowLeft" || item === "arrowRight") {
-      let shape = [
+      return (
+        <rect
+          x={centerX - unitSize * 0.5}
+          y={centerY - unitSize * 0.5}
+          width={unitSize}
+          height={unitSize}
+          fill={color}
+        />
+      );
+    } else if (
+      item === "sideArrowUp" ||
+      item === "sideArrowDown" ||
+      item === "sideArrowLeft" ||
+      item === "sideArrowRight" ||
+      item === "arrowUp" ||
+      item === "arrowDown" ||
+      item === "arrowLeft" ||
+      item === "arrowRight"
+    ) {
+      const shape = [
         [0.1, 0.1],
         [0.5, 0.1],
         [0.5, 0.05],
         [0.9, 0.125],
         [0.5, 0.2],
         [0.5, 0.15],
-        [0.1, 0.15]
+        [0.1, 0.15],
       ];
-      let points: string[] = [];
+      const points: string[] = [];
       for (let i = 0; i < shape.length; ++i) {
         let dx = shape[i][0];
         let dy = shape[i][1];
@@ -145,11 +194,21 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
         if (item.startsWith("arrow")) {
           dy *= 4;
         }
-        if (item === "sideArrowLeft" || item === "sideArrowUp" || item === "arrowLeft" || item === "arrowUp") {
+        if (
+          item === "sideArrowLeft" ||
+          item === "sideArrowUp" ||
+          item === "arrowLeft" ||
+          item === "arrowUp"
+        ) {
           dx = 1 - dx;
         }
-        if (item === "sideArrowUp" || item === "sideArrowDown" || item === "arrowUp" || item === "arrowDown") {
-          let tmp = dx;
+        if (
+          item === "sideArrowUp" ||
+          item === "sideArrowDown" ||
+          item === "arrowUp" ||
+          item === "arrowDown"
+        ) {
+          const tmp = dx;
           dx = dy;
           dy = tmp;
         }
@@ -159,15 +218,39 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
         dy = centerY + unitSize * (dy - 0.5);
         points.push(String(dx) + "," + String(dy));
       }
-      return <polygon points={points.join(" ")} stroke="none" fill={color} />
+      return <polygon points={points.join(" ")} stroke="none" fill={color} />;
     } else if (item === "aboloUpperLeft") {
-      return <polygon points={aboloPoints(centerY, centerX, unitSize, 2)} stroke="none" fill={color} />;
+      return (
+        <polygon
+          points={aboloPoints(centerY, centerX, unitSize, 2)}
+          stroke="none"
+          fill={color}
+        />
+      );
     } else if (item === "aboloUpperRight") {
-      return <polygon points={aboloPoints(centerY, centerX, unitSize, 1)} stroke="none" fill={color} />;
+      return (
+        <polygon
+          points={aboloPoints(centerY, centerX, unitSize, 1)}
+          stroke="none"
+          fill={color}
+        />
+      );
     } else if (item === "aboloLowerLeft") {
-      return <polygon points={aboloPoints(centerY, centerX, unitSize, 3)} stroke="none" fill={color} />;
+      return (
+        <polygon
+          points={aboloPoints(centerY, centerX, unitSize, 3)}
+          stroke="none"
+          fill={color}
+        />
+      );
     } else if (item === "aboloLowerRight") {
-      return <polygon points={aboloPoints(centerY, centerX, unitSize, 0)} stroke="none" fill={color} />;
+      return (
+        <polygon
+          points={aboloPoints(centerY, centerX, unitSize, 0)}
+          stroke="none"
+          fill={color}
+        />
+      );
     } else if (item === "pencilLeft") {
       return pencilElement(centerY, centerX, unitSize, 3, color);
     } else if (item === "pencilRight") {
@@ -177,53 +260,195 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
     } else if (item === "pencilDown") {
       return pencilElement(centerY, centerX, unitSize, 2, color);
     } else if (item === "circle") {
-      return <circle cx={centerX} cy={centerY} r={unitSize * 0.4} stroke={color} fill="none" />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.4}
+          stroke={color}
+          fill="none"
+        />
+      );
     } else if (item === "filledCircle") {
-      return <circle cx={centerX} cy={centerY} r={unitSize * 0.4} stroke={color} fill={color} />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.4}
+          stroke={color}
+          fill={color}
+        />
+      );
     } else if (item === "dottedHorizontalWall") {
-      return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY} y2={centerY} strokeWidth={2} stroke={color} strokeDasharray="4 2" />
+      return (
+        <line
+          x1={centerX - unitSize / 2}
+          x2={centerX + unitSize / 2}
+          y1={centerY}
+          y2={centerY}
+          strokeWidth={2}
+          stroke={color}
+          strokeDasharray="4 2"
+        />
+      );
     } else if (item === "dottedVerticalWall") {
-      return <line x1={centerX} x2={centerX} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={2} stroke={color} strokeDasharray="4 2" />
+      return (
+        <line
+          x1={centerX}
+          x2={centerX}
+          y1={centerY - unitSize / 2}
+          y2={centerY + unitSize / 2}
+          strokeWidth={2}
+          stroke={color}
+          strokeDasharray="4 2"
+        />
+      );
     } else if (item === "slash") {
-      return <line x1={centerX + unitSize / 2} x2={centerX - unitSize / 2} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} />
+      return (
+        <line
+          x1={centerX + unitSize / 2}
+          x2={centerX - unitSize / 2}
+          y1={centerY - unitSize / 2}
+          y2={centerY + unitSize / 2}
+          strokeWidth={1}
+          stroke={color}
+        />
+      );
     } else if (item === "backslash") {
-      return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} />
+      return (
+        <line
+          x1={centerX - unitSize / 2}
+          x2={centerX + unitSize / 2}
+          y1={centerY - unitSize / 2}
+          y2={centerY + unitSize / 2}
+          strokeWidth={1}
+          stroke={color}
+        />
+      );
     } else if (item === "dottedSlash") {
-      return <line x1={centerX + unitSize / 2} x2={centerX - unitSize / 2} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} strokeDasharray="4 2" />
+      return (
+        <line
+          x1={centerX + unitSize / 2}
+          x2={centerX - unitSize / 2}
+          y1={centerY - unitSize / 2}
+          y2={centerY + unitSize / 2}
+          strokeWidth={1}
+          stroke={color}
+          strokeDasharray="4 2"
+        />
+      );
     } else if (item === "dottedBackslash") {
-      return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} strokeDasharray="4 2" />
+      return (
+        <line
+          x1={centerX - unitSize / 2}
+          x2={centerX + unitSize / 2}
+          y1={centerY - unitSize / 2}
+          y2={centerY + unitSize / 2}
+          strokeWidth={1}
+          stroke={color}
+          strokeDasharray="4 2"
+        />
+      );
     } else if (item === "plus") {
-      return <g>
-        <line x1={centerX - unitSize * 0.4} x2={centerX + unitSize * 0.4} y1={centerY} y2={centerY} strokeWidth={4} stroke={color} />
-        <line x1={centerX} x2={centerX} y1={centerY - unitSize * 0.4} y2={centerY + unitSize * 0.4} strokeWidth={4} stroke={color} />
-      </g>;
+      return (
+        <g>
+          <line
+            x1={centerX - unitSize * 0.4}
+            x2={centerX + unitSize * 0.4}
+            y1={centerY}
+            y2={centerY}
+            strokeWidth={4}
+            stroke={color}
+          />
+          <line
+            x1={centerX}
+            x2={centerX}
+            y1={centerY - unitSize * 0.4}
+            y2={centerY + unitSize * 0.4}
+            strokeWidth={4}
+            stroke={color}
+          />
+        </g>
+      );
     } else if (item === "smallCircle") {
-      return <circle cx={centerX} cy={centerY} r={env.unitSize * 0.1} stroke={color} fill="none" />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={env.unitSize * 0.1}
+          stroke={color}
+          fill="none"
+        />
+      );
     } else if (item === "smallFilledCircle") {
-      return <circle cx={centerX} cy={centerY} r={env.unitSize * 0.1} stroke={color} fill={color} />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={env.unitSize * 0.1}
+          stroke={color}
+          fill={color}
+        />
+      );
     } else if (typeof item === "string" && item.startsWith("firewalkCell")) {
-      let items = [];
+      const items = [];
 
-      items.push(<polygon
-        points={`${centerX - unitSize / 4},${centerY} ${centerX},${centerY - unitSize / 4} ${centerX + unitSize / 4},${centerY} ${centerX},${centerY + unitSize / 4}`}
-        fill="#ffe0e0"
-      />);
+      items.push(
+        <polygon
+          points={`${centerX - unitSize / 4},${centerY} ${centerX},${centerY - unitSize / 4} ${centerX + unitSize / 4},${centerY} ${centerX},${centerY + unitSize / 4}`}
+          fill="#ffe0e0"
+        />,
+      );
       if (item === "firewalkCellUl" || item === "firewalkCellUlDr") {
-        items.push(<line x1={centerX - unitSize / 4} x2={centerX} y1={centerY} y2={centerY - unitSize / 4} strokeWidth={2} stroke={color} />);
+        items.push(
+          <line
+            x1={centerX - unitSize / 4}
+            x2={centerX}
+            y1={centerY}
+            y2={centerY - unitSize / 4}
+            strokeWidth={2}
+            stroke={color}
+          />,
+        );
       }
       if (item === "firewalkCellUr" || item === "firewalkCellUrDl") {
-        items.push(<line x1={centerX + unitSize / 4} x2={centerX} y1={centerY} y2={centerY - unitSize / 4} strokeWidth={2} stroke={color} />);
+        items.push(
+          <line
+            x1={centerX + unitSize / 4}
+            x2={centerX}
+            y1={centerY}
+            y2={centerY - unitSize / 4}
+            strokeWidth={2}
+            stroke={color}
+          />,
+        );
       }
       if (item === "firewalkCellDl" || item === "firewalkCellUrDl") {
-        items.push(<line x1={centerX - unitSize / 4} x2={centerX} y1={centerY} y2={centerY + unitSize / 4} strokeWidth={2} stroke={color} />);
+        items.push(
+          <line
+            x1={centerX - unitSize / 4}
+            x2={centerX}
+            y1={centerY}
+            y2={centerY + unitSize / 4}
+            strokeWidth={2}
+            stroke={color}
+          />,
+        );
       }
       if (item === "firewalkCellDr" || item === "firewalkCellUlDr") {
-        items.push(<line x1={centerX + unitSize / 4} x2={centerX} y1={centerY} y2={centerY + unitSize / 4} strokeWidth={2} stroke={color} />);
+        items.push(
+          <line
+            x1={centerX + unitSize / 4}
+            x2={centerX}
+            y1={centerY}
+            y2={centerY + unitSize / 4}
+            strokeWidth={2}
+            stroke={color}
+          />,
+        );
       }
 
-      return <g>
-        {items}
-      </g>;
+      return <g>{items}</g>;
     } else if (typeof item === "string") {
       throw new Error("unsupported item: " + item);
     } else if ("kind" in item) {
@@ -244,29 +469,103 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
             xRatio = 0.25;
             yRatio = 0.25;
           }
-          return <text x={centerX + unitSize * xRatio} y={centerY + unitSize * yRatio} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.5 }} fill={color}>{item.data}</text>;
+          return (
+            <text
+              x={centerX + unitSize * xRatio}
+              y={centerY + unitSize * yRatio}
+              dominantBaseline="central"
+              textAnchor="middle"
+              style={{ fontSize: unitSize * 0.5 }}
+              fill={color}
+            >
+              {item.data}
+            </text>
+          );
         } else {
-          return <text x={centerX} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.8 }} fill={color}>{item.data}</text>;
+          return (
+            <text
+              x={centerX}
+              y={centerY}
+              dominantBaseline="central"
+              textAnchor="middle"
+              style={{ fontSize: unitSize * 0.8 }}
+              fill={color}
+            >
+              {item.data}
+            </text>
+          );
         }
       } else if (item.kind === "compass") {
-        return <g>
-          <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} />
-          <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY + unitSize / 2} y2={centerY - unitSize / 2} strokeWidth={1} stroke={color} />
-          {
-            item.up >= 0 && <text x={centerX} y={centerY - unitSize * 0.3} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.4 }} fill={color}>{item.up}</text>
-          }
-          {
-            item.down >= 0 && <text x={centerX} y={centerY + unitSize * 0.3} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.4 }} fill={color}>{item.down}</text>
-          }
-          {
-            item.left >= 0 && <text x={centerX - unitSize * 0.3} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.4 }} fill={color}>{item.left}</text>
-          }
-          {
-            item.right >= 0 && <text x={centerX + unitSize * 0.3} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.4 }} fill={color}>{item.right}</text>
-          }
-        </g>
+        return (
+          <g>
+            <line
+              x1={centerX - unitSize / 2}
+              x2={centerX + unitSize / 2}
+              y1={centerY - unitSize / 2}
+              y2={centerY + unitSize / 2}
+              strokeWidth={1}
+              stroke={color}
+            />
+            <line
+              x1={centerX - unitSize / 2}
+              x2={centerX + unitSize / 2}
+              y1={centerY + unitSize / 2}
+              y2={centerY - unitSize / 2}
+              strokeWidth={1}
+              stroke={color}
+            />
+            {item.up >= 0 && (
+              <text
+                x={centerX}
+                y={centerY - unitSize * 0.3}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.4 }}
+                fill={color}
+              >
+                {item.up}
+              </text>
+            )}
+            {item.down >= 0 && (
+              <text
+                x={centerX}
+                y={centerY + unitSize * 0.3}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.4 }}
+                fill={color}
+              >
+                {item.down}
+              </text>
+            )}
+            {item.left >= 0 && (
+              <text
+                x={centerX - unitSize * 0.3}
+                y={centerY}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.4 }}
+                fill={color}
+              >
+                {item.left}
+              </text>
+            )}
+            {item.right >= 0 && (
+              <text
+                x={centerX + unitSize * 0.3}
+                y={centerY}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.4 }}
+                fill={color}
+              >
+                {item.right}
+              </text>
+            )}
+          </g>
+        );
       } else if (item.kind === "tapaClue") {
-        let values: string[] = [];
+        const values: string[] = [];
         for (let i = 0; i < item.value.length; ++i) {
           if (item.value[i] === -2) {
             values.push("?");
@@ -275,39 +574,151 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
           }
         }
         if (values.length === 1) {
-          return <text x={centerX} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.8 }} fill={color}>{values[0]}</text>;
+          return (
+            <text
+              x={centerX}
+              y={centerY}
+              dominantBaseline="central"
+              textAnchor="middle"
+              style={{ fontSize: unitSize * 0.8 }}
+              fill={color}
+            >
+              {values[0]}
+            </text>
+          );
         } else if (values.length === 2) {
-          return <g>
-            <text x={centerX - unitSize * 0.2} y={centerY - unitSize * 0.2} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[0]}</text>
-            <text x={centerX + unitSize * 0.2} y={centerY + unitSize * 0.2} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[1]}</text>
-          </g>;
+          return (
+            <g>
+              <text
+                x={centerX - unitSize * 0.2}
+                y={centerY - unitSize * 0.2}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[0]}
+              </text>
+              <text
+                x={centerX + unitSize * 0.2}
+                y={centerY + unitSize * 0.2}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[1]}
+              </text>
+            </g>
+          );
         } else if (values.length === 3) {
-          return <g>
-            <text x={centerX - unitSize * 0.3} y={centerY - unitSize * 0.2} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[0]}</text>
-            <text x={centerX + unitSize * 0.3} y={centerY - unitSize * 0.2} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[1]}</text>
-            <text x={centerX} y={centerY + unitSize * 0.2} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[2]}</text>
-          </g>;
+          return (
+            <g>
+              <text
+                x={centerX - unitSize * 0.3}
+                y={centerY - unitSize * 0.2}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[0]}
+              </text>
+              <text
+                x={centerX + unitSize * 0.3}
+                y={centerY - unitSize * 0.2}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[1]}
+              </text>
+              <text
+                x={centerX}
+                y={centerY + unitSize * 0.2}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[2]}
+              </text>
+            </g>
+          );
         } else if (values.length === 4) {
-          return <g>
-            <text x={centerX - unitSize * 0.3} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[0]}</text>
-            <text x={centerX} y={centerY - unitSize * 0.25} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[1]}</text>
-            <text x={centerX} y={centerY + unitSize * 0.25} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[2]}</text>
-            <text x={centerX + unitSize * 0.3} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize * 0.6 }} fill={color}>{values[3]}</text>
-          </g>;
+          return (
+            <g>
+              <text
+                x={centerX - unitSize * 0.3}
+                y={centerY}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[0]}
+              </text>
+              <text
+                x={centerX}
+                y={centerY - unitSize * 0.25}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[1]}
+              </text>
+              <text
+                x={centerX}
+                y={centerY + unitSize * 0.25}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[2]}
+              </text>
+              <text
+                x={centerX + unitSize * 0.3}
+                y={centerY}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize * 0.6 }}
+                fill={color}
+              >
+                {values[3]}
+              </text>
+            </g>
+          );
         }
       } else if (item.kind === "sudokuCandidateSet") {
-        let items: ReactElement[] = [];
+        const items: ReactElement[] = [];
         for (let i = 0; i < item.values.length; ++i) {
           const n = item.values[i];
           const gx = (n - 1) % item.size;
           const gy = Math.floor((n - 1) / item.size);
-          const x = centerX - unitSize / 2 + (gx + 0.5) / item.size * unitSize;
-          const y = centerY - unitSize / 2 + (gy + 0.5) / item.size * unitSize;
-          items.push(<text x={x} y={y} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize / item.size }} fill={color}>{n}</text>);
+          const x =
+            centerX - unitSize / 2 + ((gx + 0.5) / item.size) * unitSize;
+          const y =
+            centerY - unitSize / 2 + ((gy + 0.5) / item.size) * unitSize;
+          items.push(
+            <text
+              x={x}
+              y={y}
+              dominantBaseline="central"
+              textAnchor="middle"
+              style={{ fontSize: unitSize / item.size }}
+              fill={color}
+            >
+              {n}
+            </text>,
+          );
         }
         return <g>{items}</g>;
       } else if (item.kind === "firefly") {
-        let x = centerX, y = centerY;
+        let x = centerX,
+          y = centerY;
         if (item.dot === "up") {
           y -= unitSize * 0.6;
         } else if (item.dot === "down") {
@@ -318,13 +729,36 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
           x += unitSize * 0.6;
         }
 
-        return <g>
-          <circle cx={centerX} cy={centerY} r={unitSize * 0.6} stroke={color} fill="white" />
-          <circle cx={x} cy={y} r={unitSize * 0.2} stroke={color} fill={color} />
-          { item.value >= 0 &&
-            <text x={centerX} y={centerY} dominantBaseline="central" textAnchor="middle" style={{ fontSize: unitSize }} fill={color}>{item.value}</text>
-          }
-        </g>
+        return (
+          <g>
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r={unitSize * 0.6}
+              stroke={color}
+              fill="white"
+            />
+            <circle
+              cx={x}
+              cy={y}
+              r={unitSize * 0.2}
+              stroke={color}
+              fill={color}
+            />
+            {item.value >= 0 && (
+              <text
+                x={centerX}
+                y={centerY}
+                dominantBaseline="central"
+                textAnchor="middle"
+                style={{ fontSize: unitSize }}
+                fill={color}
+              >
+                {item.value}
+              </text>
+            )}
+          </g>
+        );
       }
     }
     throw new Error("unsupported item: " + item);
@@ -334,59 +768,204 @@ function renderItem(env: RenderEnv, y: number, x: number, color: string, item: I
 
     if (item === "line") {
       if (y % 2 === 1) {
-        return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY} y2={centerY} strokeWidth={2} stroke={color} />;
+        return (
+          <line
+            x1={centerX - unitSize / 2}
+            x2={centerX + unitSize / 2}
+            y1={centerY}
+            y2={centerY}
+            strokeWidth={2}
+            stroke={color}
+          />
+        );
       } else {
-        return <line x1={centerX} x2={centerX} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={2} stroke={color} />;
+        return (
+          <line
+            x1={centerX}
+            x2={centerX}
+            y1={centerY - unitSize / 2}
+            y2={centerY + unitSize / 2}
+            strokeWidth={2}
+            stroke={color}
+          />
+        );
       }
     } else if (item === "dottedLine") {
       if (y % 2 === 1) {
-        return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY} y2={centerY} strokeWidth={2} stroke={color} strokeDasharray="4 2" />;
+        return (
+          <line
+            x1={centerX - unitSize / 2}
+            x2={centerX + unitSize / 2}
+            y1={centerY}
+            y2={centerY}
+            strokeWidth={2}
+            stroke={color}
+            strokeDasharray="4 2"
+          />
+        );
       } else {
-        return <line x1={centerX} x2={centerX} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={2} stroke={color} strokeDasharray="4 2" />;
+        return (
+          <line
+            x1={centerX}
+            x2={centerX}
+            y1={centerY - unitSize / 2}
+            y2={centerY + unitSize / 2}
+            strokeWidth={2}
+            stroke={color}
+            strokeDasharray="4 2"
+          />
+        );
       }
     } else if (item === "doubleLine") {
       if (y % 2 === 1) {
-        return <g>
-          <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY - unitSize / 10} y2={centerY - unitSize / 10} strokeWidth={2} stroke={color} />
-          <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY + unitSize / 10} y2={centerY + unitSize / 10} strokeWidth={2} stroke={color} />
-        </g>;
+        return (
+          <g>
+            <line
+              x1={centerX - unitSize / 2}
+              x2={centerX + unitSize / 2}
+              y1={centerY - unitSize / 10}
+              y2={centerY - unitSize / 10}
+              strokeWidth={2}
+              stroke={color}
+            />
+            <line
+              x1={centerX - unitSize / 2}
+              x2={centerX + unitSize / 2}
+              y1={centerY + unitSize / 10}
+              y2={centerY + unitSize / 10}
+              strokeWidth={2}
+              stroke={color}
+            />
+          </g>
+        );
       } else {
-        return <g>
-          <line x1={centerX - unitSize / 10} x2={centerX - unitSize / 10} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={2} stroke={color} />
-          <line x1={centerX + unitSize / 10} x2={centerX + unitSize / 10} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={2} stroke={color} />
-        </g>;
+        return (
+          <g>
+            <line
+              x1={centerX - unitSize / 10}
+              x2={centerX - unitSize / 10}
+              y1={centerY - unitSize / 2}
+              y2={centerY + unitSize / 2}
+              strokeWidth={2}
+              stroke={color}
+            />
+            <line
+              x1={centerX + unitSize / 10}
+              x2={centerX + unitSize / 10}
+              y1={centerY - unitSize / 2}
+              y2={centerY + unitSize / 2}
+              strokeWidth={2}
+              stroke={color}
+            />
+          </g>
+        );
       }
     } else if (item === "cross") {
       const crossSize = unitSize * 0.1;
-      return <g>
-        <line x1={centerX - crossSize} x2={centerX + crossSize} y1={centerY - crossSize} y2={centerY + crossSize} strokeWidth={1} stroke={color} />
-        <line x1={centerX + crossSize} x2={centerX - crossSize} y1={centerY - crossSize} y2={centerY + crossSize} strokeWidth={1} stroke={color} />
-      </g>
+      return (
+        <g>
+          <line
+            x1={centerX - crossSize}
+            x2={centerX + crossSize}
+            y1={centerY - crossSize}
+            y2={centerY + crossSize}
+            strokeWidth={1}
+            stroke={color}
+          />
+          <line
+            x1={centerX + crossSize}
+            x2={centerX - crossSize}
+            y1={centerY - crossSize}
+            y2={centerY + crossSize}
+            strokeWidth={1}
+            stroke={color}
+          />
+        </g>
+      );
     } else if (item === "wall" || item === "boldWall") {
-      const strokeWidth = (item === "boldWall" ? 2 : 1);
+      const strokeWidth = item === "boldWall" ? 2 : 1;
       if (y % 2 === 0) {
-        return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY} y2={centerY} strokeWidth={strokeWidth} stroke={color} />;
+        return (
+          <line
+            x1={centerX - unitSize / 2}
+            x2={centerX + unitSize / 2}
+            y1={centerY}
+            y2={centerY}
+            strokeWidth={strokeWidth}
+            stroke={color}
+          />
+        );
       } else {
-        return <line x1={centerX} x2={centerX} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={strokeWidth} stroke={color} />;
+        return (
+          <line
+            x1={centerX}
+            x2={centerX}
+            y1={centerY - unitSize / 2}
+            y2={centerY + unitSize / 2}
+            strokeWidth={strokeWidth}
+            stroke={color}
+          />
+        );
       }
     } else if (item === "dottedWall") {
       if (y % 2 === 0) {
-        return <line x1={centerX - unitSize / 2} x2={centerX + unitSize / 2} y1={centerY} y2={centerY} strokeWidth={1} stroke={color} strokeDasharray="4 2" />;
+        return (
+          <line
+            x1={centerX - unitSize / 2}
+            x2={centerX + unitSize / 2}
+            y1={centerY}
+            y2={centerY}
+            strokeWidth={1}
+            stroke={color}
+            strokeDasharray="4 2"
+          />
+        );
       } else {
-        return <line x1={centerX} x2={centerX} y1={centerY - unitSize / 2} y2={centerY + unitSize / 2} strokeWidth={1} stroke={color} strokeDasharray="4 2" />;
+        return (
+          <line
+            x1={centerX}
+            x2={centerX}
+            y1={centerY - unitSize / 2}
+            y2={centerY + unitSize / 2}
+            strokeWidth={1}
+            stroke={color}
+            strokeDasharray="4 2"
+          />
+        );
       }
     } else if (item === "smallCircle") {
-      return <circle cx={centerX} cy={centerY} r={unitSize * 0.1} stroke={color} fill="none" />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.1}
+          stroke={color}
+          fill="none"
+        />
+      );
     } else if (item === "smallFilledCircle") {
-      return <circle cx={centerX} cy={centerY} r={unitSize * 0.1} stroke={color} fill={color} />
+      return (
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={unitSize * 0.1}
+          stroke={color}
+          fill={color}
+        />
+      );
     }
     throw new Error("unsupported item: " + item);
   }
   throw new Error("items must be on either vertices, cells, or edges");
 }
 
-function aboloPoints(centerY: number, centerX: number, unitSize: number, skip: number): string {
-  let ret: string[] = [];
+function aboloPoints(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  skip: number,
+): string {
+  const ret: string[] = [];
   if (skip !== 0) {
     ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
   }
@@ -402,8 +981,13 @@ function aboloPoints(centerY: number, centerX: number, unitSize: number, skip: n
   return ret.join(" ");
 }
 
-function pencilPoints(centerY: number, centerX: number, unitSize: number, start: number): string {
-  let ret = [`${centerX},${centerY}`];
+function pencilPoints(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  start: number,
+): string {
+  const ret = [`${centerX},${centerY}`];
   if (start === 3 || start === 0) {
     ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
   }
@@ -419,14 +1003,33 @@ function pencilPoints(centerY: number, centerX: number, unitSize: number, start:
   return ret.join(" ");
 }
 
-function pencilElement(centerY: number, centerX: number, unitSize: number, start: number, color: string): ReactElement {
-  return <g>
-    <polygon points={pencilPoints(centerY, centerX, unitSize, start)} stroke={color} fill="none" />
-    <polygon points={pencilPoints(centerY, centerX, unitSize * 0.5, start)} stroke="none" fill={color} />
-  </g>;
+function pencilElement(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  start: number,
+  color: string,
+): ReactElement {
+  return (
+    <g>
+      <polygon
+        points={pencilPoints(centerY, centerX, unitSize, start)}
+        stroke={color}
+        fill="none"
+      />
+      <polygon
+        points={pencilPoints(centerY, centerX, unitSize * 0.5, start)}
+        stroke="none"
+        fill={color}
+      />
+    </g>
+  );
 }
 
-export function renderBoardItems(boards: Board[], config: { margin: number; unitSize: number; }): { svgHeight: number; svgWidth: number; component: ReactElement } {
+export function renderBoardItems(
+  boards: Board[],
+  config: { margin: number; unitSize: number },
+): { svgHeight: number; svgWidth: number; component: ReactElement } {
   const { margin, unitSize } = config;
 
   const env = {
@@ -451,18 +1054,72 @@ export function renderBoardItems(boards: Board[], config: { margin: number; unit
     widthMax = Math.max(widthMax, width);
 
     if (board.defaultStyle === "outer_grid") {
-      components.push(<line x1={margin} x2={margin + width * unitSize} y1={margin} y2={margin} strokeWidth={2} stroke="black" />);
-      components.push(<line x1={margin} x2={margin + width * unitSize} y1={margin + height * unitSize} y2={margin + height * unitSize} strokeWidth={2} stroke="black" />);
-      components.push(<line x1={margin} x2={margin} y1={margin} y2={margin + height * unitSize} strokeWidth={2} stroke="black" />);
-      components.push(<line x1={margin + width * unitSize} x2={margin + width * unitSize} y1={margin} y2={margin + height * unitSize} strokeWidth={2} stroke="black" />);
+      components.push(
+        <line
+          x1={margin}
+          x2={margin + width * unitSize}
+          y1={margin}
+          y2={margin}
+          strokeWidth={2}
+          stroke="black"
+        />,
+      );
+      components.push(
+        <line
+          x1={margin}
+          x2={margin + width * unitSize}
+          y1={margin + height * unitSize}
+          y2={margin + height * unitSize}
+          strokeWidth={2}
+          stroke="black"
+        />,
+      );
+      components.push(
+        <line
+          x1={margin}
+          x2={margin}
+          y1={margin}
+          y2={margin + height * unitSize}
+          strokeWidth={2}
+          stroke="black"
+        />,
+      );
+      components.push(
+        <line
+          x1={margin + width * unitSize}
+          x2={margin + width * unitSize}
+          y1={margin}
+          y2={margin + height * unitSize}
+          strokeWidth={2}
+          stroke="black"
+        />,
+      );
     } else if (board.defaultStyle === "grid") {
       for (let y = 0; y <= height; ++y) {
-        const lineWidth = (y === 0 || y === height) ? 2 : 1;
-        components.push(<line x1={margin} x2={margin + width * unitSize} y1={margin + y * unitSize} y2={margin + y * unitSize} strokeWidth={lineWidth} stroke="black" />);
+        const lineWidth = y === 0 || y === height ? 2 : 1;
+        components.push(
+          <line
+            x1={margin}
+            x2={margin + width * unitSize}
+            y1={margin + y * unitSize}
+            y2={margin + y * unitSize}
+            strokeWidth={lineWidth}
+            stroke="black"
+          />,
+        );
       }
       for (let x = 0; x <= width; ++x) {
-        const lineWidth = (x === 0 || x === width) ? 2 : 1;
-        components.push(<line x1={margin + x * unitSize} x2={margin + x * unitSize} y1={margin} y2={margin + height * unitSize} strokeWidth={lineWidth} stroke="black" />);
+        const lineWidth = x === 0 || x === width ? 2 : 1;
+        components.push(
+          <line
+            x1={margin + x * unitSize}
+            x2={margin + x * unitSize}
+            y1={margin}
+            y2={margin + height * unitSize}
+            strokeWidth={lineWidth}
+            stroke="black"
+          />,
+        );
       }
     } else if (board.defaultStyle === "dots") {
       const dotSizeHalf = unitSize / 10;
@@ -470,7 +1127,15 @@ export function renderBoardItems(boards: Board[], config: { margin: number; unit
         for (let x = 0; x <= width; ++x) {
           const centerY = env.offsetY + unitSize * y;
           const centerX = env.offsetX + unitSize * x;
-          components.push(<rect x={centerX - dotSizeHalf} y={centerY - dotSizeHalf} height={dotSizeHalf * 2} width={dotSizeHalf * 2} fill="black" />);
+          components.push(
+            <rect
+              x={centerX - dotSizeHalf}
+              y={centerY - dotSizeHalf}
+              height={dotSizeHalf * 2}
+              width={dotSizeHalf * 2}
+              fill="black"
+            />,
+          );
         }
       }
     }
@@ -479,11 +1144,7 @@ export function renderBoardItems(boards: Board[], config: { margin: number; unit
   const svgHeight = heightMax * unitSize + margin * 2;
   const svgWidth = widthMax * unitSize + margin * 2;
 
-  const component = (
-    <g>
-    {components}
-    </g>
-  );
+  const component = <g>{components}</g>;
 
   return { svgHeight, svgWidth, component };
 }
