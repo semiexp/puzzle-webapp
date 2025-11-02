@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
-import { Rule, PRIORITY_CONSECUTIVE } from "../rule";
+import { Rule, PRIORITY_CONSECUTIVE, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type ConsecutiveState = object;
 
@@ -116,6 +117,42 @@ export const consecutiveRule: Rule<ConsecutiveState, ConsecutiveData> = {
       {
         priority: PRIORITY_CONSECUTIVE,
         item: <g>{items}</g>,
+      },
+    ];
+  },
+  render2: (_state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    for (let y = 0; y < data.horizontalBorder.length; ++y) {
+      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
+        if (data.horizontalBorder[y][x]) {
+          items.push({
+            y: (y + 1) * 2,
+            x: x * 2 + 1,
+            color: "rgb(192, 192, 192)",
+            item: "bar",
+          });
+        }
+      }
+    }
+
+    for (let y = 0; y < data.verticalBorder.length; ++y) {
+      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
+        if (data.verticalBorder[y][x]) {
+          items.push({
+            y: y * 2 + 1,
+            x: (x + 1) * 2,
+            color: "rgb(192, 192, 192)",
+            item: "bar",
+          });
+        }
+      }
+    }
+
+    return [
+      {
+        priority: PRIORITY_CONSECUTIVE,
+        item: items,
       },
     ];
   },

@@ -56,6 +56,7 @@ export type Item =
   | "wall"
   | "boldWall"
   | "dottedWall"
+  | "bar"
   | "slash"
   | "backslash"
   | "dottedSlash"
@@ -933,6 +934,34 @@ function renderItem(
             strokeWidth={1}
             stroke={color}
             strokeDasharray="4 2"
+          />
+        );
+      }
+    } else if (item === "bar") {
+      if (y % 2 === 0) {
+        // horizontal bar
+        return (
+          <rect
+            x={centerX - unitSize * 0.3}
+            y={centerY - unitSize * 0.1}
+            width={unitSize * 0.6}
+            height={unitSize * 0.2}
+            fill={color}
+            stroke="black"
+            strokeWidth={1}
+          />
+        );
+      } else {
+        // vertical bar
+        return (
+          <rect
+            x={centerX - unitSize * 0.1}
+            y={centerY - unitSize * 0.3}
+            width={unitSize * 0.2}
+            height={unitSize * 0.6}
+            fill={color}
+            stroke="black"
+            strokeWidth={1}
           />
         );
       }
