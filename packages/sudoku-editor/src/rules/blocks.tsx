@@ -1,5 +1,6 @@
-import { Rule, PRIORITY_BORDER } from "../rule";
+import { Rule, PRIORITY_BORDER, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type BlocksState = object;
 
@@ -123,6 +124,42 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
       {
         priority: PRIORITY_BORDER,
         item: <g>{backgroundItems}</g>,
+      },
+    ];
+  },
+  render2: (_state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+
+    for (let y = 0; y < data.horizontalBorder.length; ++y) {
+      for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
+        if (data.horizontalBorder[y][x]) {
+          items.push({
+            y: (y + 1) * 2 + 2,
+            x: x * 2 + 3,
+            color: "black",
+            item: "boldWall",
+          });
+        }
+      }
+    }
+
+    for (let y = 0; y < data.verticalBorder.length; ++y) {
+      for (let x = 0; x < data.verticalBorder[y].length; ++x) {
+        if (data.verticalBorder[y][x]) {
+          items.push({
+            y: y * 2 + 3,
+            x: (x + 1) * 2 + 2,
+            color: "black",
+            item: "boldWall",
+          });
+        }
+      }
+    }
+
+    return [
+      {
+        priority: PRIORITY_BORDER,
+        item: items,
       },
     ];
   },
