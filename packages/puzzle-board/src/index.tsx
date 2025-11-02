@@ -8,13 +8,15 @@ export type Board = {
   height: number;
   width: number;
   defaultStyle: "outer_grid" | "grid" | "dots";
-  data: {
-    y: number;
-    x: number;
-    color: string;
-    item: Item;
-  }[];
+  data: BoardItem[];
   isUnique?: boolean;
+};
+
+export type BoardItem = {
+  y: number;
+  x: number;
+  color: string;
+  item: Item;
 };
 
 export type Item =
