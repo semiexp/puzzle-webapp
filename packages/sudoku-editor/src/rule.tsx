@@ -3,12 +3,6 @@ import { BoardData } from "./penpaExporter";
 
 import { BoardItem } from "puzzle-board";
 
-export type RenderOptions = {
-  boardSize: number;
-  cellSize: number;
-  margin: number;
-};
-
 export type RenderOptions2 = {
   boardSize: number;
 };

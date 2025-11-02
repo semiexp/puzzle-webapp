@@ -10,7 +10,7 @@ import {
   handleMouseUp,
   useKeyDown,
 } from "./events";
-import { RenderOptions, RenderOptions2, Rule } from "./rule";
+import { RenderOptions2, Rule } from "./rule";
 import { allRules } from "./rules/rules";
 import { solve } from "./solver";
 import { Answer, Problem, defaultProblem } from "./puzzle";
@@ -347,7 +347,7 @@ const render2 = (
   autoSolverAnswer: Answer,
   selectedRuleIndex: number,
   ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  options: RenderOptions,
+  options: { boardSize: number; cellSize: number; margin: number; },
 ): ReactElement[] => {
   const renderResults: { priority: number; item: BoardItem[] }[] = [];
 
