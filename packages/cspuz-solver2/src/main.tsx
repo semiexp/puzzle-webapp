@@ -5,8 +5,8 @@ import "./i18n";
 
 import "./main.css";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PuzzleSolver />
   </StrictMode>,
-)
+);

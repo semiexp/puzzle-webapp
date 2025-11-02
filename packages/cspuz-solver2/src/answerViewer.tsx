@@ -1,16 +1,25 @@
-import { ReactElement, useEffect, useState} from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Board, MultipleAnswers, Result, renderBoardItems } from "puzzle-board";
 
 type AnswerViewerProps = {
-  result: Result,    
+  result: Result;
 };
 
 function renderBoard(boards: Board[]): ReactElement {
-  const { svgHeight, svgWidth, component } = renderBoardItems(boards, { margin: 30, unitSize: 30 });
+  const { svgHeight, svgWidth, component } = renderBoardItems(boards, {
+    margin: 30,
+    unitSize: 30,
+  });
 
-  return <svg height={svgHeight} width={svgWidth} style={{backgroundColor: "#ffffff"}}>
-    {component}
-  </svg>;
+  return (
+    <svg
+      height={svgHeight}
+      width={svgWidth}
+      style={{ backgroundColor: "#ffffff" }}
+    >
+      {component}
+    </svg>
+  );
 }
 
 const MultipleAnswerViewer = (result: MultipleAnswers) => {
@@ -18,20 +27,38 @@ const MultipleAnswerViewer = (result: MultipleAnswers) => {
   useEffect(() => setPos(0), [result]);
 
   let numAnswers = result.answers.length;
-  return <div>
+  return (
     <div>
-      <input type="button" value="<<" onClick={() => setPos(0)} disabled={pos == 0} />
-      <input type="button" value="<" onClick={() => setPos(pos - 1)} disabled={pos == 0} />
-      <input type="button" value=">" onClick={() => setPos(pos + 1)} disabled={pos + 1 >= numAnswers} />
-      <input type="button" value=">>" onClick={() => setPos(numAnswers - 1)} disabled={pos + 1 >= numAnswers} />
-      <span>
-        {` ${pos + 1} / ${result.answers.length}`}
-      </span>
+      <div>
+        <input
+          type="button"
+          value="<<"
+          onClick={() => setPos(0)}
+          disabled={pos == 0}
+        />
+        <input
+          type="button"
+          value="<"
+          onClick={() => setPos(pos - 1)}
+          disabled={pos == 0}
+        />
+        <input
+          type="button"
+          value=">"
+          onClick={() => setPos(pos + 1)}
+          disabled={pos + 1 >= numAnswers}
+        />
+        <input
+          type="button"
+          value=">>"
+          onClick={() => setPos(numAnswers - 1)}
+          disabled={pos + 1 >= numAnswers}
+        />
+        <span>{` ${pos + 1} / ${result.answers.length}`}</span>
+      </div>
+      {renderBoard([result.answers[pos], result.common])}
     </div>
-    {
-      renderBoard([result.answers[pos], result.common])
-    }
-  </div>;
+  );
 };
 
 export const AnswerViewer = (props: AnswerViewerProps) => {

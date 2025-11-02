@@ -6,6 +6,8 @@ settings:
 
 importers:
 
+  .: {}
+
   packages/cspuz-solver2:
     dependencies:
       '@emotion/react':
@@ -60,6 +62,9 @@ importers:
       globals:
         specifier: ^15.11.0
         version: 15.15.0
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
       typescript:
         specifier: ~5.6.2
         version: 5.6.3

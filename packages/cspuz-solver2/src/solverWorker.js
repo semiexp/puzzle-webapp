@@ -17,8 +17,14 @@ function solveProblem(data) {
   }
   Solver._free(buf);
 
-  const length = Solver.HEAPU8[ans] | (Solver.HEAPU8[ans + 1] << 8) | (Solver.HEAPU8[ans + 2] << 16) | (Solver.HEAPU8[ans + 3] << 24);
-  const resultStr = new TextDecoder().decode(Solver.HEAPU8.slice(ans + 4, ans + 4 + length));
+  const length =
+    Solver.HEAPU8[ans] |
+    (Solver.HEAPU8[ans + 1] << 8) |
+    (Solver.HEAPU8[ans + 2] << 16) |
+    (Solver.HEAPU8[ans + 3] << 24);
+  const resultStr = new TextDecoder().decode(
+    Solver.HEAPU8.slice(ans + 4, ans + 4 + length),
+  );
   const result = JSON.parse(resultStr.substring(0, resultStr.length));
 
   self.postMessage(result["description"]);
@@ -29,13 +35,13 @@ self.onmessage = function (e) {
   if (Solver) {
     solveProblem(data);
   } else {
-    Module().then(mod => {
+    Module().then((mod) => {
       Solver = mod;
       solveProblem(data);
     });
   }
 };
 
-Module().then(mod => {
+Module().then((mod) => {
   Solver = mod;
 });
