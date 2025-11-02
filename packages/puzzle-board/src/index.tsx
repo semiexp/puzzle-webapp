@@ -426,9 +426,8 @@ function pencilElement(centerY: number, centerX: number, unitSize: number, start
   </g>;
 }
 
-export function renderBoard(boards: Board[]): ReactElement {
-  const margin = 30;
-  const unitSize = 30; 
+export function renderBoardItems(boards: Board[], config: { margin: number; unitSize: number; }): { svgHeight: number; svgWidth: number; component: ReactElement } {
+  const { margin, unitSize } = config;
 
   const env = {
     offsetY: margin,
@@ -480,9 +479,11 @@ export function renderBoard(boards: Board[]): ReactElement {
   const svgHeight = heightMax * unitSize + margin * 2;
   const svgWidth = widthMax * unitSize + margin * 2;
 
-  return <svg height={svgHeight} width={svgWidth} style={{backgroundColor: "#ffffff"}}>
+  const component = (
     <g>
     {components}
     </g>
-  </svg>;
+  );
+
+  return { svgHeight, svgWidth, component };
 }
