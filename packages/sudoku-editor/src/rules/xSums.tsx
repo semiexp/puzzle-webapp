@@ -53,7 +53,7 @@ export const xSumsRule: Rule<xSumsState, xSumsData> = {
     }
     return reducerForOutsideCell(state, event, info);
   },
-  render2: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
     const backgroundItems: BoardItem[] = [];
 

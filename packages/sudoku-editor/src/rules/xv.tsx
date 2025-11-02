@@ -74,7 +74,7 @@ export const xvRule: Rule<XVState, XVData> = {
     }
     return {};
   },
-  render2: (_state, data, _options: RenderOptions2) => {
+  render: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.horizontalBorder.length; ++y) {

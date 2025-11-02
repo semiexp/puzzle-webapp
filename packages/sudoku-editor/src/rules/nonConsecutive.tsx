@@ -14,7 +14,7 @@ export const nonConsecutiveRule: Rule<NonConsecutiveState, NonConsecutiveData> =
     reducer: () => {
       return {};
     },
-    render2: () => {
+    render: () => {
       return [];
     },
     exportToPenpa: () => {

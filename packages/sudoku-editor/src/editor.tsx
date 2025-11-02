@@ -362,11 +362,11 @@ const render2 = (
       continue;
     }
 
-    if (rule.render2 === undefined) {
+    if (rule.render === undefined) {
       continue;
     }
 
-    const renderResult = rule.render2(state, data, options);
+    const renderResult = rule.render(state, data, options);
     renderResults.push(...renderResult);
   }
 

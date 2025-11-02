@@ -53,7 +53,7 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
     }
     return reducerForOutsideCell(state, event, info);
   },
-  render2: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
     const backgroundItems: BoardItem[] = [];
 

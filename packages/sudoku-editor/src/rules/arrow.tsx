@@ -23,7 +23,7 @@ export const arrowRule: Rule<ArrowState, ArrowData> = {
   reducer: (state, data, event, info) => {
     return reducerForLines(state, data, "currentArrow", "arrows", event, info);
   },
-  render2: (state, data, _options: RenderOptions2) => {
+  render: (state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 
     const addArrow = (arrow: Arrow, color: string) => {

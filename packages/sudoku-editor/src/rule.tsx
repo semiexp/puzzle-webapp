@@ -32,7 +32,7 @@ export interface Rule<State, Data> {
     state?: State;
     data?: Data;
   };
-  render2?: (
+  render?: (
     state: State | null,
     data: Data,
     options: RenderOptions2,

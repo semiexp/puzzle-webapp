@@ -13,7 +13,7 @@ export const antiKnightRule: Rule<AntiKnightState, AntiKnightData> = {
   reducer: () => {
     return {};
   },
-  render2: () => {
+  render: () => {
     return [];
   },
   exportToPenpa: () => {

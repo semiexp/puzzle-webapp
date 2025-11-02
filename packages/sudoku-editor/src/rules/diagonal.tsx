@@ -20,7 +20,7 @@ export const diagonalRule: Rule<DiagonalState, DiagonalData> = {
   reducer: () => {
     return {};
   },
-  render2: (_state, data, options: RenderOptions2) => {
+  render: (_state, data, options: RenderOptions2) => {
     const items: BoardItem[] = [];
 
     const { boardSize } = options;

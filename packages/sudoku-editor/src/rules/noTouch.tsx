@@ -13,7 +13,7 @@ export const noTouchRule: Rule<NoTouchState, NoTouchData> = {
   reducer: () => {
     return {};
   },
-  render2: () => {
+  render: () => {
     return [];
   },
   exportToPenpa: () => {

@@ -33,7 +33,7 @@ export const oddEvenRule: Rule<OddEvenState, OddEvenData> = {
     }
     return {};
   },
-  render2: (_state, data, _options: RenderOptions2) => {
+  render: (_state, data, _options: RenderOptions2) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.cellKind.length; ++y) {

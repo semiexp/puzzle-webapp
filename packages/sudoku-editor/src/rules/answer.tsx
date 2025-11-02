@@ -11,7 +11,7 @@ export const answerRule: Rule<CellNumbersState, CellNumbersData> = {
   initialData: cellNumbersRule.initialData,
   eventTypes: cellNumbersRule.eventTypes,
   reducer: cellNumbersRule.reducer,
-  render2: (state, data, options) =>
+  render: (state, data, options) =>
     cellNumbersRule.render2(
       state,
       data,

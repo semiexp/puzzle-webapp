@@ -28,7 +28,7 @@ export const extraRegionsRule: Rule<ExtraRegionsState, ExtraRegionsData> = {
   reducer: (state, data, event, info) => {
     return reducerForRegions(state, data, event, info, true, info.boardSize);
   },
-  render2: (state, data, options: RenderOptions2) => {
+  render: (state, data, options: RenderOptions2) => {
     return rendererForRegions2(
       state,
       data,
