@@ -432,7 +432,7 @@ export const Editor = (props: EditorProps) => {
     cellSize: cellSize,
     margin: margin,
   };
-  const renderResults2 = render(
+  const renderResults = render(
     problem,
     autoSolverAnswer,
     ruleState.selectedRuleIndex,
@@ -667,7 +667,7 @@ export const Editor = (props: EditorProps) => {
               userSelect: "none",
             }}
           >
-            {renderResults2}
+            {renderResults}
           </svg>
         </Box>
         <Box sx={{ height: svgContainerHeight, width: "100%" }}>
