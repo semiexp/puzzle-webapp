@@ -90,8 +90,9 @@ function renderItem(
   color: string,
   item: Item,
 ): ReactElement {
-  const isVertex = y % 2 === 0 && x % 2 === 0;
-  const isCell = y % 2 === 1 && x % 2 === 1;
+  // "x % 2 === 0" cannot be used because x, y can be negative
+  const isVertex = (y & 1) === 0 && (x & 1) === 0;
+  const isCell = (y & 1) === 1 && (x & 1) === 1;
   const isEdge = !(isVertex || isCell);
 
   const unitSize = isVertex ? env.unitSize * 0.7 : env.unitSize;

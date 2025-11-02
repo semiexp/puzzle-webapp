@@ -2,8 +2,10 @@ import {
   Rule,
   PRIORITY_SELECTED_CELL_MARKER,
   PRIORITY_SKYSCRAPERS_NUMBERS,
+  RenderOptions2,
 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 import { SelectedOutsiceCell, reducerForOutsideCell } from "./outsideUtil";
 
@@ -144,6 +146,86 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
     });
 
     return items;
+  },
+  render2: (state, data, _options: RenderOptions2) => {
+    const items: BoardItem[] = [];
+    const backgroundItems: BoardItem[] = [];
+
+    if (state !== null && state?.selectedOutsideCell !== null) {
+      const side = state.selectedOutsideCell.side;
+      const pos = state.selectedOutsideCell.pos;
+
+      const x =
+        side === "left" ? -1 : side === "right" ? data.left.length : pos;
+      const y = side === "up" ? -1 : side === "down" ? data.up.length : pos;
+
+      backgroundItems.push({
+        y: y * 2 + 1,
+        x: x * 2 + 1,
+        color: "rgba(255, 216, 216)",
+        item: "fill",
+      });
+    }
+
+    for (let i = 0; i < data.up.length; ++i) {
+      if (data.up[i] !== null) {
+        items.push({
+          y: -1 * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.up[i]) },
+        });
+      }
+    }
+
+    for (let i = 0; i < data.down.length; ++i) {
+      if (data.down[i] !== null) {
+        items.push({
+          y: data.down.length * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.down[i]) },
+        });
+      }
+    }
+
+    for (let i = 0; i < data.left.length; ++i) {
+      if (data.left[i] !== null) {
+        items.push({
+          y: i * 2 + 1,
+          x: -1 * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.left[i]) },
+        });
+      }
+    }
+
+    for (let i = 0; i < data.right.length; ++i) {
+      if (data.right[i] !== null) {
+        items.push({
+          y: i * 2 + 1,
+          x: data.right.length * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.right[i]) },
+        });
+      }
+    }
+
+    const result = [
+      {
+        priority: PRIORITY_SKYSCRAPERS_NUMBERS,
+        item: items,
+      },
+    ];
+
+    if (backgroundItems.length > 0) {
+      result.push({
+        priority: PRIORITY_SELECTED_CELL_MARKER,
+        item: backgroundItems,
+      });
+    }
+
+    return result;
   },
   exportToPenpa: (data) => {
     const items: Item[] = [];
