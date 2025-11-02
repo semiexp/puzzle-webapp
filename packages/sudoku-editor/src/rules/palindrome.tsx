@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_PALINDROME, RenderOptions2 } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";

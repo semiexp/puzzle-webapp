@@ -1,7 +1,5 @@
-import { ReactElement } from "react";
-
 import { EditorEvent } from "../events";
-import { ReducerInfo, RenderOptions, RenderOptions2 } from "../rule";
+import { ReducerInfo, RenderOptions2 } from "../rule";
 import { BoardItem } from "puzzle-board";
 
 type Pos = { x: number; y: number };
@@ -162,13 +160,6 @@ export const reducerForRegions = <
 
   return {};
 };
-
-const neighbors = [
-  { y: -1, x: 0 },
-  { y: 1, x: 0 },
-  { y: 0, x: -1 },
-  { y: 0, x: 1 },
-];
 
 export const rendererForRegions2 = <
   T,

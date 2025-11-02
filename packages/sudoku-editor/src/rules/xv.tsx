@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_XV, RenderOptions2 } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
