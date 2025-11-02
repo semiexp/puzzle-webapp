@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_CONSECUTIVE, RenderOptions } from "../rule";
+import { Rule, PRIORITY_CONSECUTIVE } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -73,7 +73,7 @@ export const consecutiveRule: Rule<ConsecutiveState, ConsecutiveData> = {
     }
     return {};
   },
-  render: (_state, data, _options: RenderOptions) => {
+  render: (_state, data) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.horizontalBorder.length; ++y) {

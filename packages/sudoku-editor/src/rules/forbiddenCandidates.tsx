@@ -2,7 +2,6 @@ import {
   Rule,
   PRIORITY_FORBIDDEN_CANDIDATES,
   PRIORITY_SELECTED_CELL_MARKER,
-  RenderOptions,
 } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -99,7 +98,7 @@ export const forbiddenCandidatesRule: Rule<
 
     return {};
   },
-  render: (state, data, _options: RenderOptions) => {
+  render: (state, data) => {
     const items: BoardItem[] = [];
     const backgroundItems: BoardItem[] = [];
 

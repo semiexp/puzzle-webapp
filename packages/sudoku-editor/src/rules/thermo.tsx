@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_THERMO, RenderOptions } from "../rule";
+import { Rule, PRIORITY_THERMO } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
@@ -30,7 +30,7 @@ export const thermoRule: Rule<ThermoState, ThermoData> = {
       info,
     );
   },
-  render: (state, data, _options: RenderOptions) => {
+  render: (state, data) => {
     const items: BoardItem[] = [];
 
     const addThermo = (thermo: Thermo, color: string) => {

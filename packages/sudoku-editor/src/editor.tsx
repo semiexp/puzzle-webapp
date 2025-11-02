@@ -84,11 +84,7 @@ const defaultBorders = (options: RenderOptions): BoardItem[] => {
   return ret;
 };
 
-const autoSolverItems = (
-  problem: Problem,
-  answer: Answer,
-  _options: RenderOptions,
-): BoardItem[] => {
+const autoSolverItems = (problem: Problem, answer: Answer): BoardItem[] => {
   if (answer === null) {
     return [];
   }
@@ -386,9 +382,7 @@ const render = (
   });
   renderResults.push({
     priority: 100,
-    item: autoSolverItems(problem, autoSolverAnswer, {
-      boardSize: problem.size,
-    }),
+    item: autoSolverItems(problem, autoSolverAnswer),
   });
 
   renderResults.sort((a, b) => a.priority - b.priority);

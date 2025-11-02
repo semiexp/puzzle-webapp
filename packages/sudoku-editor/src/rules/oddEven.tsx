@@ -1,4 +1,4 @@
-import { Rule, PRIORITY_ODD_EVEN, RenderOptions } from "../rule";
+import { Rule, PRIORITY_ODD_EVEN } from "../rule";
 import { Item } from "../penpaExporter";
 import { BoardItem } from "puzzle-board";
 
@@ -33,7 +33,7 @@ export const oddEvenRule: Rule<OddEvenState, OddEvenData> = {
     }
     return {};
   },
-  render: (_state, data, _options: RenderOptions) => {
+  render: (_state, data) => {
     const items: BoardItem[] = [];
 
     for (let y = 0; y < data.cellKind.length; ++y) {
