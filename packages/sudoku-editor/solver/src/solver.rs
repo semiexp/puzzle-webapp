@@ -2,8 +2,9 @@ use serde::Serialize;
 
 use crate::puzzle::{
     Arrow, Blocks, Consecutive, Diagonal, ExtraRegions, ForbiddenCandidates, GivenNumbers, Killer,
-    NonConsecutive, OddEven, Palindrome, Puzzle, Skyscrapers, Thermo, XSums, ODDEVEN_EVEN,
-    ODDEVEN_NO_CONSTRAINT, ODDEVEN_ODD, XV, XV_NO_CONSTRAINT, XV_V, XV_X,
+    Kropki, NonConsecutive, OddEven, Palindrome, Puzzle, Skyscrapers, Thermo, XSums, KROPKI_BLACK,
+    KROPKI_NO_CONSTRAINT, KROPKI_WHITE, ODDEVEN_EVEN, ODDEVEN_NO_CONSTRAINT, ODDEVEN_ODD, XV,
+    XV_NO_CONSTRAINT, XV_V, XV_X,
 };
 
 use cspuz_rs::complex_constraints::sum_all_different;
@@ -154,6 +155,10 @@ fn add_constraints(
 
     if puzzle.no_touch.is_some() {
         add_no_touch_constraints(solver, nums, config);
+    }
+
+    if let Some(kropki) = &puzzle.kropki {
+        add_kropki_constraints(solver, nums, kropki, config);
     }
 }
 
@@ -701,6 +706,82 @@ fn add_no_touch_constraints(solver: &mut Solver, nums: &IntVarArray2D, _config: 
                     }
                     solver.add_expr(nums.at((y, x)).ne(nums.at((ny as usize, nx as usize))));
                 }
+            }
+        }
+    }
+}
+
+fn add_kropki_constraints(
+    solver: &mut Solver,
+    nums: &IntVarArray2D,
+    kropki: &Kropki,
+    _config: SolverConfig,
+) {
+    let (h, w) = nums.shape();
+    assert_eq!(h, w);
+
+    // Check horizontal borders (between vertically adjacent cells)
+    assert_eq!(kropki.horizontal.len(), h - 1);
+    for y in 0..(h - 1) {
+        assert_eq!(kropki.horizontal[y].len(), w);
+
+        for x in 0..w {
+            let kind = kropki.horizontal[y][x];
+            let a = &nums.at((y, x));
+            let b = &nums.at((y + 1, x));
+
+            match kind {
+                KROPKI_NO_CONSTRAINT => {
+                    if kropki.all_shown {
+                        // No dot means neither white nor black constraint applies
+                        // White: |a - b| = 1
+                        solver.add_expr(!(a.eq(b - 1) | a.eq(b + 1)));
+                        // Black: a = 2*b or b = 2*a
+                        solver.add_expr(!(a.eq(b + b) | b.eq(a + a)));
+                    }
+                }
+                KROPKI_WHITE => {
+                    // White dot: |a - b| = 1
+                    solver.add_expr(a.eq(b - 1) | a.eq(b + 1));
+                }
+                KROPKI_BLACK => {
+                    // Black dot: one is twice the other
+                    solver.add_expr(a.eq(b + b) | b.eq(a + a));
+                }
+                _ => panic!("Invalid Kropki constraint value"),
+            }
+        }
+    }
+
+    // Check vertical borders (between horizontally adjacent cells)
+    assert_eq!(kropki.vertical.len(), h);
+    for y in 0..h {
+        assert_eq!(kropki.vertical[y].len(), w - 1);
+
+        for x in 0..(w - 1) {
+            let kind = kropki.vertical[y][x];
+            let a = &nums.at((y, x));
+            let b = &nums.at((y, x + 1));
+
+            match kind {
+                KROPKI_NO_CONSTRAINT => {
+                    if kropki.all_shown {
+                        // No dot means neither white nor black constraint applies
+                        // White: |a - b| = 1
+                        solver.add_expr(!(a.eq(b - 1) | a.eq(b + 1)));
+                        // Black: a = 2*b or b = 2*a
+                        solver.add_expr(!(a.eq(b + b) | b.eq(a + a)));
+                    }
+                }
+                KROPKI_WHITE => {
+                    // White dot: |a - b| = 1
+                    solver.add_expr(a.eq(b - 1) | a.eq(b + 1));
+                }
+                KROPKI_BLACK => {
+                    // Black dot: one is twice the other
+                    solver.add_expr(a.eq(b + b) | b.eq(a + a));
+                }
+                _ => panic!("Invalid Kropki constraint value"),
             }
         }
     }

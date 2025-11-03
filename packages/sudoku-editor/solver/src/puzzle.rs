@@ -54,6 +54,9 @@ pub struct Puzzle {
 
     #[serde(rename = "noTouch")]
     pub no_touch: Option<NoTouch>,
+
+    #[serde(rename = "kropki")]
+    pub kropki: Option<Kropki>,
 }
 
 #[derive(Debug, Clone, Deserialize, Default)]
@@ -185,6 +188,18 @@ pub struct AntiKnight {}
 #[derive(Debug, Clone, Deserialize)]
 pub struct NoTouch {}
 
+#[derive(Debug, Clone, Deserialize)]
+pub struct Kropki {
+    #[serde(rename = "horizontalBorder")]
+    pub horizontal: Vec<Vec<i32>>,
+
+    #[serde(rename = "verticalBorder")]
+    pub vertical: Vec<Vec<i32>>,
+
+    #[serde(rename = "allShown")]
+    pub all_shown: bool,
+}
+
 pub const ODDEVEN_NO_CONSTRAINT: i32 = 0;
 pub const ODDEVEN_ODD: i32 = 1;
 pub const ODDEVEN_EVEN: i32 = 2;
@@ -192,3 +207,7 @@ pub const ODDEVEN_EVEN: i32 = 2;
 pub const XV_NO_CONSTRAINT: i32 = 0;
 pub const XV_X: i32 = 1;
 pub const XV_V: i32 = 2;
+
+pub const KROPKI_NO_CONSTRAINT: i32 = 0;
+pub const KROPKI_WHITE: i32 = 1;
+pub const KROPKI_BLACK: i32 = 2;
