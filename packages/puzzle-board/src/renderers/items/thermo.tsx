@@ -5,7 +5,8 @@ export function renderThermoItem(
   spec: ItemRenderingSpec,
   item: ThermoItem,
 ): ReactElement {
-  const { globalOffsetX, globalOffsetY, centerX, centerY, color, unitSize } = spec;
+  const { globalOffsetX, globalOffsetY, centerX, centerY, color, unitSize } =
+    spec;
 
   const elements: ReactElement[] = [];
 

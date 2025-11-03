@@ -5,7 +5,8 @@ export function renderArrowItem(
   spec: ItemRenderingSpec,
   item: ArrowItem,
 ): ReactElement {
-  const { globalOffsetX, globalOffsetY, centerX, centerY, unitSize, color } = spec;
+  const { globalOffsetX, globalOffsetY, centerX, centerY, unitSize, color } =
+    spec;
 
   const elements: ReactElement[] = [];
 

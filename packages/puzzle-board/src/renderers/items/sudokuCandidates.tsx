@@ -1,5 +1,9 @@
 import { ReactElement } from "react";
-import { ItemRenderingSpec, SudokuCandidateSetItem, SudokuForbiddenCandidateMarkerItem } from "../../types";
+import {
+  ItemRenderingSpec,
+  SudokuCandidateSetItem,
+  SudokuForbiddenCandidateMarkerItem,
+} from "../../types";
 
 export function renderSudokuCandidateSetItem(
   spec: ItemRenderingSpec,

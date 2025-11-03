@@ -28,13 +28,7 @@ export function renderFireflyItem(
         stroke={color}
         fill="white"
       />
-      <circle
-        cx={x}
-        cy={y}
-        r={unitSize * 0.2}
-        stroke={color}
-        fill={color}
-      />
+      <circle cx={x} cy={y} r={unitSize * 0.2} stroke={color} fill={color} />
       {item.value >= 0 && (
         <text
           x={centerX}

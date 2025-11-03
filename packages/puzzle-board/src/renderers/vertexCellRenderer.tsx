@@ -6,7 +6,10 @@ import { renderCompassItem } from "./items/compass";
 import { renderTapaClueItem } from "./items/tapaClue";
 import { renderThermoItem } from "./items/thermo";
 import { renderRegionBorderItem } from "./items/regionBorder";
-import { renderSudokuCandidateSetItem, renderSudokuForbiddenCandidateMarkerItem } from "./items/sudokuCandidates";
+import {
+  renderSudokuCandidateSetItem,
+  renderSudokuForbiddenCandidateMarkerItem,
+} from "./items/sudokuCandidates";
 import { renderFireflyItem } from "./items/firefly";
 import { renderTextItem } from "./items/text";
 

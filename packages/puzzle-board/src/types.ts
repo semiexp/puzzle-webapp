@@ -91,18 +91,38 @@ export type TapaClueItem = {
   value: number[];
 };
 
-export type FireflyItem = { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number };
+export type FireflyItem = {
+  kind: "firefly";
+  dot: "up" | "down" | "left" | "right";
+  value: number;
+};
 
 export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
 
 export type ArrowItem = { kind: "arrow"; cells: { y: number; x: number }[] };
 
-export type RegionBorderItem = { kind: "regionBorder"; cells: { y: number; x: number }[] };
+export type RegionBorderItem = {
+  kind: "regionBorder";
+  cells: { y: number; x: number }[];
+};
 
-export type SudokuCandidateSetItem = { kind: "sudokuCandidateSet"; size: number; values: number[] };
-export type SudokuForbiddenCandidateMarkerItem = { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] };
+export type SudokuCandidateSetItem = {
+  kind: "sudokuCandidateSet";
+  size: number;
+  values: number[];
+};
+export type SudokuForbiddenCandidateMarkerItem = {
+  kind: "sudokuForbiddenCandidateMarker";
+  size: number;
+  values: number[];
+};
 
-export type TextItem = { kind: "text"; data: string; pos?: string; size?: number };
+export type TextItem = {
+  kind: "text";
+  data: string;
+  pos?: string;
+  size?: number;
+};
 
 export type RenderEnv = {
   offsetY: number;
