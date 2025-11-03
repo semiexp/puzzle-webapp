@@ -559,10 +559,8 @@ export function renderVertexCellItem(
         const n = item.values[i];
         const gx = (n - 1) % item.size;
         const gy = Math.floor((n - 1) / item.size);
-        const x =
-          centerX - unitSize / 2 + ((gx + 0.5) / item.size) * unitSize;
-        const y =
-          centerY - unitSize / 2 + ((gy + 0.5) / item.size) * unitSize;
+        const x = centerX - unitSize / 2 + ((gx + 0.5) / item.size) * unitSize;
+        const y = centerY - unitSize / 2 + ((gy + 0.5) / item.size) * unitSize;
         items.push(
           <text
             x={x}
@@ -583,10 +581,8 @@ export function renderVertexCellItem(
         const n = item.values[i];
         const gx = (n - 1) % item.size;
         const gy = Math.floor((n - 1) / item.size);
-        const x =
-          centerX - unitSize / 2 + ((gx + 0.5) / item.size) * unitSize;
-        const y =
-          centerY - unitSize / 2 + ((gy + 0.5) / item.size) * unitSize;
+        const x = centerX - unitSize / 2 + ((gx + 0.5) / item.size) * unitSize;
+        const y = centerY - unitSize / 2 + ((gy + 0.5) / item.size) * unitSize;
 
         // Draw the number
         items.push(
@@ -886,7 +882,6 @@ export function renderVertexCellItem(
   }
   throw new Error("unsupported item: " + item);
 }
-
 
 function aboloPoints(
   centerY: number,

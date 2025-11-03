@@ -78,7 +78,13 @@ export type Item =
   | { kind: "arrow"; cells: { y: number; x: number }[] }
   | { kind: "regionBorder"; cells: { y: number; x: number }[] };
 
-export type CompassItem = { kind: "compass"; up: number; down: number; left: number; right: number };
+export type CompassItem = {
+  kind: "compass";
+  up: number;
+  down: number;
+  left: number;
+  right: number;
+};
 
 export type RenderEnv = {
   offsetY: number;
