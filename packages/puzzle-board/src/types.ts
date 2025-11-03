@@ -68,7 +68,7 @@ export type Item =
   | "firewalkCellUlDr"
   | "firewalkCellUrDl"
   | FireflyItem
-  | { kind: "text"; data: string; pos?: string; size?: number }
+  | TextItem
   | CompassItem
   | TapaClueItem
   | SudokuCandidateSetItem
@@ -101,6 +101,8 @@ export type RegionBorderItem = { kind: "regionBorder"; cells: { y: number; x: nu
 
 export type SudokuCandidateSetItem = { kind: "sudokuCandidateSet"; size: number; values: number[] };
 export type SudokuForbiddenCandidateMarkerItem = { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] };
+
+export type TextItem = { kind: "text"; data: string; pos?: string; size?: number };
 
 export type RenderEnv = {
   offsetY: number;

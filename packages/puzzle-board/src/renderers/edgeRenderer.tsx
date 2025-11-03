@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
-import { Item, RenderEnv } from "../types";
+import { Item, ItemRenderingSpec, RenderEnv } from "../types";
+
+import { renderTextItem } from "./items/text";
 
 export function renderEdgeItem(
   env: RenderEnv,
@@ -258,19 +260,18 @@ export function renderEdgeItem(
       />
     );
   } else if (typeof item !== "string" && item.kind === "text") {
-    const sizeMultiplier = item.size !== undefined ? item.size : 1.0;
-    return (
-      <text
-        x={centerX}
-        y={centerY}
-        dominantBaseline="central"
-        textAnchor="middle"
-        style={{ fontSize: unitSize * 0.8 * sizeMultiplier }}
-        fill={color}
-      >
-        {item.data}
-      </text>
-    );
+    const spec: ItemRenderingSpec = {
+      globalOffsetY: env.offsetY,
+      globalOffsetX: env.offsetX,
+      y,
+      x,
+      centerY,
+      centerX,
+      unitSize,
+      color,
+    };
+
+    return renderTextItem(spec, item);
   }
   throw new Error("unsupported item: " + item);
 }

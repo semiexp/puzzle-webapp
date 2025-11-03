@@ -8,6 +8,7 @@ import { renderThermoItem } from "./items/thermo";
 import { renderRegionBorderItem } from "./items/regionBorder";
 import { renderSudokuCandidateSetItem, renderSudokuForbiddenCandidateMarkerItem } from "./items/sudokuCandidates";
 import { renderFireflyItem } from "./items/firefly";
+import { renderTextItem } from "./items/text";
 
 export function renderVertexCellItem(
   env: RenderEnv,
@@ -388,49 +389,7 @@ export function renderVertexCellItem(
     throw new Error("unsupported item: " + item);
   } else if ("kind" in item) {
     if (item.kind === "text") {
-      const sizeMultiplier = item.size !== undefined ? item.size : 1.0;
-      if (item.pos) {
-        let xRatio = 0;
-        let yRatio = 0;
-        if (item.pos === "upperLeft") {
-          xRatio = -0.25;
-          yRatio = -0.25;
-        } else if (item.pos === "upperRight") {
-          xRatio = 0.25;
-          yRatio = -0.25;
-        } else if (item.pos === "lowerLeft") {
-          xRatio = -0.25;
-          yRatio = 0.25;
-        } else if (item.pos === "lowerRight") {
-          xRatio = 0.25;
-          yRatio = 0.25;
-        }
-        return (
-          <text
-            x={centerX + unitSize * xRatio}
-            y={centerY + unitSize * yRatio}
-            dominantBaseline="central"
-            textAnchor="middle"
-            style={{ fontSize: unitSize * 0.5 * sizeMultiplier }}
-            fill={color}
-          >
-            {item.data}
-          </text>
-        );
-      } else {
-        return (
-          <text
-            x={centerX}
-            y={centerY}
-            dominantBaseline="central"
-            textAnchor="middle"
-            style={{ fontSize: unitSize * 0.8 * sizeMultiplier }}
-            fill={color}
-          >
-            {item.data}
-          </text>
-        );
-      }
+      return renderTextItem(spec, item);
     } else if (item.kind === "compass") {
       return renderCompassItem(spec, item);
     } else if (item.kind === "tapaClue") {
