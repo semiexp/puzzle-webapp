@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Item, RenderEnv } from "../index";
+import { Item, RenderEnv } from "../types";
 
 export function renderEdgeItem(
   env: RenderEnv,
