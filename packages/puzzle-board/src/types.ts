@@ -76,7 +76,7 @@ export type Item =
   | { kind: "lineTo"; destY: number; destX: number }
   | ThermoItem
   | ArrowItem
-  | { kind: "regionBorder"; cells: { y: number; x: number }[] };
+  | RegionBorderItem;
 
 export type CompassItem = {
   kind: "compass";
@@ -94,6 +94,8 @@ export type TapaClueItem = {
 export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
 
 export type ArrowItem = { kind: "arrow"; cells: { y: number; x: number }[] };
+
+export type RegionBorderItem = { kind: "regionBorder"; cells: { y: number; x: number }[] };
 
 export type RenderEnv = {
   offsetY: number;

@@ -5,6 +5,7 @@ import { renderArrowItem } from "./items/arrow";
 import { renderCompassItem } from "./items/compass";
 import { renderTapaClueItem } from "./items/tapaClue";
 import { renderThermoItem } from "./items/thermo";
+import { renderRegionBorderItem } from "./items/regionBorder";
 
 export function renderVertexCellItem(
   env: RenderEnv,
@@ -552,59 +553,7 @@ export function renderVertexCellItem(
     } else if (item.kind === "arrow") {
       return renderArrowItem(spec, item);
     } else if (item.kind === "regionBorder") {
-      const elements: ReactElement[] = [];
-
-      const neighbors = [
-        { y: -2, x: 0 },
-        { y: 2, x: 0 },
-        { y: 0, x: -2 },
-        { y: 0, x: 2 },
-      ];
-
-      // For each cell in the region
-      for (const cell of item.cells) {
-        // Check each neighbor direction
-        for (const neighbor of neighbors) {
-          const neighborY = cell.y + neighbor.y;
-          const neighborX = cell.x + neighbor.x;
-
-          // Check if the neighbor cell is part of the region
-          const hasNeighbor = item.cells.some(
-            (c) => c.y === neighborY && c.x === neighborX,
-          );
-
-          if (!hasNeighbor) {
-            // Draw a dotted line between the cell and the neighbor
-            const cellCenterY = env.offsetY + env.unitSize * (cell.y / 2);
-            const cellCenterX = env.offsetX + env.unitSize * (cell.x / 2);
-
-            const midY = cellCenterY + (neighbor.y / 2) * env.unitSize * 0.4;
-            const midX = cellCenterX + (neighbor.x / 2) * env.unitSize * 0.4;
-
-            const startY = midY + (neighbor.x / 2) * 0.4 * env.unitSize;
-            const startX = midX + (neighbor.y / 2) * 0.4 * env.unitSize;
-            const endY = midY - (neighbor.x / 2) * 0.4 * env.unitSize;
-            const endX = midX - (neighbor.y / 2) * 0.4 * env.unitSize;
-
-            const strokeDasharray = `${(env.unitSize * 0.8) / 6},${(env.unitSize * 0.8) / 9}`;
-
-            elements.push(
-              <line
-                key={`border-${cell.y}-${cell.x}-${neighborY}-${neighborX}`}
-                x1={startX}
-                y1={startY}
-                x2={endX}
-                y2={endY}
-                stroke={color}
-                strokeWidth={1}
-                strokeDasharray={strokeDasharray}
-              />,
-            );
-          }
-        }
-      }
-
-      return <g>{elements}</g>;
+      return renderRegionBorderItem(spec, item);
     }
   }
   throw new Error("unsupported item: " + item);
