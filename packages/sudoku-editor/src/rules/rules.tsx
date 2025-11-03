@@ -18,6 +18,7 @@ import { palindromeRule } from "./palindrome";
 import { forbiddenCandidatesRule } from "./forbiddenCandidates";
 import { antiKnightRule } from "./antiKnight";
 import { noTouchRule } from "./noTouch";
+import { kropkiRule } from "./kropki";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const allRules: Rule<any, any>[] = [
@@ -31,6 +32,7 @@ export const allRules: Rule<any, any>[] = [
   consecutiveRule,
   nonConsecutiveRule,
   xvRule,
+  kropkiRule,
   arrowRule,
   thermoRule,
   killerRule,
