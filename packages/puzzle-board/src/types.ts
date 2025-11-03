@@ -70,7 +70,7 @@ export type Item =
   | { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number }
   | { kind: "text"; data: string; pos?: string; size?: number }
   | CompassItem
-  | { kind: "tapaClue"; value: number[] }
+  | TapaClueItem
   | { kind: "sudokuCandidateSet"; size: number; values: number[] }
   | { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] }
   | { kind: "lineTo"; destY: number; destX: number }
@@ -84,6 +84,11 @@ export type CompassItem = {
   down: number;
   left: number;
   right: number;
+};
+
+export type TapaClueItem = {
+  kind: "tapaClue";
+  value: number[];
 };
 
 export type RenderEnv = {

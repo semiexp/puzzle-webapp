@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import { Item, ItemRenderingSpec, RenderEnv } from "../types";
 
 import { renderCompassItem } from "./items/compass";
+import { renderTapaClueItem } from "./items/tapaClue";
 
 export function renderVertexCellItem(
   env: RenderEnv,
@@ -426,133 +427,7 @@ export function renderVertexCellItem(
     } else if (item.kind === "compass") {
       return renderCompassItem(spec, item);
     } else if (item.kind === "tapaClue") {
-      const values: string[] = [];
-      for (let i = 0; i < item.value.length; ++i) {
-        if (item.value[i] === -2) {
-          values.push("?");
-        } else if (item.value[i] !== -1) {
-          values.push(item.value[i] + "");
-        }
-      }
-      if (values.length === 1) {
-        return (
-          <text
-            x={centerX}
-            y={centerY}
-            dominantBaseline="central"
-            textAnchor="middle"
-            style={{ fontSize: unitSize * 0.8 }}
-            fill={color}
-          >
-            {values[0]}
-          </text>
-        );
-      } else if (values.length === 2) {
-        return (
-          <g>
-            <text
-              x={centerX - unitSize * 0.2}
-              y={centerY - unitSize * 0.2}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[0]}
-            </text>
-            <text
-              x={centerX + unitSize * 0.2}
-              y={centerY + unitSize * 0.2}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[1]}
-            </text>
-          </g>
-        );
-      } else if (values.length === 3) {
-        return (
-          <g>
-            <text
-              x={centerX - unitSize * 0.3}
-              y={centerY - unitSize * 0.2}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[0]}
-            </text>
-            <text
-              x={centerX + unitSize * 0.3}
-              y={centerY - unitSize * 0.2}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[1]}
-            </text>
-            <text
-              x={centerX}
-              y={centerY + unitSize * 0.2}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[2]}
-            </text>
-          </g>
-        );
-      } else if (values.length === 4) {
-        return (
-          <g>
-            <text
-              x={centerX - unitSize * 0.3}
-              y={centerY}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[0]}
-            </text>
-            <text
-              x={centerX}
-              y={centerY - unitSize * 0.25}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[1]}
-            </text>
-            <text
-              x={centerX}
-              y={centerY + unitSize * 0.25}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[2]}
-            </text>
-            <text
-              x={centerX + unitSize * 0.3}
-              y={centerY}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.6 }}
-              fill={color}
-            >
-              {values[3]}
-            </text>
-          </g>
-        );
-      }
+      return renderTapaClueItem(spec, item);
     } else if (item.kind === "sudokuCandidateSet") {
       const items: ReactElement[] = [];
       for (let i = 0; i < item.values.length; ++i) {
