@@ -1,0 +1,482 @@
+import { ReactElement } from "react";
+import { Item, ItemRenderingSpec, RenderEnv } from "../types";
+
+import { renderArrowItem } from "./items/arrow";
+import { renderCompassItem } from "./items/compass";
+import { renderTapaClueItem } from "./items/tapaClue";
+import { renderThermoItem } from "./items/thermo";
+import { renderRegionBorderItem } from "./items/regionBorder";
+import {
+  renderSudokuCandidateSetItem,
+  renderSudokuForbiddenCandidateMarkerItem,
+} from "./items/sudokuCandidates";
+import { renderFireflyItem } from "./items/firefly";
+import { renderTextItem } from "./items/text";
+
+export function renderVertexCellItem(
+  env: RenderEnv,
+  y: number,
+  x: number,
+  color: string,
+  item: Item,
+): ReactElement {
+  const isVertex = (y & 1) === 0 && (x & 1) === 0;
+  const unitSize = isVertex ? env.unitSize * 0.7 : env.unitSize;
+
+  const centerY = env.offsetY + env.unitSize * (y / 2);
+  const centerX = env.offsetX + env.unitSize * (x / 2);
+
+  const spec: ItemRenderingSpec = {
+    globalOffsetY: env.offsetY,
+    globalOffsetX: env.offsetX,
+    y,
+    x,
+    centerY,
+    centerX,
+    unitSize,
+    color,
+  };
+
+  if (item === "dot") {
+    return (
+      <rect
+        x={centerX - unitSize * 0.1}
+        y={centerY - unitSize * 0.1}
+        width={unitSize * 0.2}
+        height={unitSize * 0.2}
+        fill={color}
+      />
+    );
+  } else if (item === "block") {
+    return (
+      <rect
+        x={centerX - unitSize * 0.4}
+        y={centerY - unitSize * 0.4}
+        width={unitSize * 0.8}
+        height={unitSize * 0.8}
+        fill={color}
+      />
+    );
+  } else if (item === "square") {
+    return (
+      <rect
+        x={centerX - unitSize * 0.3}
+        y={centerY - unitSize * 0.3}
+        width={unitSize * 0.6}
+        height={unitSize * 0.6}
+        stroke={color}
+        fill="none"
+      />
+    );
+  } else if (item === "triangle") {
+    const shape = [
+      [0.2, 0.8],
+      [0.5, 0.2],
+      [0.8, 0.8],
+    ];
+    const points: string[] = [];
+    for (let i = 0; i < shape.length; ++i) {
+      let dx = shape[i][0];
+      let dy = shape[i][1];
+
+      // adjust to the cell
+      dx = centerX + unitSize * (dx - 0.5);
+      dy = centerY + unitSize * (dy - 0.5);
+      points.push(String(dx) + "," + String(dy));
+    }
+    return <polygon points={points.join(" ")} stroke={color} fill="none" />;
+  } else if (item === "fill") {
+    return (
+      <rect
+        x={centerX - unitSize * 0.5}
+        y={centerY - unitSize * 0.5}
+        width={unitSize}
+        height={unitSize}
+        fill={color}
+      />
+    );
+  } else if (
+    item === "sideArrowUp" ||
+    item === "sideArrowDown" ||
+    item === "sideArrowLeft" ||
+    item === "sideArrowRight" ||
+    item === "arrowUp" ||
+    item === "arrowDown" ||
+    item === "arrowLeft" ||
+    item === "arrowRight"
+  ) {
+    const shape = [
+      [0.1, 0.1],
+      [0.5, 0.1],
+      [0.5, 0.05],
+      [0.9, 0.125],
+      [0.5, 0.2],
+      [0.5, 0.15],
+      [0.1, 0.15],
+    ];
+    const points: string[] = [];
+    for (let i = 0; i < shape.length; ++i) {
+      let dx = shape[i][0];
+      let dy = shape[i][1];
+
+      // transform
+      if (item.startsWith("arrow")) {
+        dy *= 4;
+      }
+      if (
+        item === "sideArrowLeft" ||
+        item === "sideArrowUp" ||
+        item === "arrowLeft" ||
+        item === "arrowUp"
+      ) {
+        dx = 1 - dx;
+      }
+      if (
+        item === "sideArrowUp" ||
+        item === "sideArrowDown" ||
+        item === "arrowUp" ||
+        item === "arrowDown"
+      ) {
+        const tmp = dx;
+        dx = dy;
+        dy = tmp;
+      }
+
+      // adjust to the cell
+      dx = centerX + unitSize * (dx - 0.5);
+      dy = centerY + unitSize * (dy - 0.5);
+      points.push(String(dx) + "," + String(dy));
+    }
+    return <polygon points={points.join(" ")} stroke="none" fill={color} />;
+  } else if (item === "aboloUpperLeft") {
+    return (
+      <polygon
+        points={aboloPoints(centerY, centerX, unitSize, 2)}
+        stroke="none"
+        fill={color}
+      />
+    );
+  } else if (item === "aboloUpperRight") {
+    return (
+      <polygon
+        points={aboloPoints(centerY, centerX, unitSize, 1)}
+        stroke="none"
+        fill={color}
+      />
+    );
+  } else if (item === "aboloLowerLeft") {
+    return (
+      <polygon
+        points={aboloPoints(centerY, centerX, unitSize, 3)}
+        stroke="none"
+        fill={color}
+      />
+    );
+  } else if (item === "aboloLowerRight") {
+    return (
+      <polygon
+        points={aboloPoints(centerY, centerX, unitSize, 0)}
+        stroke="none"
+        fill={color}
+      />
+    );
+  } else if (item === "pencilLeft") {
+    return pencilElement(centerY, centerX, unitSize, 3, color);
+  } else if (item === "pencilRight") {
+    return pencilElement(centerY, centerX, unitSize, 1, color);
+  } else if (item === "pencilUp") {
+    return pencilElement(centerY, centerX, unitSize, 0, color);
+  } else if (item === "pencilDown") {
+    return pencilElement(centerY, centerX, unitSize, 2, color);
+  } else if (item === "circle") {
+    return (
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={unitSize * 0.4}
+        stroke={color}
+        fill="none"
+      />
+    );
+  } else if (item === "filledCircle") {
+    return (
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={unitSize * 0.4}
+        stroke={color}
+        fill={color}
+      />
+    );
+  } else if (item === "dottedHorizontalWall") {
+    return (
+      <line
+        x1={centerX - unitSize / 2}
+        x2={centerX + unitSize / 2}
+        y1={centerY}
+        y2={centerY}
+        strokeWidth={2}
+        stroke={color}
+        strokeDasharray="4 2"
+      />
+    );
+  } else if (item === "dottedVerticalWall") {
+    return (
+      <line
+        x1={centerX}
+        x2={centerX}
+        y1={centerY - unitSize / 2}
+        y2={centerY + unitSize / 2}
+        strokeWidth={2}
+        stroke={color}
+        strokeDasharray="4 2"
+      />
+    );
+  } else if (item === "slash") {
+    return (
+      <line
+        x1={centerX + unitSize / 2}
+        x2={centerX - unitSize / 2}
+        y1={centerY - unitSize / 2}
+        y2={centerY + unitSize / 2}
+        strokeWidth={1}
+        stroke={color}
+      />
+    );
+  } else if (item === "backslash") {
+    return (
+      <line
+        x1={centerX - unitSize / 2}
+        x2={centerX + unitSize / 2}
+        y1={centerY - unitSize / 2}
+        y2={centerY + unitSize / 2}
+        strokeWidth={1}
+        stroke={color}
+      />
+    );
+  } else if (item === "dottedSlash") {
+    return (
+      <line
+        x1={centerX + unitSize / 2}
+        x2={centerX - unitSize / 2}
+        y1={centerY - unitSize / 2}
+        y2={centerY + unitSize / 2}
+        strokeWidth={1}
+        stroke={color}
+        strokeDasharray="4 2"
+      />
+    );
+  } else if (item === "dottedBackslash") {
+    return (
+      <line
+        x1={centerX - unitSize / 2}
+        x2={centerX + unitSize / 2}
+        y1={centerY - unitSize / 2}
+        y2={centerY + unitSize / 2}
+        strokeWidth={1}
+        stroke={color}
+        strokeDasharray="4 2"
+      />
+    );
+  } else if (item === "plus") {
+    return (
+      <g>
+        <line
+          x1={centerX - unitSize * 0.4}
+          x2={centerX + unitSize * 0.4}
+          y1={centerY}
+          y2={centerY}
+          strokeWidth={4}
+          stroke={color}
+        />
+        <line
+          x1={centerX}
+          x2={centerX}
+          y1={centerY - unitSize * 0.4}
+          y2={centerY + unitSize * 0.4}
+          strokeWidth={4}
+          stroke={color}
+        />
+      </g>
+    );
+  } else if (item === "smallCircle") {
+    return (
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={env.unitSize * 0.1}
+        stroke={color}
+        fill="none"
+      />
+    );
+  } else if (item === "smallFilledCircle") {
+    return (
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={env.unitSize * 0.1}
+        stroke={color}
+        fill={color}
+      />
+    );
+  } else if (item === "middleFilledCircle") {
+    return (
+      <circle
+        cx={centerX}
+        cy={centerY}
+        r={env.unitSize * 0.2}
+        stroke={color}
+        fill={color}
+      />
+    );
+  } else if (typeof item === "string" && item.startsWith("firewalkCell")) {
+    const items = [];
+
+    items.push(
+      <polygon
+        points={`${centerX - unitSize / 4},${centerY} ${centerX},${centerY - unitSize / 4} ${centerX + unitSize / 4},${centerY} ${centerX},${centerY + unitSize / 4}`}
+        fill="#ffe0e0"
+      />,
+    );
+    if (item === "firewalkCellUl" || item === "firewalkCellUlDr") {
+      items.push(
+        <line
+          x1={centerX - unitSize / 4}
+          x2={centerX}
+          y1={centerY}
+          y2={centerY - unitSize / 4}
+          strokeWidth={2}
+          stroke={color}
+        />,
+      );
+    }
+    if (item === "firewalkCellUr" || item === "firewalkCellUrDl") {
+      items.push(
+        <line
+          x1={centerX + unitSize / 4}
+          x2={centerX}
+          y1={centerY}
+          y2={centerY - unitSize / 4}
+          strokeWidth={2}
+          stroke={color}
+        />,
+      );
+    }
+    if (item === "firewalkCellDl" || item === "firewalkCellUrDl") {
+      items.push(
+        <line
+          x1={centerX - unitSize / 4}
+          x2={centerX}
+          y1={centerY}
+          y2={centerY + unitSize / 4}
+          strokeWidth={2}
+          stroke={color}
+        />,
+      );
+    }
+    if (item === "firewalkCellDr" || item === "firewalkCellUlDr") {
+      items.push(
+        <line
+          x1={centerX + unitSize / 4}
+          x2={centerX}
+          y1={centerY}
+          y2={centerY + unitSize / 4}
+          strokeWidth={2}
+          stroke={color}
+        />,
+      );
+    }
+
+    return <g>{items}</g>;
+  } else if (typeof item === "string") {
+    throw new Error("unsupported item: " + item);
+  } else if ("kind" in item) {
+    if (item.kind === "text") {
+      return renderTextItem(spec, item);
+    } else if (item.kind === "compass") {
+      return renderCompassItem(spec, item);
+    } else if (item.kind === "tapaClue") {
+      return renderTapaClueItem(spec, item);
+    } else if (item.kind === "sudokuCandidateSet") {
+      return renderSudokuCandidateSetItem(spec, item);
+    } else if (item.kind === "sudokuForbiddenCandidateMarker") {
+      return renderSudokuForbiddenCandidateMarkerItem(spec, item);
+    } else if (item.kind === "firefly") {
+      return renderFireflyItem(spec, item);
+    } else if (item.kind === "thermo") {
+      return renderThermoItem(spec, item);
+    } else if (item.kind === "arrow") {
+      return renderArrowItem(spec, item);
+    } else if (item.kind === "regionBorder") {
+      return renderRegionBorderItem(spec, item);
+    }
+  }
+  throw new Error("unsupported item: " + item);
+}
+
+function aboloPoints(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  skip: number,
+): string {
+  const ret: string[] = [];
+  if (skip !== 0) {
+    ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
+  }
+  if (skip !== 1) {
+    ret.push(`${centerX - unitSize / 2},${centerY + unitSize / 2}`);
+  }
+  if (skip !== 2) {
+    ret.push(`${centerX + unitSize / 2},${centerY + unitSize / 2}`);
+  }
+  if (skip !== 3) {
+    ret.push(`${centerX + unitSize / 2},${centerY - unitSize / 2}`);
+  }
+  return ret.join(" ");
+}
+
+function pencilPoints(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  start: number,
+): string {
+  const ret = [`${centerX},${centerY}`];
+  if (start === 3 || start === 0) {
+    ret.push(`${centerX - unitSize / 2},${centerY - unitSize / 2}`);
+  }
+  if (start === 0 || start === 1) {
+    ret.push(`${centerX + unitSize / 2},${centerY - unitSize / 2}`);
+  }
+  if (start === 1 || start === 2) {
+    ret.push(`${centerX + unitSize / 2},${centerY + unitSize / 2}`);
+  }
+  if (start === 2 || start === 3) {
+    ret.push(`${centerX - unitSize / 2},${centerY + unitSize / 2}`);
+  }
+  return ret.join(" ");
+}
+
+function pencilElement(
+  centerY: number,
+  centerX: number,
+  unitSize: number,
+  start: number,
+  color: string,
+): ReactElement {
+  return (
+    <g>
+      <polygon
+        points={pencilPoints(centerY, centerX, unitSize, start)}
+        stroke={color}
+        fill="none"
+      />
+      <polygon
+        points={pencilPoints(centerY, centerX, unitSize * 0.5, start)}
+        stroke="none"
+        fill={color}
+      />
+    </g>
+  );
+}
