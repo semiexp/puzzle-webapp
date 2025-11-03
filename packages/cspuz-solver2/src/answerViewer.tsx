@@ -1,5 +1,8 @@
 import { ReactElement, useEffect, useState } from "react";
-import { Board, MultipleAnswers, Result, renderBoardItems } from "puzzle-board";
+import { Board, renderBoardItems } from "puzzle-board";
+
+type MultipleAnswers = { common: Board; answers: Board[] };
+type Result = Board | MultipleAnswers;
 
 type AnswerViewerProps = {
   result: Result;

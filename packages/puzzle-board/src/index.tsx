@@ -1,8 +1,5 @@
 import { ReactElement } from "react";
 
-export type MultipleAnswers = { common: Board; answers: Board[] };
-export type Result = Board | MultipleAnswers;
-
 export type Board = {
   kind: "grid";
   height: number;
