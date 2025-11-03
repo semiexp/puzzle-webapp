@@ -134,6 +134,9 @@ importers:
       pako:
         specifier: ^2.1.0
         version: 2.1.0
+      puzzle-board:
+        specifier: workspace:*
+        version: link:../puzzle-board
       react:
         specifier: ^19.0.0
         version: 19.2.0

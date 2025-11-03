@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_PALINDROME } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type Palindrome = { y: number; x: number }[];
 
@@ -30,55 +30,38 @@ export const palindromeRule: Rule<PalindromeState, PalindromeData> = {
       info,
     );
   },
-  render: (state, data, options) => {
-    const { cellSize, margin } = options;
+  render: (state, data) => {
+    const items: BoardItem[] = [];
 
-    const items: ReactElement[] = [];
-
-    const addPalindrome = (
-      palindrome: Palindrome,
-      i: number,
-      color: string,
-    ) => {
+    const addPalindrome = (palindrome: Palindrome, color: string) => {
       for (let j = 0; j < palindrome.length - 1; ++j) {
         const start = palindrome[j];
         const end = palindrome[j + 1];
 
-        const startX = margin + (start.x + 0.5) * cellSize;
-        const startY = margin + (start.y + 0.5) * cellSize;
-        const endX = margin + (end.x + 0.5) * cellSize;
-        const endY = margin + (end.y + 0.5) * cellSize;
-
-        items.push(
-          <line
-            key={`palindrome-${i}-${j}`}
-            x1={startX}
-            y1={startY}
-            x2={endX}
-            y2={endY}
-            stroke={color}
-            strokeWidth={cellSize * 0.2}
-            strokeLinecap="round"
-          />,
-        );
+        items.push({
+          y: start.y * 2 + 1,
+          x: start.x * 2 + 1,
+          color: color,
+          item: {
+            kind: "lineTo",
+            destY: end.y * 2 + 1,
+            destX: end.x * 2 + 1,
+          },
+        });
       }
     };
 
     for (let i = 0; i < data.palindromes.length; ++i) {
-      addPalindrome(data.palindromes[i], i, "rgb(176, 176, 176)");
+      addPalindrome(data.palindromes[i], "rgb(176, 176, 176)");
     }
     if (state && state.currentPalindrome) {
-      addPalindrome(
-        state.currentPalindrome,
-        data.palindromes.length,
-        "rgb(176, 176, 255)",
-      );
+      addPalindrome(state.currentPalindrome, "rgb(176, 176, 255)");
     }
 
     return [
       {
         priority: PRIORITY_PALINDROME,
-        item: <g>{items}</g>,
+        item: items,
       },
     ];
   },

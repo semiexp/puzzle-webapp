@@ -1,5 +1,6 @@
-import { Rule, PRIORITY_DIAGNOAL } from "../rule";
+import { Rule, PRIORITY_DIAGNOAL, RenderOptions } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type DiagonalState = object;
 type DiagonalData = {
@@ -19,47 +20,35 @@ export const diagonalRule: Rule<DiagonalState, DiagonalData> = {
   reducer: () => {
     return {};
   },
-  render: (_state, data, options) => {
-    const items = [];
+  render: (_state, data, options: RenderOptions) => {
+    const items: BoardItem[] = [];
 
-    const { boardSize, cellSize, margin } = options;
+    const { boardSize } = options;
     if (data.mainDiagonal) {
       for (let i = 0; i < boardSize; ++i) {
-        items.push(
-          <line
-            key={`mainDiagonal-${i}`}
-            x1={i * cellSize + margin}
-            y1={i * cellSize + margin}
-            x2={(i + 1) * cellSize + margin}
-            y2={(i + 1) * cellSize + margin}
-            stroke="black"
-            strokeWidth={1}
-            strokeDasharray={"5 5"}
-          />,
-        );
+        items.push({
+          y: i * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: "dottedBackslash",
+        });
       }
     }
     if (data.antiDiagonal) {
       for (let i = 0; i < boardSize; ++i) {
-        items.push(
-          <line
-            key={`antiDiagonal-${i}`}
-            x1={(boardSize - i) * cellSize + margin}
-            y1={i * cellSize + margin}
-            x2={(boardSize - i - 1) * cellSize + margin}
-            y2={(i + 1) * cellSize + margin}
-            stroke="black"
-            strokeWidth={1}
-            strokeDasharray={"5 5"}
-          />,
-        );
+        items.push({
+          y: i * 2 + 1,
+          x: (boardSize - i - 1) * 2 + 1,
+          color: "black",
+          item: "dottedSlash",
+        });
       }
     }
 
     return [
       {
         priority: PRIORITY_DIAGNOAL,
-        item: <g>{items}</g>,
+        item: items,
       },
     ];
   },

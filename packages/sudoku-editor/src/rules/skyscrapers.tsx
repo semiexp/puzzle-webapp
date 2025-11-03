@@ -4,6 +4,7 @@ import {
   PRIORITY_SKYSCRAPERS_NUMBERS,
 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 import { SelectedOutsiceCell, reducerForOutsideCell } from "./outsideUtil";
 
@@ -51,11 +52,11 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
     }
     return reducerForOutsideCell(state, event, info);
   },
-  render: (state, data, options) => {
-    const items = [];
+  render: (state, data) => {
+    const items: BoardItem[] = [];
+    const backgroundItems: BoardItem[] = [];
 
     if (state !== null && state?.selectedOutsideCell !== null) {
-      const { cellSize, margin } = options;
       const side = state.selectedOutsideCell.side;
       const pos = state.selectedOutsideCell.pos;
 
@@ -63,87 +64,73 @@ export const skyscrapersRule: Rule<SkyscrapersState, SkyscrapersData> = {
         side === "left" ? -1 : side === "right" ? data.left.length : pos;
       const y = side === "up" ? -1 : side === "down" ? data.up.length : pos;
 
-      items.push({
-        priority: PRIORITY_SELECTED_CELL_MARKER,
-        item: (
-          <rect
-            key={`skyscraper-${side}-${pos}`}
-            x={margin + x * cellSize}
-            y={margin + y * cellSize}
-            width={cellSize}
-            height={cellSize}
-            fill="rgba(255, 216, 216)"
-          />
-        ),
+      backgroundItems.push({
+        y: y * 2 + 1,
+        x: x * 2 + 1,
+        color: "rgba(255, 216, 216)",
+        item: "fill",
       });
     }
 
-    const clues = [];
     for (let i = 0; i < data.up.length; ++i) {
       if (data.up[i] !== null) {
-        clues.push({
-          y: -1,
-          x: i,
-          value: data.up[i],
+        items.push({
+          y: -1 * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.up[i]), size: 7.0 / 8.0 },
         });
       }
     }
+
     for (let i = 0; i < data.down.length; ++i) {
       if (data.down[i] !== null) {
-        clues.push({
-          y: data.down.length,
-          x: i,
-          value: data.down[i],
+        items.push({
+          y: data.down.length * 2 + 1,
+          x: i * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.down[i]), size: 7.0 / 8.0 },
         });
       }
     }
+
     for (let i = 0; i < data.left.length; ++i) {
       if (data.left[i] !== null) {
-        clues.push({
-          y: i,
-          x: -1,
-          value: data.left[i],
+        items.push({
+          y: i * 2 + 1,
+          x: -1 * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.left[i]), size: 7.0 / 8.0 },
         });
       }
     }
+
     for (let i = 0; i < data.right.length; ++i) {
       if (data.right[i] !== null) {
-        clues.push({
-          y: i,
-          x: data.right.length,
-          value: data.right[i],
+        items.push({
+          y: i * 2 + 1,
+          x: data.right.length * 2 + 1,
+          color: "black",
+          item: { kind: "text", data: String(data.right[i]), size: 7.0 / 8.0 },
         });
       }
     }
 
-    items.push({
-      priority: PRIORITY_SKYSCRAPERS_NUMBERS,
-      item: (
-        <g>
-          {clues.map((clue, i) => {
-            const { x, y, value } = clue;
-            const textX = options.margin + (x + 0.5) * options.cellSize;
-            const textY = options.margin + (y + 0.5) * options.cellSize;
-            return (
-              <text
-                key={`skyscraper-clue-${i}`}
-                x={textX}
-                y={textY}
-                fontSize={options.cellSize * 0.7}
-                fill="black"
-                textAnchor="middle"
-                dominantBaseline="central"
-                style={{ userSelect: "none" }}
-              >
-                {value}
-              </text>
-            );
-          })}
-        </g>
-      ),
-    });
+    const result = [
+      {
+        priority: PRIORITY_SKYSCRAPERS_NUMBERS,
+        item: items,
+      },
+    ];
 
-    return items;
+    if (backgroundItems.length > 0) {
+      result.push({
+        priority: PRIORITY_SELECTED_CELL_MARKER,
+        item: backgroundItems,
+      });
+    }
+
+    return result;
   },
   exportToPenpa: (data) => {
     const items: Item[] = [];

@@ -2,6 +2,7 @@ import {
   Rule,
   PRIORITY_EXTRA_REGION,
   PRIORITY_EXTRA_REGION_BORDER,
+  RenderOptions,
 } from "../rule";
 import { reducerForRegions, rendererForRegions } from "./regionsUtil";
 import { Item } from "../penpaExporter";
@@ -27,7 +28,7 @@ export const extraRegionsRule: Rule<ExtraRegionsState, ExtraRegionsData> = {
   reducer: (state, data, event, info) => {
     return reducerForRegions(state, data, event, info, true, info.boardSize);
   },
-  render: (state, data, options) => {
+  render: (state, data, options: RenderOptions) => {
     return rendererForRegions(
       state,
       data,

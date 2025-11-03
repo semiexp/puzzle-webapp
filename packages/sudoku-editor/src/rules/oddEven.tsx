@@ -1,5 +1,6 @@
 import { Rule, PRIORITY_ODD_EVEN } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type OddEvenState = object;
 
@@ -32,42 +33,33 @@ export const oddEvenRule: Rule<OddEvenState, OddEvenData> = {
     }
     return {};
   },
-  render: (_state, data, options) => {
-    const { cellSize, margin } = options;
-    const items = [];
+  render: (_state, data) => {
+    const items: BoardItem[] = [];
 
     for (let y = 0; y < data.cellKind.length; ++y) {
       for (let x = 0; x < data.cellKind[y].length; ++x) {
         if (data.cellKind[y][x] === 1) {
-          items.push(
-            <circle
-              key={`odd-${y}-${x}`}
-              cx={margin + (x + 0.5) * cellSize}
-              cy={margin + (y + 0.5) * cellSize}
-              r={cellSize * 0.4}
-              fill="rgb(128, 128, 128)"
-              fillOpacity={0.5}
-            />,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgba(128, 128, 128, 0.5)",
+            item: "filledCircle",
+          });
         } else if (data.cellKind[y][x] === 2) {
-          items.push(
-            <rect
-              key={`even-${y}-${x}`}
-              x={margin + x * cellSize + cellSize * 0.1}
-              y={margin + y * cellSize + cellSize * 0.1}
-              width={cellSize * 0.8}
-              height={cellSize * 0.8}
-              fill="rgb(128, 128, 128)"
-              fillOpacity={0.5}
-            />,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgba(128, 128, 128, 0.5)",
+            item: "block",
+          });
         }
       }
     }
+
     return [
       {
         priority: PRIORITY_ODD_EVEN,
-        item: <g>{items}</g>,
+        item: items,
       },
     ];
   },

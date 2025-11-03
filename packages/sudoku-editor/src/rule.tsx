@@ -1,11 +1,10 @@
-import { ReactElement } from "react";
 import { EditorEvent, EditorEventType } from "./events";
 import { BoardData } from "./penpaExporter";
 
+import { BoardItem } from "puzzle-board";
+
 export type RenderOptions = {
   boardSize: number;
-  cellSize: number;
-  margin: number;
 };
 
 export type ReducerInfo = {
@@ -33,7 +32,7 @@ export interface Rule<State, Data> {
     options: RenderOptions,
   ) => {
     priority: number;
-    item: ReactElement;
+    item: BoardItem[];
   }[];
   exportToPenpa: (data: Data) => BoardData;
   persistentStateKeys?: (keyof State)[];

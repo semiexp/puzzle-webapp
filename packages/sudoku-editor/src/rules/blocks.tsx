@@ -1,5 +1,6 @@
 import { Rule, PRIORITY_BORDER } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type BlocksState = object;
 
@@ -83,46 +84,39 @@ export const blocksRule: Rule<BlocksState, BlocksData> = {
     }
     return {};
   },
-  render: (_state, data, options) => {
-    const backgroundItems = [];
+  render: (_state, data) => {
+    const items: BoardItem[] = [];
+
     for (let y = 0; y < data.horizontalBorder.length; ++y) {
       for (let x = 0; x < data.horizontalBorder[y].length; ++x) {
         if (data.horizontalBorder[y][x]) {
-          backgroundItems.push(
-            <line
-              key={`horizontal-${y}-${x}`}
-              x1={options.margin + options.cellSize * x}
-              y1={options.margin + options.cellSize * (y + 1)}
-              x2={options.margin + options.cellSize * (x + 1)}
-              y2={options.margin + options.cellSize * (y + 1)}
-              stroke="black"
-              strokeWidth={3}
-            />,
-          );
+          items.push({
+            y: (y + 1) * 2,
+            x: x * 2 + 1,
+            color: "black",
+            item: "boldWall",
+          });
         }
       }
     }
+
     for (let y = 0; y < data.verticalBorder.length; ++y) {
       for (let x = 0; x < data.verticalBorder[y].length; ++x) {
         if (data.verticalBorder[y][x]) {
-          backgroundItems.push(
-            <line
-              key={`vertical-${y}-${x}`}
-              x1={options.margin + options.cellSize * (x + 1)}
-              y1={options.margin + options.cellSize * y}
-              x2={options.margin + options.cellSize * (x + 1)}
-              y2={options.margin + options.cellSize * (y + 1)}
-              stroke="black"
-              strokeWidth={3}
-            />,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: (x + 1) * 2,
+            color: "black",
+            item: "boldWall",
+          });
         }
       }
     }
+
     return [
       {
         priority: PRIORITY_BORDER,
-        item: <g>{backgroundItems}</g>,
+        item: items,
       },
     ];
   },

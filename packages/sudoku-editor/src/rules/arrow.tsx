@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_ARROW } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type Arrow = { y: number; x: number }[];
 
@@ -23,106 +23,40 @@ export const arrowRule: Rule<ArrowState, ArrowData> = {
   reducer: (state, data, event, info) => {
     return reducerForLines(state, data, "currentArrow", "arrows", event, info);
   },
-  render: (state, data, options) => {
-    const { cellSize, margin } = options;
+  render: (state, data) => {
+    const items: BoardItem[] = [];
 
-    const items: ReactElement[] = [];
+    const addArrow = (arrow: Arrow, color: string) => {
+      if (arrow.length === 0) return;
 
-    const addArrow = (arrow: Arrow, i: number, color: string) => {
       const start = arrow[0];
-      const startX = margin + (start.x + 0.5) * cellSize;
-      const startY = margin + (start.y + 0.5) * cellSize;
-      items.push(
-        <circle
-          key={`arrow-start-${i}`}
-          cx={startX}
-          cy={startY}
-          r={cellSize * 0.4}
-          stroke={color}
-          fill="none"
-          strokeWidth={3}
-        />,
-      );
-      for (let j = 1; j < arrow.length; ++j) {
-        let startY = margin + (arrow[j - 1].y + 0.5) * cellSize;
-        let startX = margin + (arrow[j - 1].x + 0.5) * cellSize;
-        const endY = margin + (arrow[j].y + 0.5) * cellSize;
-        const endX = margin + (arrow[j].x + 0.5) * cellSize;
+      const cells = arrow.slice(1).map((cell) => ({
+        y: cell.y * 2 + 1,
+        x: cell.x * 2 + 1,
+      }));
 
-        if (j === 1) {
-          const d = Math.hypot(endY - startY, endX - startX);
-          const dy = (endY - startY) / d;
-          const dx = (endX - startX) / d;
-
-          startY += dy * cellSize * 0.4;
-          startX += dx * cellSize * 0.4;
-        }
-
-        items.push(
-          <line
-            key={`arrow-${i}-${j}`}
-            x1={startX}
-            y1={startY}
-            x2={endX}
-            y2={endY}
-            stroke={color}
-            strokeWidth={3}
-            strokeLinecap="round"
-          />,
-        );
-      }
-
-      if (arrow.length >= 2) {
-        const last = arrow[arrow.length - 1];
-        const secondLast = arrow[arrow.length - 2];
-
-        const d = Math.hypot(last.y - secondLast.y, last.x - secondLast.x);
-        const dy = (last.y - secondLast.y) / d;
-        const dx = (last.x - secondLast.x) / d;
-
-        const endY = margin + (last.y + 0.5) * cellSize;
-        const endX = margin + (last.x + 0.5) * cellSize;
-
-        const scale = 0.4 * Math.sqrt(0.5);
-
-        items.push(
-          <line
-            key={`arrow-head-${i}`}
-            x1={endX}
-            y1={endY}
-            x2={endX - dx * cellSize * scale + dy * cellSize * scale}
-            y2={endY - dy * cellSize * scale - dx * cellSize * scale}
-            stroke={color}
-            strokeWidth={3}
-            strokeLinecap="round"
-          />,
-        );
-        items.push(
-          <line
-            key={`arrow-head-${i}-2`}
-            x1={endX}
-            y1={endY}
-            x2={endX - dx * cellSize * scale - dy * cellSize * scale}
-            y2={endY - dy * cellSize * scale + dx * cellSize * scale}
-            stroke={color}
-            strokeWidth={3}
-            strokeLinecap="round"
-          />,
-        );
-      }
+      items.push({
+        y: start.y * 2 + 1,
+        x: start.x * 2 + 1,
+        color: color,
+        item: {
+          kind: "arrow",
+          cells: cells,
+        },
+      });
     };
 
     for (let i = 0; i < data.arrows.length; ++i) {
-      addArrow(data.arrows[i], i, "rgb(192, 192, 192)");
+      addArrow(data.arrows[i], "rgb(192, 192, 192)");
     }
     if (state && state.currentArrow) {
-      addArrow(state.currentArrow, data.arrows.length, "rgb(255, 176, 176)");
+      addArrow(state.currentArrow, "rgb(255, 176, 176)");
     }
 
     return [
       {
         priority: PRIORITY_ARROW,
-        item: <g>{items}</g>,
+        item: items,
       },
     ];
   },

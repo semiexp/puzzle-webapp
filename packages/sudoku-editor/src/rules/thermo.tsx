@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import { Rule, PRIORITY_THERMO } from "../rule";
 import { reducerForLines } from "./linesUtil";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type Thermo = { y: number; x: number }[];
 
@@ -30,61 +30,40 @@ export const thermoRule: Rule<ThermoState, ThermoData> = {
       info,
     );
   },
-  render: (state, data, options) => {
-    const { cellSize, margin } = options;
+  render: (state, data) => {
+    const items: BoardItem[] = [];
 
-    const items: ReactElement[] = [];
+    const addThermo = (thermo: Thermo, color: string) => {
+      if (thermo.length === 0) return;
 
-    const addThermo = (arrow: Thermo, i: number, color: string) => {
-      const start = arrow[0];
-      const startX = margin + (start.x + 0.5) * cellSize;
-      const startY = margin + (start.y + 0.5) * cellSize;
+      const start = thermo[0];
+      const cells = thermo.slice(1).map((cell) => ({
+        y: cell.y * 2 + 1,
+        x: cell.x * 2 + 1,
+      }));
 
-      // draw the start circle
-      items.push(
-        <circle
-          key={`thermo-start-${i}`}
-          cx={startX}
-          cy={startY}
-          r={cellSize * 0.38}
-          stroke={color}
-          fill={color}
-          strokeWidth={3}
-        />,
-      );
-
-      for (let j = 1; j < arrow.length; ++j) {
-        const startY = margin + (arrow[j - 1].y + 0.5) * cellSize;
-        const startX = margin + (arrow[j - 1].x + 0.5) * cellSize;
-        const endY = margin + (arrow[j].y + 0.5) * cellSize;
-        const endX = margin + (arrow[j].x + 0.5) * cellSize;
-
-        items.push(
-          <line
-            key={`thermo-${i}-${j}`}
-            x1={startX}
-            y1={startY}
-            x2={endX}
-            y2={endY}
-            stroke={color}
-            strokeWidth={cellSize * 0.25}
-            strokeLinecap="round"
-          />,
-        );
-      }
+      items.push({
+        y: start.y * 2 + 1,
+        x: start.x * 2 + 1,
+        color: color,
+        item: {
+          kind: "thermo",
+          cells: cells,
+        },
+      });
     };
 
     for (let i = 0; i < data.thermos.length; ++i) {
-      addThermo(data.thermos[i], i, "rgb(208, 208, 208)");
+      addThermo(data.thermos[i], "rgb(208, 208, 208)");
     }
     if (state && state.currentThermo) {
-      addThermo(state.currentThermo, data.thermos.length, "rgb(255, 176, 176)");
+      addThermo(state.currentThermo, "rgb(255, 176, 176)");
     }
 
     return [
       {
         priority: PRIORITY_THERMO,
-        item: <g>{items}</g>,
+        item: items,
       },
     ];
   },

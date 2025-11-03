@@ -1,6 +1,6 @@
-import { ReactElement } from "react";
 import { EditorEvent, EditorEventType } from "../events";
 import { PRIORITY_SELECTED_CELL_MARKER, RenderOptions } from "../rule";
+import { BoardItem } from "puzzle-board";
 
 export type CellNumbersState = {
   selectedCell: { y: number; x: number } | null;
@@ -99,70 +99,56 @@ export const cellNumbersRule = {
   render: (
     state: CellNumbersState | null,
     data: CellNumbersData,
-    options: RenderOptions,
+    _options: RenderOptions,
     textColor: string,
     numberPriority: number,
   ) => {
-    let background: ReactElement | undefined = undefined;
+    const items: BoardItem[] = [];
 
     if (state !== null && state.selectedCell) {
       const { x, y } = state.selectedCell;
-      const cellSize = options.cellSize;
-      const margin = options.margin;
-      const rectX = x * cellSize + margin;
-      const rectY = y * cellSize + margin;
 
-      background = (
-        <rect
-          x={rectX}
-          y={rectY}
-          width={cellSize}
-          height={cellSize}
-          fill="rgb(255, 216, 216)"
-        />
-      );
+      items.push({
+        y: y * 2 + 1,
+        x: x * 2 + 1,
+        color: "rgb(255, 216, 216)",
+        item: "fill",
+      });
     }
 
-    const foregroundItems = [];
     for (let y = 0; y < data.numbers.length; y++) {
       for (let x = 0; x < data.numbers[y].length; x++) {
         const number = data.numbers[y][x];
         if (number !== null) {
-          const cellSize = options.cellSize;
-          const margin = options.margin;
-          const rectX = x * cellSize + margin;
-          const rectY = y * cellSize + margin;
-
-          foregroundItems.push(
-            <text
-              key={`${y}-${x}`}
-              x={rectX + cellSize / 2}
-              y={rectY + cellSize / 2}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={cellSize * 0.7}
-              fill={textColor}
-              style={{ userSelect: "none" }}
-            >
-              {number}
-            </text>,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: textColor,
+            item: { kind: "text", data: String(number), size: 7.0 / 8.0 },
+          });
         }
       }
     }
 
-    const items = [
+    const result = [
       {
         priority: numberPriority,
-        item: <g>{foregroundItems}</g>,
+        item: items.filter(
+          (item) => typeof item.item !== "string" || item.item !== "fill",
+        ),
       },
     ];
-    if (background) {
-      items.push({
+
+    const backgroundItems = items.filter(
+      (item) => typeof item.item === "string" && item.item === "fill",
+    );
+    if (backgroundItems.length > 0) {
+      result.push({
         priority: PRIORITY_SELECTED_CELL_MARKER,
-        item: <g>{background}</g>,
+        item: backgroundItems,
       });
     }
-    return items;
+
+    return result;
   },
 };

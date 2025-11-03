@@ -4,6 +4,7 @@ import {
   PRIORITY_SELECTED_CELL_MARKER,
 } from "../rule";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type ForbiddenCandidatesState = {
   selectedCell: { y: number; x: number } | null;
@@ -97,91 +98,63 @@ export const forbiddenCandidatesRule: Rule<
 
     return {};
   },
-  render: (state, data, options) => {
-    const { cellSize, margin } = options;
-
-    const items = [];
+  render: (state, data) => {
+    const items: BoardItem[] = [];
+    const backgroundItems: BoardItem[] = [];
 
     if (state !== null && state.selectedCell !== null) {
       const { selectedCell } = state;
       const { y, x } = selectedCell;
 
-      items.push({
-        priority: PRIORITY_SELECTED_CELL_MARKER,
-        item: (
-          <rect
-            x={margin + x * cellSize}
-            y={margin + y * cellSize}
-            width={cellSize}
-            height={cellSize}
-            fill="rgb(255, 216, 216)"
-          />
-        ),
+      backgroundItems.push({
+        y: y * 2 + 1,
+        x: x * 2 + 1,
+        color: "rgb(255, 216, 216)",
+        item: "fill",
       });
     }
 
-    const forbiddenMarkers = [];
     const w = Math.ceil(Math.sqrt(data.isForbidden.length));
 
     for (let y = 0; y < data.isForbidden.length; ++y) {
       for (let x = 0; x < data.isForbidden[y].length; ++x) {
+        const forbiddenValues: number[] = [];
         for (let n = 0; n < data.isForbidden[y][x].length; ++n) {
           if (data.isForbidden[y][x][n]) {
-            const textY =
-              margin +
-              y * cellSize +
-              ((Math.floor(n / w) + 0.5) / w) * cellSize;
-            const textX =
-              margin + x * cellSize + (((n % w) + 0.5) / w) * cellSize;
-            forbiddenMarkers.push(
-              <text
-                key={`forbidden-${y}-${x}-${n}`}
-                x={textX}
-                y={textY}
-                fontSize={(cellSize / w) * 0.9}
-                fill="black"
-                textAnchor="middle"
-                dominantBaseline="central"
-                style={{ userSelect: "none" }}
-              >
-                {n + 1}
-              </text>,
-            );
-
-            const crossSize = (cellSize / w) * 0.3;
-            forbiddenMarkers.push(
-              <line
-                key={`forbidden-cross-${y}-${x}-${n}-1`}
-                x1={textX - crossSize}
-                y1={textY - crossSize}
-                x2={textX + crossSize}
-                y2={textY + crossSize}
-                stroke="red"
-                strokeWidth={1}
-              />,
-            );
-            forbiddenMarkers.push(
-              <line
-                key={`forbidden-cross-${y}-${x}-${n}-2`}
-                x1={textX + crossSize}
-                y1={textY - crossSize}
-                x2={textX - crossSize}
-                y2={textY + crossSize}
-                stroke="red"
-                strokeWidth={1}
-              />,
-            );
+            forbiddenValues.push(n + 1);
           }
+        }
+
+        if (forbiddenValues.length > 0) {
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "black",
+            item: {
+              kind: "sudokuForbiddenCandidateMarker",
+              size: w,
+              values: forbiddenValues,
+            },
+          });
         }
       }
     }
 
-    items.push({
-      priority: PRIORITY_FORBIDDEN_CANDIDATES,
-      item: <g>{forbiddenMarkers}</g>,
-    });
+    const result = [
+      {
+        priority: PRIORITY_FORBIDDEN_CANDIDATES,
+        item: items,
+      },
+    ];
 
-    return items;
+    if (backgroundItems.length > 0) {
+      result.push({
+        priority: PRIORITY_SELECTED_CELL_MARKER,
+        item: backgroundItems,
+      });
+    }
+
+    return result;
   },
   exportToPenpa: (data) => {
     const items: Item[] = [];

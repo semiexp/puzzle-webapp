@@ -1,7 +1,6 @@
-import { ReactElement } from "react";
-
 import { EditorEvent } from "../events";
 import { ReducerInfo, RenderOptions } from "../rule";
+import { BoardItem } from "puzzle-board";
 
 type Pos = { x: number; y: number };
 type Region<T> = { cells: Pos[]; extraValue?: T };
@@ -162,13 +161,6 @@ export const reducerForRegions = <
   return {};
 };
 
-const neighbors = [
-  { y: -1, x: 0 },
-  { y: 1, x: 0 },
-  { y: 0, x: -1 },
-  { y: 0, x: 1 },
-];
-
 export const rendererForRegions = <
   T,
   S extends {
@@ -179,77 +171,48 @@ export const rendererForRegions = <
 >(
   state: S | null,
   data: D,
-  options: RenderOptions,
+  _options: RenderOptions,
   cellPriority: number | null,
   borderPriority: number | null,
 ): {
   priority: number;
-  item: ReactElement;
+  item: BoardItem[];
 }[] => {
-  const cellItems: ReactElement[] = [];
-  const borderItems: ReactElement[] = [];
+  const cellItems: BoardItem[] = [];
+  const borderItems: BoardItem[] = [];
 
   const addRegion = (
     region: Region<T>,
-    i: number,
     cellColor: string,
     borderColor: string,
   ) => {
-    if (cellPriority !== undefined) {
+    if (cellPriority !== null) {
       for (const cell of region.cells) {
-        cellItems.push(
-          <rect
-            key={`extra-region-${i}-${cell.y}-${cell.x}`}
-            x={options.margin + cell.x * options.cellSize}
-            y={options.margin + cell.y * options.cellSize}
-            width={options.cellSize}
-            height={options.cellSize}
-            fill={cellColor}
-            stroke="none"
-          />,
-        );
+        cellItems.push({
+          y: cell.y * 2 + 1,
+          x: cell.x * 2 + 1,
+          color: cellColor,
+          item: "fill",
+        });
       }
     }
 
-    if (borderPriority !== undefined) {
-      for (const cell of region.cells) {
-        for (const neighbor of neighbors) {
-          // check if the neighbor cell is part of the region
-          const neighborY = cell.y + neighbor.y;
-          const neighborX = cell.x + neighbor.x;
-          const hasNeighbor = region.cells.some(
-            (c) => c.y === neighborY && c.x === neighborX,
-          );
-          if (!hasNeighbor) {
-            // add a dotted line (border) between the cell and the neighbor
+    if (borderPriority !== null) {
+      const cells = region.cells.map((cell) => ({
+        y: cell.y * 2 + 1,
+        x: cell.x * 2 + 1,
+      }));
 
-            const midY =
-              options.margin +
-              (cell.y + 0.5 + neighbor.y * 0.4) * options.cellSize;
-            const midX =
-              options.margin +
-              (cell.x + 0.5 + neighbor.x * 0.4) * options.cellSize;
-
-            const startY = midY + neighbor.x * 0.4 * options.cellSize;
-            const startX = midX + neighbor.y * 0.4 * options.cellSize;
-            const endY = midY - neighbor.x * 0.4 * options.cellSize;
-            const endX = midX - neighbor.y * 0.4 * options.cellSize;
-
-            const strokeDasharray = `${(options.cellSize * 0.8) / 6},${(options.cellSize * 0.8) / 9}`;
-            borderItems.push(
-              <line
-                key={`extra-region-border-${i}-${cell.y}-${cell.x}-${neighborY}-${neighborX}`}
-                x1={startX}
-                y1={startY}
-                x2={endX}
-                y2={endY}
-                stroke={borderColor}
-                strokeWidth={1}
-                strokeDasharray={strokeDasharray}
-              />,
-            );
-          }
-        }
+      if (cells.length > 0) {
+        borderItems.push({
+          y: cells[0].y,
+          x: cells[0].x,
+          color: borderColor,
+          item: {
+            kind: "regionBorder",
+            cells: cells,
+          },
+        });
       }
     }
   };
@@ -258,7 +221,6 @@ export const rendererForRegions = <
     const region = data.regions[i];
     addRegion(
       region,
-      i,
       i === state?.selectedRegionId
         ? "rgb(255, 206, 206)"
         : "rgb(216, 216, 216)",
@@ -266,7 +228,7 @@ export const rendererForRegions = <
     );
   }
   if (state !== null && state.currentRegion) {
-    addRegion(state.currentRegion, -1, "rgb(255, 206, 206)", "red");
+    addRegion(state.currentRegion, "rgb(255, 206, 206)", "red");
   }
 
   const ret = [];
@@ -274,13 +236,13 @@ export const rendererForRegions = <
   if (cellPriority !== null) {
     ret.push({
       priority: cellPriority,
-      item: <g key="extra-regions">{cellItems}</g>,
+      item: cellItems,
     });
   }
   if (borderPriority !== null) {
     ret.push({
       priority: borderPriority,
-      item: <g key="extra-regions-border">{borderItems}</g>,
+      item: borderItems,
     });
   }
   return ret;

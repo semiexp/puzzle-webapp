@@ -45,53 +45,46 @@ import { openDialog } from "./dialogs/dialog";
 import { NumberKeypad } from "./components/NumberKeypad";
 import "./editor.css";
 
+import {
+  Board as PuzzleBoard,
+  BoardItem,
+  renderBoardItems,
+} from "puzzle-board";
+
 export type EditorProps = {
   problem: Problem;
   onChangeProblem: (problem: Problem) => void;
 };
 
-const defaultBorders = (options: RenderOptions) => {
-  const { boardSize, cellSize, margin } = options;
+const defaultBorders = (options: RenderOptions): BoardItem[] => {
+  const ret: BoardItem[] = [];
 
-  const ret = [];
-  for (let i = 0; i <= boardSize; ++i) {
-    // horizontal lines
-    const width = i === 0 || i === boardSize ? 3 : 1;
-    ret.push(
-      <line
-        key={`h-${i}`}
-        x1={margin - width * 0.5}
-        y1={margin + i * cellSize}
-        x2={margin + boardSize * cellSize + width * 0.5}
-        y2={margin + i * cellSize}
-        stroke="black"
-        strokeWidth={width}
-      />,
-    );
+  const { boardSize } = options;
+  for (let y = 0; y < boardSize; ++y) {
+    for (let x = 0; x <= boardSize; ++x) {
+      ret.push({
+        y: y * 2 + 1,
+        x: x * 2,
+        color: "black",
+        item: x === 0 || x === boardSize ? "boldWall" : "wall",
+      });
+    }
   }
-  for (let i = 0; i <= boardSize; ++i) {
-    // vertical lines
-    const width = i === 0 || i === boardSize ? 3 : 1;
-    ret.push(
-      <line
-        key={`v-${i}`}
-        x1={margin + i * cellSize}
-        y1={margin - width * 0.5}
-        x2={margin + i * cellSize}
-        y2={margin + boardSize * cellSize + width * 0.5}
-        stroke="black"
-        strokeWidth={width}
-      />,
-    );
+  for (let y = 0; y <= boardSize; ++y) {
+    for (let x = 0; x < boardSize; ++x) {
+      ret.push({
+        y: y * 2,
+        x: x * 2 + 1,
+        color: "black",
+        item: y === 0 || y === boardSize ? "boldWall" : "wall",
+      });
+    }
   }
+
   return ret;
 };
 
-const autoSolverItems = (
-  problem: Problem,
-  answer: Answer,
-  options: RenderOptions,
-) => {
+const autoSolverItems = (problem: Problem, answer: Answer): BoardItem[] => {
   if (answer === null) {
     return [];
   }
@@ -115,8 +108,7 @@ const autoSolverItems = (
   const answerRule: any = problem.ruleData.get("answer"); // eslint-disable-line @typescript-eslint/no-explicit-any
   const answerNumbers: (number | null)[][] = answerRule.numbers; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  const { cellSize, margin } = options;
-  const items = [];
+  const items: BoardItem[] = [];
   for (let y = 0; y < size; ++y) {
     for (let x = 0; x < size; ++x) {
       if (hasClue[y][x]) {
@@ -132,61 +124,47 @@ const autoSolverItems = (
           }
         }
         if (hasMismatch) {
-          items.push(
-            <rect
-              key={`auto-solver-${y}-${x}-mismatch`}
-              x={margin + x * cellSize + 2}
-              y={margin + y * cellSize + 2}
-              width={cellSize - 4}
-              height={cellSize - 4}
-              strokeWidth={2}
-              stroke="rgba(255, 0, 0)"
-              fill="rgba(255, 0, 255, 0.3)"
-            />,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgba(255, 0, 255, 0.3)",
+            item: "fill",
+          });
         }
       }
       if (answer.decidedNumbers[y][x] !== null) {
         if (answerNum !== answer.decidedNumbers[y][x]) {
-          items.push(
-            <text
-              key={`auto-solver-${y}-${x}`}
-              x={margin + x * cellSize + cellSize * 0.5}
-              y={margin + y * cellSize + cellSize * 0.5}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={cellSize * 0.7}
-              style={{ userSelect: "none" }}
-              fill="rgb(64, 128, 255)"
-            >
-              {answer.decidedNumbers[y][x]}
-            </text>,
-          );
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgb(64, 128, 255)",
+            item: {
+              kind: "text",
+              data: String(answer.decidedNumbers[y][x]),
+              size: 7.0 / 8.0,
+            },
+          });
         }
       } else {
         const candidates = answer.candidates[y][x];
-        const w = Math.ceil(Math.sqrt(size));
+        const candidateValues: number[] = [];
         for (let i = 0; i < size; ++i) {
           if (candidates[i]) {
-            items.push(
-              <text
-                key={`auto-solver-candidate-${y}-${x}-${i}`}
-                x={margin + x * cellSize + (((i % w) + 0.5) / w) * cellSize}
-                y={
-                  margin +
-                  y * cellSize +
-                  ((Math.floor(i / w) + 0.5) / w) * cellSize
-                }
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={(cellSize / w) * 0.9}
-                style={{ userSelect: "none" }}
-                fill="rgb(64, 128, 255)"
-              >
-                {i + 1}
-              </text>,
-            );
+            candidateValues.push(i + 1);
           }
+        }
+        if (candidateValues.length > 0) {
+          const w = Math.ceil(Math.sqrt(size));
+          items.push({
+            y: y * 2 + 1,
+            x: x * 2 + 1,
+            color: "rgb(64, 128, 255)",
+            item: {
+              kind: "sudokuCandidateSet",
+              size: w,
+              values: candidateValues,
+            },
+          });
         }
       }
     }
@@ -377,10 +355,11 @@ const render = (
   autoSolverAnswer: Answer,
   selectedRuleIndex: number,
   ruleState: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  options: RenderOptions,
-): ReactElement[] => {
-  const renderResults: { priority: number; item: ReactElement }[] = [];
+  options: { boardSize: number; cellSize: number; margin: number },
+): { svgHeight: number; svgWidth: number; component: ReactElement } => {
+  const renderResults: { priority: number; item: BoardItem[] }[] = [];
 
+  // TODO
   for (let i = 0; i < allRules.length; ++i) {
     const rule = allRules[i];
     const state = i === selectedRuleIndex ? ruleState : null;
@@ -392,30 +371,38 @@ const render = (
     }
 
     const renderResult = rule.render(state, data, options);
-    for (let j = 0; j < renderResult.length; ++j) {
-      renderResults.push({
-        priority: renderResult[j].priority,
-        item: <g key={`rule-${i}-${j}`}>{renderResult[j].item}</g>,
-      });
-    }
+    renderResults.push(...renderResult);
   }
 
   renderResults.push({
     priority: 0,
-    item: <g key="defaultBorders">{defaultBorders(options)}</g>,
+    item: defaultBorders({
+      boardSize: problem.size,
+    }),
   });
   renderResults.push({
     priority: 100,
-    item: (
-      <g key="autoSolverItems">
-        {autoSolverItems(problem, autoSolverAnswer, options)}
-      </g>
-    ),
+    item: autoSolverItems(problem, autoSolverAnswer),
   });
 
   renderResults.sort((a, b) => a.priority - b.priority);
+  const boardItems = renderResults.map((c) => c.item);
+  const boardItemsFlat = ([] as BoardItem[]).concat(...boardItems);
 
-  return renderResults.map((c) => c.item);
+  const board: PuzzleBoard = {
+    kind: "grid",
+    height: problem.size,
+    width: problem.size,
+    defaultStyle: "empty",
+    data: boardItemsFlat,
+  };
+  const renderConfig = {
+    margin: options.margin,
+    unitSize: options.cellSize,
+  };
+  const rendered = renderBoardItems([board], renderConfig);
+
+  return rendered;
 };
 
 export const Editor = (props: EditorProps) => {
@@ -438,7 +425,6 @@ export const Editor = (props: EditorProps) => {
   const problemHistory = useHistory(problem, props.onChangeProblem);
 
   const margin = cellSize + 10;
-  const svgSize = margin * 2 + cellSize * props.problem.size;
 
   const renderOptions = {
     boardSize: size,
@@ -662,8 +648,8 @@ export const Editor = (props: EditorProps) => {
       <Box sx={{ display: "flex" }}>
         <Box ref={svgContainerRef}>
           <svg
-            width={svgSize}
-            height={svgSize}
+            width={renderResults.svgHeight}
+            height={renderResults.svgWidth}
             onMouseDown={(e) =>
               handleMouseDown(e, cellSize, margin, dispatchEventRef.current)
             }
@@ -677,9 +663,10 @@ export const Editor = (props: EditorProps) => {
               fontFamily: "sans-serif",
               border: "1px solid black",
               margin: "5px",
+              userSelect: "none",
             }}
           >
-            {renderResults}
+            {renderResults.component}
           </svg>
         </Box>
         <Box sx={{ height: svgContainerHeight, width: "100%" }}>

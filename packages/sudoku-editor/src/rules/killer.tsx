@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
-import { Rule, PRIORITY_KILLER } from "../rule";
+import { Rule, PRIORITY_KILLER, RenderOptions } from "../rule";
 import { reducerForRegions, rendererForRegions } from "./regionsUtil";
 import { Item } from "../penpaExporter";
+import { BoardItem } from "puzzle-board";
 
 type Region = { cells: { y: number; x: number }[]; extraValue?: number | null };
 
@@ -58,10 +58,10 @@ export const killerRule: Rule<KillerState, KillerData> = {
 
     return reducerForRegions(state, data, event, info, true);
   },
-  render: (state, data, options) => {
-    const items: ReactElement[] = [];
+  render: (state, data, _options: RenderOptions) => {
+    const items: BoardItem[] = [];
 
-    const addRegion = (region: Region, i: number, color: string) => {
+    const addRegion = (region: Region, color: string) => {
       let smallestCell = region.cells[0];
 
       for (const cell of region.cells) {
@@ -73,39 +73,39 @@ export const killerRule: Rule<KillerState, KillerData> = {
         }
       }
 
-      if (region.extraValue !== null) {
-        const textY =
-          options.margin + (smallestCell.y + 0.28) * options.cellSize;
-        const textX =
-          options.margin + (smallestCell.x + 0.28) * options.cellSize;
-        items.push(
-          <text
-            key={`killer-number-${i}`}
-            x={textX}
-            y={textY}
-            fontSize={options.cellSize * 0.25}
-            fill={color}
-            textAnchor="middle"
-            dominantBaseline="middle"
-          >
-            {region.extraValue}
-          </text>,
-        );
+      if (region.extraValue !== null && region.extraValue !== undefined) {
+        items.push({
+          y: smallestCell.y * 2 + 1,
+          x: smallestCell.x * 2 + 1,
+          color: color,
+          item: {
+            kind: "text",
+            data: String(region.extraValue),
+            pos: "upperLeft",
+            size: 0.5,
+          },
+        });
       }
     };
 
     for (let i = 0; i < data.regions.length; ++i) {
       const region = data.regions[i];
-      addRegion(region, i, i === state?.selectedRegionId ? "red" : "black");
+      addRegion(region, i === state?.selectedRegionId ? "red" : "black");
     }
     if (state !== null && state.currentRegion) {
-      addRegion(state.currentRegion, -1, "rgb(255, 168, 168)");
+      addRegion(state.currentRegion, "rgb(255, 168, 168)");
     }
 
-    const ret = rendererForRegions(state, data, options, null, PRIORITY_KILLER);
+    const ret = rendererForRegions(
+      state,
+      data,
+      _options,
+      null,
+      PRIORITY_KILLER,
+    );
     ret.push({
       priority: PRIORITY_KILLER,
-      item: <g>{items}</g>,
+      item: items,
     });
     return ret;
   },
