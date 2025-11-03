@@ -69,7 +69,7 @@ export type Item =
   | "firewalkCellUrDl"
   | { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number }
   | { kind: "text"; data: string; pos?: string; size?: number }
-  | { kind: "compass"; up: number; down: number; left: number; right: number }
+  | CompassItem
   | { kind: "tapaClue"; value: number[] }
   | { kind: "sudokuCandidateSet"; size: number; values: number[] }
   | { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] }
@@ -78,8 +78,19 @@ export type Item =
   | { kind: "arrow"; cells: { y: number; x: number }[] }
   | { kind: "regionBorder"; cells: { y: number; x: number }[] };
 
+export type CompassItem = { kind: "compass"; up: number; down: number; left: number; right: number };
+
 export type RenderEnv = {
   offsetY: number;
   offsetX: number;
   unitSize: number;
+};
+
+export type ItemRenderingSpec = {
+  y: number;
+  x: number;
+  centerY: number;
+  centerX: number;
+  unitSize: number;
+  color: string;
 };

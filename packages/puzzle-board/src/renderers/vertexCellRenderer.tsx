@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
-import { Item, RenderEnv } from "../types";
+import { Item, ItemRenderingSpec, RenderEnv } from "../types";
+
+import { renderCompassItem } from "./items/compass";
 
 export function renderVertexCellItem(
   env: RenderEnv,
@@ -13,6 +15,15 @@ export function renderVertexCellItem(
 
   const centerY = env.offsetY + env.unitSize * (y / 2);
   const centerX = env.offsetX + env.unitSize * (x / 2);
+
+  const spec: ItemRenderingSpec = {
+    y,
+    x,
+    centerY,
+    centerX,
+    unitSize,
+    color,
+  };
 
   if (item === "dot") {
     return (
@@ -413,74 +424,7 @@ export function renderVertexCellItem(
         );
       }
     } else if (item.kind === "compass") {
-      return (
-        <g>
-          <line
-            x1={centerX - unitSize / 2}
-            x2={centerX + unitSize / 2}
-            y1={centerY - unitSize / 2}
-            y2={centerY + unitSize / 2}
-            strokeWidth={1}
-            stroke={color}
-          />
-          <line
-            x1={centerX - unitSize / 2}
-            x2={centerX + unitSize / 2}
-            y1={centerY + unitSize / 2}
-            y2={centerY - unitSize / 2}
-            strokeWidth={1}
-            stroke={color}
-          />
-          {item.up >= 0 && (
-            <text
-              x={centerX}
-              y={centerY - unitSize * 0.3}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.4 }}
-              fill={color}
-            >
-              {item.up}
-            </text>
-          )}
-          {item.down >= 0 && (
-            <text
-              x={centerX}
-              y={centerY + unitSize * 0.3}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.4 }}
-              fill={color}
-            >
-              {item.down}
-            </text>
-          )}
-          {item.left >= 0 && (
-            <text
-              x={centerX - unitSize * 0.3}
-              y={centerY}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.4 }}
-              fill={color}
-            >
-              {item.left}
-            </text>
-          )}
-          {item.right >= 0 && (
-            <text
-              x={centerX + unitSize * 0.3}
-              y={centerY}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize * 0.4 }}
-              fill={color}
-            >
-              {item.right}
-            </text>
-          )}
-        </g>
-      );
+      return renderCompassItem(spec, item);
     } else if (item.kind === "tapaClue") {
       const values: string[] = [];
       for (let i = 0; i < item.value.length; ++i) {
