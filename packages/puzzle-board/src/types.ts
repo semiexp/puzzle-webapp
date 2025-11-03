@@ -71,8 +71,8 @@ export type Item =
   | { kind: "text"; data: string; pos?: string; size?: number }
   | CompassItem
   | TapaClueItem
-  | { kind: "sudokuCandidateSet"; size: number; values: number[] }
-  | { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] }
+  | SudokuCandidateSetItem
+  | SudokuForbiddenCandidateMarkerItem
   | { kind: "lineTo"; destY: number; destX: number }
   | ThermoItem
   | ArrowItem
@@ -96,6 +96,9 @@ export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
 export type ArrowItem = { kind: "arrow"; cells: { y: number; x: number }[] };
 
 export type RegionBorderItem = { kind: "regionBorder"; cells: { y: number; x: number }[] };
+
+export type SudokuCandidateSetItem = { kind: "sudokuCandidateSet"; size: number; values: number[] };
+export type SudokuForbiddenCandidateMarkerItem = { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] };
 
 export type RenderEnv = {
   offsetY: number;
