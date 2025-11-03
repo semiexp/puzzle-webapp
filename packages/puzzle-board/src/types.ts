@@ -67,7 +67,7 @@ export type Item =
   | "firewalkCellDr"
   | "firewalkCellUlDr"
   | "firewalkCellUrDl"
-  | { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number }
+  | FireflyItem
   | { kind: "text"; data: string; pos?: string; size?: number }
   | CompassItem
   | TapaClueItem
@@ -90,6 +90,8 @@ export type TapaClueItem = {
   kind: "tapaClue";
   value: number[];
 };
+
+export type FireflyItem = { kind: "firefly"; dot: "up" | "down" | "left" | "right"; value: number };
 
 export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
 

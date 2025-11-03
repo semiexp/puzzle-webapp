@@ -7,6 +7,7 @@ import { renderTapaClueItem } from "./items/tapaClue";
 import { renderThermoItem } from "./items/thermo";
 import { renderRegionBorderItem } from "./items/regionBorder";
 import { renderSudokuCandidateSetItem, renderSudokuForbiddenCandidateMarkerItem } from "./items/sudokuCandidates";
+import { renderFireflyItem } from "./items/firefly";
 
 export function renderVertexCellItem(
   env: RenderEnv,
@@ -439,48 +440,7 @@ export function renderVertexCellItem(
     } else if (item.kind === "sudokuForbiddenCandidateMarker") {
       return renderSudokuForbiddenCandidateMarkerItem(spec, item);
     } else if (item.kind === "firefly") {
-      let x = centerX,
-        y = centerY;
-      if (item.dot === "up") {
-        y -= unitSize * 0.6;
-      } else if (item.dot === "down") {
-        y += unitSize * 0.6;
-      } else if (item.dot === "left") {
-        x -= unitSize * 0.6;
-      } else if (item.dot === "right") {
-        x += unitSize * 0.6;
-      }
-
-      return (
-        <g>
-          <circle
-            cx={centerX}
-            cy={centerY}
-            r={unitSize * 0.6}
-            stroke={color}
-            fill="white"
-          />
-          <circle
-            cx={x}
-            cy={y}
-            r={unitSize * 0.2}
-            stroke={color}
-            fill={color}
-          />
-          {item.value >= 0 && (
-            <text
-              x={centerX}
-              y={centerY}
-              dominantBaseline="central"
-              textAnchor="middle"
-              style={{ fontSize: unitSize }}
-              fill={color}
-            >
-              {item.value}
-            </text>
-          )}
-        </g>
-      );
+      return renderFireflyItem(spec, item);
     } else if (item.kind === "thermo") {
       return renderThermoItem(spec, item);
     } else if (item.kind === "arrow") {
