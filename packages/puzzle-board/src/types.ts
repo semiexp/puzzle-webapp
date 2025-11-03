@@ -75,7 +75,7 @@ export type Item =
   | { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] }
   | { kind: "lineTo"; destY: number; destX: number }
   | ThermoItem
-  | { kind: "arrow"; cells: { y: number; x: number }[] }
+  | ArrowItem
   | { kind: "regionBorder"; cells: { y: number; x: number }[] };
 
 export type CompassItem = {
@@ -92,6 +92,8 @@ export type TapaClueItem = {
 };
 
 export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
+
+export type ArrowItem = { kind: "arrow"; cells: { y: number; x: number }[] };
 
 export type RenderEnv = {
   offsetY: number;
