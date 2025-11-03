@@ -13,7 +13,7 @@ export const givenNumbersRule: Rule<CellNumbersState, CellNumbersData> = {
   eventTypes: cellNumbersRule.eventTypes,
   reducer: cellNumbersRule.reducer,
   render: (state, data, options) =>
-    cellNumbersRule.render2(
+    cellNumbersRule.render(
       state,
       data,
       options,

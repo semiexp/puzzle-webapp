@@ -96,7 +96,7 @@ export const cellNumbersRule = {
     }
     return {};
   },
-  render2: (
+  render: (
     state: CellNumbersState | null,
     data: CellNumbersData,
     _options: RenderOptions,
