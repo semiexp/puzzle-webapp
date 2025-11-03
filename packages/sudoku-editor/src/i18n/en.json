@@ -76,7 +76,7 @@
       "allShown": "All applicable marks are shown: if there is no marker, the sum of the numbers is not 5 or 10."
     },
     "kropki": {
-      "title": "Dots",
+      "title": "Kropki",
       "explanation": "In cells with white dots between adjacent squares, the difference between the two numbers is 1. In cells with black dots, one number is exactly twice the other.",
       "allShown": "In cells without dots, the difference between the two numbers is not 1, and neither number is exactly twice the other."
     },
