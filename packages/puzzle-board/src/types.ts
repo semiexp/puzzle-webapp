@@ -74,7 +74,7 @@ export type Item =
   | { kind: "sudokuCandidateSet"; size: number; values: number[] }
   | { kind: "sudokuForbiddenCandidateMarker"; size: number; values: number[] }
   | { kind: "lineTo"; destY: number; destX: number }
-  | { kind: "thermo"; cells: { y: number; x: number }[] }
+  | ThermoItem
   | { kind: "arrow"; cells: { y: number; x: number }[] }
   | { kind: "regionBorder"; cells: { y: number; x: number }[] };
 
@@ -91,6 +91,8 @@ export type TapaClueItem = {
   value: number[];
 };
 
+export type ThermoItem = { kind: "thermo"; cells: { y: number; x: number }[] };
+
 export type RenderEnv = {
   offsetY: number;
   offsetX: number;
@@ -98,6 +100,8 @@ export type RenderEnv = {
 };
 
 export type ItemRenderingSpec = {
+  globalOffsetY: number;
+  globalOffsetX: number;
   y: number;
   x: number;
   centerY: number;
