@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generator build files
+generator/target/*
+generator/Cargo.lock
+src/generator/*
