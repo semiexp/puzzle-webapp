@@ -95,19 +95,3 @@ pub fn generate_slitherlink_problem(request_json: *const u8, len: usize) -> *con
         SHARED_ARRAY.as_ptr()
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    #[should_panic(expected = "not yet implemented")]
-    fn test_generate_slitherlink() {
-        let request = GenerateRequest {
-            height: 10,
-            width: 10,
-            seed: Some(42),
-        };
-        let _response = generate_slitherlink(&request);
-    }
-}
