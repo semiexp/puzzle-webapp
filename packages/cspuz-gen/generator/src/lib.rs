@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use cspuz_rs_puzzles::puzzles::slitherlink::{serialize_problem, solve_slitherlink};
+use cspuz_rs::generator;
 
 use rand::SeedableRng;
 
@@ -19,12 +20,15 @@ pub fn generate_slitherlink(request: &GenerateRequest) -> GenerateResponse {
     let seed = request.seed.unwrap_or(0);
     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
 
-    let pattern = vec![
-        vec![cspuz_rs::generator::Choice::new(vec![None, Some(0), Some(1), Some(2), Some(3)], None);
-            request.width];
-        request.height
-    ];
-    let generated = cspuz_rs::generator::Generator::new(
+    let pattern = generator::Grid::new(
+        request.height,
+        request.width,
+        &[None, Some(0), Some(1), Some(2), Some(3)],
+        None,
+        generator::Symmetry::Rotate180,
+    );
+
+    let generated = generator::Generator::new(
         |problem: &Vec<Vec<Option<i32>>>| {
             for y in 1..problem.len() {
                 for x in 1..problem[0].len() {
@@ -49,8 +53,8 @@ pub fn generate_slitherlink(request: &GenerateRequest) -> GenerateResponse {
             solve_slitherlink(problem)
         },
         pattern,
-        cspuz_rs::generator::default_uniqueness_checker(),
-        cspuz_rs::generator::default_scorer(None, 5.0),
+        generator::default_uniqueness_checker(),
+        generator::default_scorer(None, 5.0),
     ).generate(&mut rng);
 
     if let Some(generated) = generated {
