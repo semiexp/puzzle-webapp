@@ -1,11 +1,12 @@
 import React from "react";
-import { generateSlitherlink, terminateWorker } from "./generatorBackend";
+import { generateSlitherlink, terminateWorker, Symmetry } from "./generatorBackend";
 import type { GeneratorResult } from "./generatorBackend";
 
 function App() {
   const [height, setHeight] = React.useState(10);
   const [width, setWidth] = React.useState(10);
   const [seed, setSeed] = React.useState<number | undefined>(undefined);
+  const [symmetry, setSymmetry] = React.useState<Symmetry>(Symmetry.Rotate180);
   const [generating, setGenerating] = React.useState(false);
   const [result, setResult] = React.useState<GeneratorResult | undefined>(undefined);
 
@@ -13,7 +14,7 @@ function App() {
     setResult(undefined);
     setGenerating(true);
 
-    const result = await generateSlitherlink(height, width, seed);
+    const result = await generateSlitherlink(height, width, seed, symmetry);
     setResult(result);
     setGenerating(false);
   };
@@ -66,6 +67,23 @@ function App() {
               placeholder="Random"
               disabled={generating}
             />
+          </label>
+        </div>
+
+        <div style={{ marginBottom: "10px" }}>
+          <label>
+            Symmetry:{" "}
+            <select
+              value={symmetry}
+              onChange={(e) => setSymmetry(e.target.value as Symmetry)}
+              disabled={generating}
+            >
+              <option value={Symmetry.None}>None</option>
+              <option value={Symmetry.HorizontalLine}>Horizontal Line</option>
+              <option value={Symmetry.VerticalLine}>Vertical Line</option>
+              <option value={Symmetry.Rotate180}>Rotate 180°</option>
+              <option value={Symmetry.Rotate90}>Rotate 90°</option>
+            </select>
           </label>
         </div>
       </div>

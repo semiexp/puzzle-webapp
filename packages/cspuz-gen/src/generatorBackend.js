@@ -1,10 +1,18 @@
 import Worker from "./generatorWorker?worker";
 
+export const Symmetry = {
+  None: "None",
+  HorizontalLine: "HorizontalLine",
+  VerticalLine: "VerticalLine",
+  Rotate180: "Rotate180",
+  Rotate90: "Rotate90",
+};
+
 let worker = null;
 let currentResolve = null;
 let currentRequest = null;
 
-export function generateSlitherlink(height, width, seed) {
+export function generateSlitherlink(height, width, seed, symmetry) {
   if (worker === null) {
     worker = new Worker();
   }
@@ -16,7 +24,7 @@ export function generateSlitherlink(height, width, seed) {
       });
     });
   }
-  const request = { height, width, seed };
+  const request = { height, width, seed, symmetry };
   currentRequest = request;
   return new Promise((resolve) => {
     const start = Date.now();

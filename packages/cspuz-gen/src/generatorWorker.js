@@ -6,11 +6,13 @@ function generateProblem(data) {
   const height = data.height || 10;
   const width = data.width || 10;
   const seed = data.seed;
+  const symmetry = data.symmetry;
 
   const request = {
     height,
     width,
     seed: seed ?? null,
+    symmetry: symmetry ?? null,
   };
 
   const requestJson = JSON.stringify(request);
@@ -18,7 +20,6 @@ function generateProblem(data) {
   const buf = Generator._malloc(requestEncoded.length);
   Generator.HEAPU8.set(requestEncoded, buf);
 
-  console.log(Generator);
   let res = Generator._generate_slitherlink_problem(
     buf,
     requestEncoded.length,

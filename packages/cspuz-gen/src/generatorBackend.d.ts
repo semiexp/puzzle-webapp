@@ -1,3 +1,11 @@
+export enum Symmetry {
+  None = "None",
+  HorizontalLine = "HorizontalLine",
+  VerticalLine = "VerticalLine",
+  Rotate180 = "Rotate180",
+  Rotate90 = "Rotate90",
+}
+
 export type GeneratorResult =
   | {
       status: "success";
@@ -16,6 +24,7 @@ export declare function generateSlitherlink(
   height: number,
   width: number,
   seed?: number,
+  symmetry?: Symmetry,
 ): Promise<GeneratorResult>;
 
 export declare function terminateWorker(): void;

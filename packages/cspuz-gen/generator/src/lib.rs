@@ -1,14 +1,36 @@
-use serde::{Deserialize, Serialize};
-use cspuz_rs_puzzles::puzzles::slitherlink::{serialize_problem, solve_slitherlink};
 use cspuz_rs::generator;
+use cspuz_rs_puzzles::puzzles::slitherlink::{serialize_problem, solve_slitherlink};
+use serde::{Deserialize, Serialize};
 
 use rand::SeedableRng;
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Symmetry {
+    None,
+    HorizontalLine,
+    VerticalLine,
+    Rotate180,
+    Rotate90,
+}
+
+impl From<Symmetry> for generator::Symmetry {
+    fn from(s: Symmetry) -> Self {
+        match s {
+            Symmetry::None => generator::Symmetry::None,
+            Symmetry::HorizontalLine => generator::Symmetry::HorizontalLine,
+            Symmetry::VerticalLine => generator::Symmetry::VerticalLine,
+            Symmetry::Rotate180 => generator::Symmetry::Rotate180,
+            Symmetry::Rotate90 => generator::Symmetry::Rotate90,
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GenerateRequest {
     pub height: usize,
     pub width: usize,
     pub seed: Option<u64>,
+    pub symmetry: Option<Symmetry>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -20,12 +42,14 @@ pub fn generate_slitherlink(request: &GenerateRequest) -> GenerateResponse {
     let seed = request.seed.unwrap_or(0);
     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
 
+    let symmetry = request.symmetry.unwrap_or(Symmetry::Rotate180).into();
+
     let pattern = generator::Grid::new(
         request.height,
         request.width,
         &[None, Some(0), Some(1), Some(2), Some(3)],
         None,
-        generator::Symmetry::Rotate180,
+        symmetry,
     );
 
     let generated = generator::Generator::new(
@@ -55,7 +79,8 @@ pub fn generate_slitherlink(request: &GenerateRequest) -> GenerateResponse {
         pattern,
         generator::default_uniqueness_checker(),
         generator::default_scorer(None, 5.0),
-    ).generate(&mut rng);
+    )
+    .generate(&mut rng);
 
     if let Some(generated) = generated {
         let problem_str = serialize_problem(&generated);
