@@ -63,11 +63,11 @@ pub fn generate_slitherlink(request: &SlitherlinkGenerateRequest) -> GenerateRes
         // Here we would normally upload the problem to a server and get a URL.
         // For this example, we'll just return a placeholder URL.
         GenerateResponse {
-            url: problem_str.unwrap(),
+            url: problem_str,
         }
     } else {
         GenerateResponse {
-            url: "failed".to_string(),
+            url: None,
         }
     }
 }

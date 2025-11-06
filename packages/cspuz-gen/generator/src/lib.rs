@@ -34,7 +34,7 @@ pub enum GenerateRequest {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GenerateResponse {
-    pub url: String,
+    pub url: Option<String>,
 }
 
 static mut SHARED_ARRAY: Vec<u8> = Vec::new();
