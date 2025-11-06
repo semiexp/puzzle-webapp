@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Slitherlink Generator</h1>
+      <h1>Puzzle Generator</h1>
 
       <div style={{ marginBottom: "20px" }}>
         <div style={{ marginBottom: "10px" }}>
