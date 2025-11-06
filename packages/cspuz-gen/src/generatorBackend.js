@@ -10,9 +10,8 @@ export const Symmetry = {
 
 let worker = null;
 let currentResolve = null;
-let currentRequest = null;
 
-export function generateSlitherlink(height, width, seed, symmetry) {
+export function generateProblem(kind, request) {
   if (worker === null) {
     worker = new Worker();
   }
@@ -24,8 +23,7 @@ export function generateSlitherlink(height, width, seed, symmetry) {
       });
     });
   }
-  const request = { height, width, seed, symmetry };
-  currentRequest = request;
+  const payload = { type: kind, ...request };
   return new Promise((resolve) => {
     const start = Date.now();
     worker.onmessage = (e) => {
@@ -49,7 +47,7 @@ export function generateSlitherlink(height, width, seed, symmetry) {
         });
       }
     };
-    worker.postMessage(request);
+    worker.postMessage(payload);
     currentResolve = resolve;
   });
 }
