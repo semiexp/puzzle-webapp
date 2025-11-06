@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
 use rand::SeedableRng;
+use serde::{Deserialize, Serialize};
 
 use cspuz_rs::generator;
 use cspuz_rs_puzzles::puzzles::slitherlink::{serialize_problem, solve_slitherlink};
 
-use crate::{Symmetry, GenerateResponse};
+use crate::{GenerateResponse, Symmetry};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SlitherlinkGenerateRequest {
@@ -62,12 +62,8 @@ pub fn generate_slitherlink(request: &SlitherlinkGenerateRequest) -> GenerateRes
         let problem_str = serialize_problem(&generated);
         // Here we would normally upload the problem to a server and get a URL.
         // For this example, we'll just return a placeholder URL.
-        GenerateResponse {
-            url: problem_str,
-        }
+        GenerateResponse { url: problem_str }
     } else {
-        GenerateResponse {
-            url: None,
-        }
+        GenerateResponse { url: None }
     }
 }
