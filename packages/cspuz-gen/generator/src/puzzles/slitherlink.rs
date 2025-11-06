@@ -10,12 +10,12 @@ use crate::{Symmetry, GenerateResponse};
 pub struct SlitherlinkGenerateRequest {
     pub height: usize,
     pub width: usize,
-    pub seed: Option<u64>,
+    pub seed: u64,
     pub symmetry: Option<Symmetry>,
 }
 
 pub fn generate_slitherlink(request: &SlitherlinkGenerateRequest) -> GenerateResponse {
-    let seed = request.seed.unwrap_or(0);
+    let seed = request.seed;
     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
 
     let symmetry = request.symmetry.unwrap_or(Symmetry::Rotate180).into();
