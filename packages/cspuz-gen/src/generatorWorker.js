@@ -4,7 +4,7 @@ let Generator = null;
 
 function generateProblem(request) {
   if (!("seed" in request) || request.seed === undefined) {
-    const seed = Math.floor(Math.random() * (2 ** 53));
+    const seed = Math.floor(Math.random() * 2 ** 53);
     request = { ...request, seed };
   }
   const requestJson = JSON.stringify(request);
@@ -12,10 +12,7 @@ function generateProblem(request) {
   const buf = Generator._malloc(requestEncoded.length);
   Generator.HEAPU8.set(requestEncoded, buf);
 
-  let res = Generator._generate_problem(
-    buf,
-    requestEncoded.length,
-  );
+  let res = Generator._generate_problem(buf, requestEncoded.length);
   Generator._free(buf);
 
   const length =

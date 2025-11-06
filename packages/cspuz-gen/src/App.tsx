@@ -8,7 +8,9 @@ function App() {
   const [seed, setSeed] = React.useState<number | undefined>(undefined);
   const [symmetry, setSymmetry] = React.useState<Symmetry>(Symmetry.Rotate180);
   const [generating, setGenerating] = React.useState(false);
-  const [result, setResult] = React.useState<GeneratorResult | undefined>(undefined);
+  const [result, setResult] = React.useState<GeneratorResult | undefined>(
+    undefined,
+  );
 
   const handleGenerate = async () => {
     setResult(undefined);
@@ -68,7 +70,9 @@ function App() {
             <input
               type="number"
               value={seed ?? ""}
-              onChange={(e) => setSeed(e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={(e) =>
+                setSeed(e.target.value ? parseInt(e.target.value) : undefined)
+              }
               placeholder="Random"
               disabled={generating}
             />
@@ -107,9 +111,7 @@ function App() {
         <div style={{ marginTop: "20px" }}>
           {result.status === "success" && (
             <div>
-              <p style={{ color: "green" }}>
-                Generated in {result.elapsed}ms
-              </p>
+              <p style={{ color: "green" }}>Generated in {result.elapsed}ms</p>
               <p>
                 URL:{" "}
                 <a href={result.url} target="_blank" rel="noopener noreferrer">
