@@ -20,11 +20,9 @@ export type GeneratorResult =
       status: "terminated";
     };
 
-export declare function generateSlitherlink(
-  height: number,
-  width: number,
-  seed?: number,
-  symmetry?: Symmetry,
+export declare function generateProblem(
+  kind: string,
+  request: any,
 ): Promise<GeneratorResult>;
 
 export declare function terminateWorker(): void;

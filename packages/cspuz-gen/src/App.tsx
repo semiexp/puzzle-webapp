@@ -1,5 +1,5 @@
 import React from "react";
-import { generateSlitherlink, terminateWorker, Symmetry } from "./generatorBackend";
+import { generateProblem, terminateWorker, Symmetry } from "./generatorBackend";
 import type { GeneratorResult } from "./generatorBackend";
 
 function App() {
@@ -14,7 +14,12 @@ function App() {
     setResult(undefined);
     setGenerating(true);
 
-    const result = await generateSlitherlink(height, width, seed, symmetry);
+    const result = await generateProblem("slitherlink", {
+      height,
+      width,
+      seed,
+      symmetry,
+    });
     setResult(result);
     setGenerating(false);
   };
@@ -26,7 +31,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Slitherlink Generator</h1>
+      <h1>Puzzle Generator</h1>
 
       <div style={{ marginBottom: "20px" }}>
         <div style={{ marginBottom: "10px" }}>

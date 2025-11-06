@@ -18,7 +18,7 @@ def main():
     output = root + ".js"
 
     if os.path.basename(root) == "cspuz_gen":
-        extra_args += ["-s", "EXPORTED_FUNCTIONS=_generate_slitherlink_problem,_malloc,_free"]
+        extra_args += ["-s", "EXPORTED_FUNCTIONS=_generate_problem,_malloc,_free"]
 
     args = ["emcc", "-o", output] + extra_args
     subprocess.check_call(args)

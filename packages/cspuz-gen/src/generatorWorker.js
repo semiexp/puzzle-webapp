@@ -2,25 +2,17 @@ import Module from "./generator/cspuz_gen.js";
 
 let Generator = null;
 
-function generateProblem(data) {
-  const height = data.height || 10;
-  const width = data.width || 10;
-  const seed = data.seed;
-  const symmetry = data.symmetry;
-
-  const request = {
-    height,
-    width,
-    seed: seed ?? null,
-    symmetry: symmetry ?? null,
-  };
-
+function generateProblem(request) {
+  if (!("seed" in request) || request.seed === undefined) {
+    const seed = Math.floor(Math.random() * (2 ** 53));
+    request = { ...request, seed };
+  }
   const requestJson = JSON.stringify(request);
   const requestEncoded = new TextEncoder().encode(requestJson);
   const buf = Generator._malloc(requestEncoded.length);
   Generator.HEAPU8.set(requestEncoded, buf);
 
-  let res = Generator._generate_slitherlink_problem(
+  let res = Generator._generate_problem(
     buf,
     requestEncoded.length,
   );
