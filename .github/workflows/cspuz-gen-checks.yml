@@ -1,0 +1,24 @@
+name: Checks (cspuz-gen)
+
+on:
+  pull_request:
+    paths:
+      - 'packages/cspuz-gen/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+    - uses: actions/checkout@v4
+    - name: Setup pnpm
+      run: |
+        npm install -g pnpm@10.18.2
+        pnpm setup
+    - name: Lint
+      run: |
+        pnpm --filter cspuz-gen install --frozen-lockfile
+        pnpm --filter cspuz-gen run format-check
+        pnpm --filter cspuz-gen run lint

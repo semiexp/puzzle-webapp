@@ -22,7 +22,7 @@ export type GeneratorResult =
 
 export declare function generateProblem(
   kind: string,
-  request: any,
+  request: unknown,
 ): Promise<GeneratorResult>;
 
 export declare function terminateWorker(): void;
