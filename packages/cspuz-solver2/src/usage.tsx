@@ -19,7 +19,7 @@ export const Usage = () => {
     currentUrl +
     '#url=${encodeURIComponent(ui.puzzle.getURL(pzpr.parser.URL_PZPRV3))}`,target="__solver_window"))';
 
-  const cspuzSolver2Version = document
+  const puzzleWebappVersion = document
     .querySelector('meta[name="revision-cspuz-solver2"]')
     ?.getAttribute("content");
   const cspuzCoreVersion = document
@@ -66,10 +66,10 @@ export const Usage = () => {
       </Typography>
       <Typography variant="h5">{t("usage.versionInfo")}</Typography>
       <Typography>
-        {cspuzSolver2Version && (
+        {puzzleWebappVersion && (
           <>
-            <a href="https://github.com/semiexp/cspuz-solver2">cspuz-solver2</a>
-            : {cspuzSolver2Version} <br />
+            <a href="https://github.com/semiexp/puzzle-webapp">puzzle-webapp</a>
+            : {puzzleWebappVersion} <br />
           </>
         )}
         {cspuzCoreVersion && (
@@ -94,7 +94,7 @@ export const Usage = () => {
         <p>{t("usage.contactText")}</p>
         <ul>
           <li>
-            <a href="https://github.com/semiexp/cspuz-solver2/issues">GitHub</a>
+            <a href="https://github.com/semiexp/puzzle-webapp/issues">GitHub</a>
           </li>
           <li>
             <a href="https://twitter.com/semiexp">Twitter (@semiexp)</a>

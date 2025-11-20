@@ -16,7 +16,7 @@ export const HelpDialog = (props: {
 
   const { t } = useTranslation();
 
-  const sudokuEditorVersion = document
+  const puzzleWebappVersion = document
     .querySelector('meta[name="revision-sudoku-editor"]')
     ?.getAttribute("content");
   const cspuzCoreVersion = document
@@ -38,12 +38,12 @@ export const HelpDialog = (props: {
 
         <Typography variant="h5">{t("help.versions")}</Typography>
         <Typography>
-          {sudokuEditorVersion && (
+          {puzzleWebappVersion && (
             <>
-              <a href="https://github.com/semiexp/sudoku-editor">
-                sudoku-editor
+              <a href="https://github.com/semiexp/puzzle-webapp">
+                puzzle-webapp
               </a>
-              : {sudokuEditorVersion} <br />
+              : {puzzleWebappVersion} <br />
             </>
           )}
           {cspuzCoreVersion && (
