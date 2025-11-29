@@ -1,6 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { solveProblem, terminateWorker, SolverResult } from "./solverBackend";
+import { inflateBase64 } from "./zlib";
+import puzzlesData from "./puzzles.json";
 import { AnswerViewer } from "./answerViewer";
 import { Usage } from "./usage";
 import {
@@ -8,11 +10,14 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  ButtonGroup,
   CircularProgress,
   Fab,
   List,
   ListItem,
   ListItemButton,
+  Menu,
+  MenuItem,
   Popover,
   TextField,
   ToggleButton,
@@ -20,9 +25,33 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { ExpandMore, Help, Settings } from "@mui/icons-material";
+import { ArrowDropDown, ExpandMore, Help, Settings } from "@mui/icons-material";
 
 let solveOnLoadDone = false;
+
+const isPenpaEditUrl = (url: string): boolean => {
+  return url.startsWith("https://opt-pan.github.io/penpa-edit/");
+};
+
+const maybePreDecodeUrl = (url: string, puzzleKey?: string): string => {
+  if (isPenpaEditUrl(url)) {
+    const idx = url.indexOf("&p=");
+    if (idx >= 0 && puzzleKey !== undefined) {
+      const p = url.substring(idx + 3);
+      const idx2 = p.indexOf("&");
+
+      const encoded = idx2 >= 0 ? p.substring(0, idx2) : p;
+      const decoded = inflateBase64(encoded);
+
+      const key = puzzleKey;
+      return key + "!penpa-edit-predecoded:" + decoded;
+    } else {
+      return "penpa-edit-predecoded:"; // TODO
+    }
+  } else {
+    return url;
+  }
+};
 
 export const PuzzleSolver = () => {
   const { t, i18n } = useTranslation();
@@ -33,6 +62,12 @@ export const PuzzleSolver = () => {
   );
   const [history, setHistory] = React.useState<SolverResult[]>([]);
   const [numMaxAnswer, setNumMaxAnswer] = React.useState(100);
+  const [selectedPuzzleKey, setSelectedPuzzleKey] = React.useState(
+    puzzlesData.penpa_edit[0].key,
+  );
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null,
+  );
 
   const changeUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProblemUrl(e.target.value);
@@ -47,13 +82,17 @@ export const PuzzleSolver = () => {
     url: string,
     enumerateAnswers: boolean,
     keep?: boolean,
+    puzzleKey?: string,
   ) => {
     if (keep === undefined || !keep) {
       setResult(undefined);
     }
     setSolverRunning(true);
 
-    const result = await solveProblem(url, enumerateAnswers ? numMaxAnswer : 0);
+    const result = await solveProblem(
+      maybePreDecodeUrl(url, puzzleKey),
+      enumerateAnswers ? numMaxAnswer : 0,
+    );
     setResult(result);
 
     setHistory((history) => {
@@ -116,6 +155,24 @@ export const PuzzleSolver = () => {
   ) => {
     setHelpAnchorEl(event.currentTarget);
   };
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+  const handlePuzzleSelect = (key: string) => {
+    setSelectedPuzzleKey(key);
+    handleMenuClose();
+  };
+
+  const isPenpaEdit = isPenpaEditUrl(problemUrl);
+  const selectedPuzzle = puzzlesData.penpa_edit.find(
+    (p) => p.key === selectedPuzzleKey,
+  );
+  const selectedPuzzleName =
+    selectedPuzzle?.[i18n.language as "en" | "ja"] || selectedPuzzle?.en || "";
 
   const loadProblemFromUrlHash = () => {
     if (window.location.hash === "") {
@@ -215,6 +272,30 @@ export const PuzzleSolver = () => {
                   <CircularProgress size={24} sx={{ marginRight: 1 }} />
                   {t("puzzleSolver.stop")}
                 </Button>
+              </Grid>
+            ) : isPenpaEdit ? (
+              <Grid size={3}>
+                <ButtonGroup
+                  variant="outlined"
+                  sx={{ width: "100%", height: "100%" }}
+                >
+                  <Button
+                    size="large"
+                    onClick={() =>
+                      solve(problemUrl, false, undefined, selectedPuzzleKey)
+                    }
+                    sx={{ flexGrow: 1, textTransform: "none" }}
+                  >
+                    {`${t("puzzleSolver.solve")} ${selectedPuzzleName}`}
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={handleMenuClick}
+                    sx={{ width: "40px", minWidth: "40px", padding: 0 }}
+                  >
+                    <ArrowDropDown />
+                  </Button>
+                </ButtonGroup>
               </Grid>
             ) : (
               <>
@@ -333,6 +414,21 @@ export const PuzzleSolver = () => {
       >
         <Usage />
       </Popover>
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={handleMenuClose}
+      >
+        {puzzlesData.penpa_edit.map((puzzle) => (
+          <MenuItem
+            key={puzzle.key}
+            onClick={() => handlePuzzleSelect(puzzle.key)}
+            selected={puzzle.key === selectedPuzzleKey}
+          >
+            {puzzle[i18n.language as "en" | "ja"] || puzzle.en}
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 };
