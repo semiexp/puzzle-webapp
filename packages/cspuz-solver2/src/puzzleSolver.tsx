@@ -96,7 +96,8 @@ export const PuzzleSolver = () => {
     setResult(result);
 
     setHistory((history) => {
-      const newHistory = [result];
+      // TODO: pre-decode url in solveProblem, not here
+      const newHistory = [{ ...result, url: url }];
       newHistory.push(...history);
       if (newHistory.length > 50) {
         newHistory.pop();
