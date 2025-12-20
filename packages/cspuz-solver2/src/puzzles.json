@@ -13,9 +13,14 @@
   ],
   "penpa_edit": [
     {
-      "key": "exercise",
-      "en": "Exercise",
-      "ja": "Exercise"
+      "key": "castle_walker",
+      "en": "Castle Walker",
+      "ja": "Castle Walker"
+    },
+    {
+      "key": "pyramid_climbers",
+      "en": "Pyramid",
+      "ja": "ピラミッド"
     }
   ]
 }

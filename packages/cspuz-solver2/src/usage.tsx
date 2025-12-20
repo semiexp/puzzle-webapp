@@ -60,6 +60,19 @@ export const Usage = () => {
           {t("usage.listAnswers")}: {puzzleList(language, "enumerate")}
         </p>
       </Typography>
+      <Typography variant="h5">{t("usage.penpaEditorInst")}</Typography>
+      <Typography>
+        <ul>
+          {Object.keys(
+            i18n.getResourceBundle(language, "translation").penpaEditorInst ||
+              {},
+          ).map((key) => (
+            <li key={key}>
+              <strong>{key}:</strong> {t(`penpaEditorInst.${key}`)}
+            </li>
+          ))}
+        </ul>
+      </Typography>
       <Typography variant="h5">{t("usage.disclaimer")}</Typography>
       <Typography>
         <p>{t("usage.disclaimerText")}</p>

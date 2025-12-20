@@ -32,6 +32,13 @@
     "buildDate": "Build date",
     "license": "License",
     "contact": "Contact",
-    "contactText": "If you have any bug reports, feature requests, or requests for additional puzzle types, please contact us at the following."
+    "contactText": "If you have any bug reports, feature requests, or requests for additional puzzle types, please contact us at the following.",
+    "penpaEditorInst": "How to input in Penpa Editor"
+  },
+  "penpaEditorInst": {
+    "Exercise": "Place the 'stone' using the 'Shape→Shape→Square' mode.",
+    "Castle Walker": "Place squares using 'Shape→Shape→Square', with options: white (press 1), black (press 2), or gray (press 3). Arrow-marked numbers should be placed using 'Number→Arrow'. The plus sign ('+') should be placed using 'Shape→Shape→Line→+'.",
+    "Pyramid": "Select 'Pyramid' as the board configuration, with white spaces set to either 0 or 1. Gray squares should be placed using 'Surface→DG/GR/LG'. Number range specifications must be provided on any of the margin squares outside the board, in a format like '[2-7]'. Numbers should be placed using 'Number→Normal'.",
+    "Pyramid Climbers": "Select 'Pyramid' as the board configuration, with white spaces set to either 0 or 1. Each square's character should be placed using 'Number→Normal→A'."
   }
 }
