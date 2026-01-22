@@ -128,6 +128,14 @@ export const PuzzleSolver = () => {
     isUnique = undefined;
   }
 
+  let hasAnswer: boolean | undefined = undefined;
+  if (result !== undefined && result.status === "success") {
+    const r = result.result;
+    if ("hasAnswer" in r) {
+      hasAnswer = r.hasAnswer;
+    }
+  }
+
   let error: string | undefined = undefined;
   if (result !== undefined) {
     if (result.status === "error") {
@@ -140,7 +148,11 @@ export const PuzzleSolver = () => {
   }
   let message: string | undefined = undefined;
   if (result !== undefined && result.status === "success") {
-    message = t("puzzleSolver.solved", { elapsed: result.elapsed });
+    if (hasAnswer === false) {
+      message = "(" + result.elapsed + "ms)";
+    } else {
+      message = t("puzzleSolver.solved", { elapsed: result.elapsed });
+    }
   }
   const [configAnchorEl, setConfigAnchorEl] =
     React.useState<null | HTMLButtonElement>(null);
@@ -349,6 +361,11 @@ export const PuzzleSolver = () => {
         </div>
         <div>
           {error && <span style={{ color: "red" }}>Error: {error}</span>}
+          {hasAnswer === false && (
+            <span style={{ color: "white", backgroundColor: "red" }}>
+              {t("puzzleSolver.noAnswer")}
+            </span>
+          )}
           {message && <span style={{ color: "black" }}>{message}</span>}
           {isUnique === true && (
             <span style={{ color: "blue" }}>

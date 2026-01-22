@@ -5,6 +5,7 @@ export type Board = {
   defaultStyle: "outer_grid" | "grid" | "dots" | "empty";
   data: BoardItem[];
   isUnique?: boolean;
+  hasAnswer?: boolean;
 };
 
 export type BoardItem = {
