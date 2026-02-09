@@ -27,6 +27,8 @@ export const useSolverState = () => {
       setResult(result);
 
       setHistory((history) => {
+        // Note: result.url is intentionally set here to preserve the original URL
+        // before any pre-decoding transformations
         const newHistory = [{ ...result, url: url }];
         newHistory.push(...history);
         if (newHistory.length > 50) {
@@ -46,6 +48,9 @@ export const useSolverState = () => {
   const selectFromHistory = useCallback(
     (i: number) => {
       if (solverRunning) {
+        return;
+      }
+      if (i < 0 || i >= history.length) {
         return;
       }
       const r = history[i];

@@ -17,7 +17,7 @@ export const maybePreDecodeUrl = (url: string, puzzleKey?: string): string => {
       const key = puzzleKey;
       return key + "!penpa-edit-predecoded:" + decoded;
     } else {
-      return "penpa-edit-predecoded:"; // TODO
+      return "penpa-edit-predecoded:"; // TODO: handle case when puzzle key is not provided
     }
   } else {
     return url;
