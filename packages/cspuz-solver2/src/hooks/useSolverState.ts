@@ -20,8 +20,11 @@ export const useSolverState = () => {
       }
       setSolverRunning(true);
 
+      const useNumlin =
+        url.includes("/p?numlin") || url.includes("/p?numberlink");
       const result = await solveProblem(
         maybePreDecodeUrl(url, puzzleKey),
+        useNumlin ? "numlin" : "cspuz",
         enumerateAnswers ? numMaxAnswer : 0,
       );
       setResult(result);

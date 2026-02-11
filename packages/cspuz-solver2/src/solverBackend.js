@@ -4,7 +4,7 @@ let worker = null;
 let currentResolve = null;
 let currentUrl = null;
 
-export function solveProblem(url, numAnswers) {
+export function solveProblem(url, solver, numAnswers) {
   if (worker === null) {
     worker = new Worker();
   }
@@ -53,7 +53,7 @@ export function solveProblem(url, numAnswers) {
         });
       }
     };
-    worker.postMessage({ url, numAnswers, solver: "cspuz" });
+    worker.postMessage({ url, numAnswers, solver });
     currentResolve = resolve;
   });
 }

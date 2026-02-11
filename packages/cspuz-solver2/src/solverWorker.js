@@ -1,13 +1,26 @@
 import CspuzSolverModule from "./solver/cspuz/cspuz_solver_backend.js";
+import NumlinSolverModule from "./solver/numlin/numlin.js";
 
 let CspuzSolver = null;
+let NumlinSolver = null;
 
 function solveProblem(data) {
   const url = data.url;
   const numAnswers = data.numAnswers || 0;
   const urlEncoded = new TextEncoder().encode(url);
 
-  const solver = CspuzSolver;
+  let solver;
+  if (data.solver === "cspuz") {
+    solver = CspuzSolver;
+  } else if (data.solver === "numlin") {
+    solver = NumlinSolver;
+  } else {
+    self.postMessage({
+      status: "error",
+      description: `Unknown solver: ${data.solver}`,
+    });
+    return;
+  }
 
   const buf = solver._malloc(urlEncoded.length);
   solver.HEAPU8.set(urlEncoded, buf);
@@ -38,6 +51,7 @@ function solveProblem(data) {
 
     // In case of error, reset the Solver to null so that it can be reloaded on the next attempt.
     CspuzSolver = null;
+    NumlinSolver = null;
     return;
   }
 
@@ -66,5 +80,19 @@ self.onmessage = function (e) {
         solveProblem(data);
       });
     }
+  } else if (data.solver === "numlin") {
+    if (NumlinSolver) {
+      solveProblem(data);
+    } else {
+      NumlinSolverModule().then((mod) => {
+        NumlinSolver = mod;
+        solveProblem(data);
+      });
+    }
+  } else {
+    self.postMessage({
+      status: "error",
+      description: `Unknown solver: ${data.solver}`,
+    });
   }
 };

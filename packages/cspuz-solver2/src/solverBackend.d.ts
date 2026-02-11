@@ -29,6 +29,7 @@ export type SolverResult =
 
 declare function solveProblem(
   url: string,
+  solver?: "cspuz" | "numlin",
   numAnswers?: number,
 ): Promise<SolverResult>;
 declare function terminateWorker(): void;
