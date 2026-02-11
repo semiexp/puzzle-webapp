@@ -10,12 +10,33 @@ function solveProblem(data) {
   Solver.HEAPU8.set(urlEncoded, buf);
 
   let ans;
-  if (numAnswers <= 0) {
-    ans = Solver._solve_problem(buf, urlEncoded.length);
-  } else {
-    ans = Solver._enumerate_answers_problem(buf, urlEncoded.length, numAnswers);
+  let error = undefined;
+
+  try {
+    if (numAnswers <= 0) {
+      ans = Solver._solve_problem(buf, urlEncoded.length);
+    } else {
+      ans = Solver._enumerate_answers_problem(
+        buf,
+        urlEncoded.length,
+        numAnswers,
+      );
+    }
+  } catch (e) {
+    error = e.toString();
   }
   Solver._free(buf);
+
+  if (error !== undefined) {
+    self.postMessage({
+      status: "internal-error",
+      description: error,
+    });
+
+    // In case of error, reset the Solver to null so that it can be reloaded on the next attempt.
+    Solver = null;
+    return;
+  }
 
   const length =
     Solver.HEAPU8[ans] |
@@ -27,7 +48,7 @@ function solveProblem(data) {
   );
   const result = JSON.parse(resultStr.substring(0, resultStr.length));
 
-  self.postMessage(result["description"]);
+  self.postMessage(result);
 }
 
 self.onmessage = function (e) {

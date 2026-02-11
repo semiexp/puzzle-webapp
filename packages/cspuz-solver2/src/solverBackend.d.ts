@@ -14,6 +14,11 @@ export type SolverResult =
       error: string;
     }
   | {
+      status: "internal-error";
+      url: string;
+      error: string;
+    }
+  | {
       status: "terminated";
       url: string;
     }
