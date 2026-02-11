@@ -7,6 +7,8 @@
     "history": "履歴",
     "terminated": "中断しました",
     "noAnswer": "解がありません",
+    "error": "エラー: {{error}}",
+    "internalError": "内部エラー（バグの可能性があります。ご報告いただけると助かります）: {{error}}",
     "solved": "解けました！({{elapsed}}ms)",
     "uniqueAnswer": "唯一解です",
     "multipleAnswers": "複数解があります！",

@@ -23,23 +23,33 @@ export function solveProblem(url, numAnswers) {
     worker.onmessage = (e) => {
       currentResolve = null;
 
-      if (e.data === "no answer") {
-        resolve({
-          status: "noAnswer",
-          url,
-        });
-      } else if (typeof e.data === "string") {
-        resolve({
-          status: "error",
-          url,
-          error: e.data,
-        });
-      } else {
+      if (e.data["status"] == "ok") {
         resolve({
           status: "success",
           url,
-          result: e.data,
+          result: e.data["description"],
           elapsed: Date.now() - start,
+        });
+      } else if (e.data["status"] == "error") {
+        const description = e.data["description"];
+
+        if (description === "no answer") {
+          resolve({
+            status: "noAnswer",
+            url,
+          });
+        } else {
+          resolve({
+            status: "error",
+            url,
+            error: description,
+          });
+        }
+      } else if (e.data["status"] == "internal-error") {
+        resolve({
+          status: "internal-error",
+          url,
+          error: e.data["description"],
         });
       }
     };

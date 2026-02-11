@@ -7,6 +7,8 @@
     "history": "History",
     "terminated": "Terminated",
     "noAnswer": "No answer",
+    "error": "Error: ({{error}})",
+    "internalError": "Internal error (may be a bug. Please report it): ({{error}})",
     "solved": "Solved! ({{elapsed}}ms)",
     "uniqueAnswer": "Unique answer",
     "multipleAnswers": "NOT unique answer (multiple answers)!",

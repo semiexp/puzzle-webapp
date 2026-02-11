@@ -34,11 +34,13 @@ export const useResultMetadata = (
     let error: string | undefined = undefined;
     if (result !== undefined) {
       if (result.status === "error") {
-        error = result.error;
+        error = t("puzzleSolver.error", { error: result.error });
       } else if (result.status === "terminated") {
         error = t("puzzleSolver.terminated");
       } else if (result.status === "noAnswer") {
         error = t("puzzleSolver.noAnswer");
+      } else if (result.status === "internal-error") {
+        error = t("puzzleSolver.internalError", { error: result.error });
       }
     }
 

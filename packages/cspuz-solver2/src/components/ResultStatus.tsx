@@ -13,7 +13,7 @@ export const ResultStatus: React.FC<ResultStatusProps> = ({ result }) => {
 
   return (
     <div>
-      {error && <span style={{ color: "red" }}>Error: {error}</span>}
+      {error && <span style={{ color: "red" }}>{error}</span>}
       {hasAnswer === false && (
         <span style={{ color: "white", backgroundColor: "red" }}>
           {t("puzzleSolver.noAnswer")}
