@@ -25,6 +25,9 @@ export const Usage = () => {
   const cspuzCoreVersion = document
     .querySelector('meta[name="revision-cspuz-core"]')
     ?.getAttribute("content");
+  const numlinVersion = document
+    .querySelector('meta[name="revision-numlin"]')
+    ?.getAttribute("content");
   const buildDate = document
     .querySelector('meta[name="build-date"]')
     ?.getAttribute("content");
@@ -89,6 +92,12 @@ export const Usage = () => {
           <>
             <a href="https://github.com/semiexp/cspuz_core">cspuz-core</a>:{" "}
             {cspuzCoreVersion} <br />
+          </>
+        )}
+        {numlinVersion && (
+          <>
+            <a href="https://github.com/semiexp/numlin">numlin</a>:{" "}
+            {numlinVersion} <br />
           </>
         )}
         {buildDate && (

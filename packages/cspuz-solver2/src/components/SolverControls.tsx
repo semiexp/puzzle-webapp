@@ -11,6 +11,8 @@ import {
 import Grid from "@mui/material/Grid2";
 import { ArrowDropDown, Help, Settings } from "@mui/icons-material";
 
+import { isNumberlinkUrl } from "../utils/urlUtils";
+
 type SolverControlsProps = {
   problemUrl: string;
   onChangeUrl: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -113,6 +115,7 @@ export const SolverControls: React.FC<SolverControlsProps> = ({
               size="large"
               onClick={() => onSolve(false)}
               sx={{ width: "100%", height: "100%" }}
+              disabled={isNumberlinkUrl(problemUrl)}
             >
               {t("puzzleSolver.solve")}
             </Button>

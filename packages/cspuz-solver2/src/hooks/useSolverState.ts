@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { solveProblem, terminateWorker, SolverResult } from "../solverBackend";
-import { maybePreDecodeUrl } from "../utils/urlUtils";
+import { isNumberlinkUrl, maybePreDecodeUrl } from "../utils/urlUtils";
 
 export const useSolverState = () => {
   const [solverRunning, setSolverRunning] = useState(false);
@@ -22,6 +22,7 @@ export const useSolverState = () => {
 
       const result = await solveProblem(
         maybePreDecodeUrl(url, puzzleKey),
+        isNumberlinkUrl(url) ? "numlin" : "cspuz",
         enumerateAnswers ? numMaxAnswer : 0,
       );
       setResult(result);
