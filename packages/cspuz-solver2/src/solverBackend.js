@@ -53,7 +53,7 @@ export function solveProblem(url, numAnswers) {
         });
       }
     };
-    worker.postMessage({ url, numAnswers });
+    worker.postMessage({ url, numAnswers, solver: "cspuz" });
     currentResolve = resolve;
   });
 }

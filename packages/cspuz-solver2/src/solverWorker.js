@@ -1,22 +1,25 @@
-import Module from "./solver/cspuz/cspuz_solver_backend.js";
+import CspuzSolverModule from "./solver/cspuz/cspuz_solver_backend.js";
 
-let Solver = null;
+let CspuzSolver = null;
 
 function solveProblem(data) {
   const url = data.url;
   const numAnswers = data.numAnswers || 0;
   const urlEncoded = new TextEncoder().encode(url);
-  const buf = Solver._malloc(urlEncoded.length);
-  Solver.HEAPU8.set(urlEncoded, buf);
+
+  const solver = CspuzSolver;
+
+  const buf = solver._malloc(urlEncoded.length);
+  solver.HEAPU8.set(urlEncoded, buf);
 
   let ans;
   let error = undefined;
 
   try {
     if (numAnswers <= 0) {
-      ans = Solver._solve_problem(buf, urlEncoded.length);
+      ans = solver._solve_problem(buf, urlEncoded.length);
     } else {
-      ans = Solver._enumerate_answers_problem(
+      ans = solver._enumerate_answers_problem(
         buf,
         urlEncoded.length,
         numAnswers,
@@ -25,7 +28,7 @@ function solveProblem(data) {
   } catch (e) {
     error = e.toString();
   }
-  Solver._free(buf);
+  solver._free(buf);
 
   if (error !== undefined) {
     self.postMessage({
@@ -34,17 +37,17 @@ function solveProblem(data) {
     });
 
     // In case of error, reset the Solver to null so that it can be reloaded on the next attempt.
-    Solver = null;
+    CspuzSolver = null;
     return;
   }
 
   const length =
-    Solver.HEAPU8[ans] |
-    (Solver.HEAPU8[ans + 1] << 8) |
-    (Solver.HEAPU8[ans + 2] << 16) |
-    (Solver.HEAPU8[ans + 3] << 24);
+    solver.HEAPU8[ans] |
+    (solver.HEAPU8[ans + 1] << 8) |
+    (solver.HEAPU8[ans + 2] << 16) |
+    (solver.HEAPU8[ans + 3] << 24);
   const resultStr = new TextDecoder().decode(
-    Solver.HEAPU8.slice(ans + 4, ans + 4 + length),
+    solver.HEAPU8.slice(ans + 4, ans + 4 + length),
   );
   const result = JSON.parse(resultStr.substring(0, resultStr.length));
 
@@ -53,16 +56,15 @@ function solveProblem(data) {
 
 self.onmessage = function (e) {
   const data = e.data;
-  if (Solver) {
-    solveProblem(data);
-  } else {
-    Module().then((mod) => {
-      Solver = mod;
+
+  if (data.solver === "cspuz") {
+    if (CspuzSolver) {
       solveProblem(data);
-    });
+    } else {
+      CspuzSolverModule().then((mod) => {
+        CspuzSolver = mod;
+        solveProblem(data);
+      });
+    }
   }
 };
-
-Module().then((mod) => {
-  Solver = mod;
-});
