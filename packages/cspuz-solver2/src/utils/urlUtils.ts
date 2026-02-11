@@ -4,6 +4,10 @@ export const isPenpaEditUrl = (url: string): boolean => {
   return url.startsWith("https://opt-pan.github.io/penpa-edit/");
 };
 
+export const isNumberlinkUrl = (url: string): boolean => {
+  return url.includes("/p?numlin") || url.includes("/p?numberlink");
+};
+
 export const maybePreDecodeUrl = (url: string, puzzleKey?: string): string => {
   if (isPenpaEditUrl(url)) {
     const idx = url.indexOf("&p=");
