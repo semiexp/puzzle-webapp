@@ -1,4 +1,4 @@
-import Module from "./solver/cspuz_solver_backend.js";
+import Module from "./solver/cspuz/cspuz_solver_backend.js";
 
 let Solver = null;
 

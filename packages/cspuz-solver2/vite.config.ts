@@ -9,7 +9,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: "src/solver/cspuz_solver_backend.wasm",
+          src: "src/solver/cspuz/cspuz_solver_backend.wasm",
           dest: "assets/",
         }
       ]
