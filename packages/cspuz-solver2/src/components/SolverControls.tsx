@@ -17,7 +17,7 @@ type SolverControlsProps = {
   solverRunning: boolean;
   isPenpaEdit: boolean;
   selectedPuzzleKey: string;
-  onSolve: (enumerateAnswers: boolean, puzzleKey?: string) => void;
+  onSolve: (enumerateAnswers: boolean) => void;
   onStop: () => void;
   onConfigButtonClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onHelpButtonClick: (event: React.MouseEvent<HTMLButtonElement>) => void;

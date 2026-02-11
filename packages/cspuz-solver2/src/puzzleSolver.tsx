@@ -39,13 +39,13 @@ export const PuzzleSolver = () => {
     }
   };
 
-  const handleSolve = (enumerateAnswers: boolean, puzzleKey?: string) => {
+  const handleSolve = (enumerateAnswers: boolean) => {
     solve(
       problemUrl,
       enumerateAnswers,
       numMaxAnswer,
       undefined,
-      puzzleKey || selectedPuzzleKey,
+      selectedPuzzleKey,
     );
   };
 
