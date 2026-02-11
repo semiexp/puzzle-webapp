@@ -1,19 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useResultMetadata } from "../hooks/useResultMetadata";
+import { SolverResult } from "../solverBackend";
 
 type ResultStatusProps = {
-  error: string | undefined;
-  hasAnswer: boolean | undefined;
-  message: string | undefined;
-  isUnique: boolean | undefined;
+  result: SolverResult | undefined;
 };
 
-export const ResultStatus: React.FC<ResultStatusProps> = ({
-  error,
-  hasAnswer,
-  message,
-  isUnique,
-}) => {
+export const ResultStatus: React.FC<ResultStatusProps> = ({ result }) => {
+  const { error, hasAnswer, message, isUnique } = useResultMetadata(result);
   const { t } = useTranslation();
 
   return (

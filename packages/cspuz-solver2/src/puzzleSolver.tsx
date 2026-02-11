@@ -3,7 +3,6 @@ import puzzlesData from "./puzzles.json";
 import { AnswerViewer } from "./answerViewer";
 import { isPenpaEditUrl } from "./utils/urlUtils";
 import { useSolverState } from "./hooks/useSolverState";
-import { useResultMetadata } from "./hooks/useResultMetadata";
 import { useUrlHashLoading } from "./hooks/useUrlHashLoading";
 import { SolverControls } from "./components/SolverControls";
 import { HistoryPanel } from "./components/HistoryPanel";
@@ -28,8 +27,6 @@ export const PuzzleSolver = () => {
 
   const { solverRunning, result, history, solve, stop, selectFromHistory } =
     useSolverState();
-
-  const { isUnique, hasAnswer, error, message } = useResultMetadata(result);
 
   const changeUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProblemUrl(e.target.value);
@@ -111,12 +108,7 @@ export const PuzzleSolver = () => {
             onSelectFromHistory={handleSelectFromHistory}
           />
         </div>
-        <ResultStatus
-          error={error}
-          hasAnswer={hasAnswer}
-          message={message}
-          isUnique={isUnique}
-        />
+        <ResultStatus result={result} />
         {result && result.status === "success" && (
           <AnswerViewer result={result.result} />
         )}
