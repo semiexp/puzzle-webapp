@@ -1,4 +1,4 @@
-import { Result } from "./puzzleBoard";
+import { Result } from "./answerViewer";
 
 // TODO: merge "noAnswer" into "success"
 export type SolverResult =
