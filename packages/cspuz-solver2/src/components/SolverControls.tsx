@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import puzzlesData from "../puzzles.json";
 import {
   Button,
   ButtonGroup,
@@ -15,7 +16,7 @@ type SolverControlsProps = {
   onChangeUrl: (e: React.ChangeEvent<HTMLInputElement>) => void;
   solverRunning: boolean;
   isPenpaEdit: boolean;
-  selectedPuzzleName: string;
+  selectedPuzzleKey: string;
   onSolve: (enumerateAnswers: boolean, puzzleKey?: string) => void;
   onStop: () => void;
   onConfigButtonClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -28,14 +29,20 @@ export const SolverControls: React.FC<SolverControlsProps> = ({
   onChangeUrl,
   solverRunning,
   isPenpaEdit,
-  selectedPuzzleName,
+  selectedPuzzleKey,
   onSolve,
   onStop,
   onConfigButtonClick,
   onHelpButtonClick,
   onMenuClick,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const selectedPuzzle = puzzlesData.penpa_edit.find(
+    (p) => p.key === selectedPuzzleKey,
+  );
+  const selectedPuzzleName =
+    selectedPuzzle?.[i18n.language as "en" | "ja"] || selectedPuzzle?.en || "";
 
   return (
     <Grid container sx={{ display: "flex", width: "100%" }}>

@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import puzzlesData from "./puzzles.json";
 import { AnswerViewer } from "./answerViewer";
 import { isPenpaEditUrl } from "./utils/urlUtils";
@@ -14,7 +13,6 @@ import { HelpPopover } from "./components/HelpPopover";
 import { PuzzleMenu } from "./components/PuzzleMenu";
 
 export const PuzzleSolver = () => {
-  const { i18n } = useTranslation();
   const [problemUrl, setProblemUrl] = React.useState("");
   const [numMaxAnswer, setNumMaxAnswer] = React.useState(100);
   const [selectedPuzzleKey, setSelectedPuzzleKey] = React.useState(
@@ -91,11 +89,6 @@ export const PuzzleSolver = () => {
   );
 
   const isPenpaEdit = isPenpaEditUrl(problemUrl);
-  const selectedPuzzle = puzzlesData.penpa_edit.find(
-    (p) => p.key === selectedPuzzleKey,
-  );
-  const selectedPuzzleName =
-    selectedPuzzle?.[i18n.language as "en" | "ja"] || selectedPuzzle?.en || "";
 
   return (
     <>
@@ -106,7 +99,7 @@ export const PuzzleSolver = () => {
             onChangeUrl={changeUrl}
             solverRunning={solverRunning}
             isPenpaEdit={isPenpaEdit}
-            selectedPuzzleName={selectedPuzzleName}
+            selectedPuzzleKey={selectedPuzzleKey}
             onSolve={handleSolve}
             onStop={stop}
             onConfigButtonClick={handleConfigButtonClick}
