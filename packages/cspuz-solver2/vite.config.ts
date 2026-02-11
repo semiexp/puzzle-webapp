@@ -11,6 +11,10 @@ export default defineConfig({
         {
           src: "src/solver/cspuz/cspuz_solver_backend.wasm",
           dest: "assets/",
+        },
+        {
+          src: "src/solver/numlin/numlin.wasm",
+          dest: "assets/",
         }
       ]
     })
