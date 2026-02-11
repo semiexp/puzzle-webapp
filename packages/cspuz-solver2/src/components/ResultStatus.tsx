@@ -26,10 +26,7 @@ export const ResultStatus: React.FC<ResultStatusProps> = ({
       )}
       {message && <span style={{ color: "black" }}>{message}</span>}
       {isUnique === true && (
-        <span style={{ color: "blue" }}>
-          {" "}
-          {t("puzzleSolver.uniqueAnswer")}
-        </span>
+        <span style={{ color: "blue" }}> {t("puzzleSolver.uniqueAnswer")}</span>
       )}
       {isUnique === false && (
         <span style={{ color: "red" }}>
