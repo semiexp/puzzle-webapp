@@ -5,7 +5,15 @@ import Puzzles from "./puzzles.json";
 const puzzleList = (language: "ja" | "en", mode: "solve" | "enumerate") => {
   const sep = language === "ja" ? "、" : ", ";
 
-  return Puzzles[mode].map((puzzle) => puzzle[language]).join(sep);
+  const puzzles = Puzzles[mode].map((puzzle) => puzzle[language]);
+  if (mode === "enumerate") {
+    if (language === "ja") {
+      puzzles.push("ナンバーリンク");
+    } else if (language === "en") {
+      puzzles.push("Numberlink");
+    }
+  }
+  return puzzles.join(sep);
 };
 
 export const Usage = () => {
