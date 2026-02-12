@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from "react";
 import { Board, renderBoardItems } from "puzzle-board";
 
-type MultipleAnswers = { common: Board; answers: Board[] };
+type MultipleAnswers = { common: Board; answers: Board[]; isUnique?: boolean };
 type Result = Board | MultipleAnswers;
 
 type AnswerViewerProps = {
