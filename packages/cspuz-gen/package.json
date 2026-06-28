@@ -9,8 +9,8 @@
     "build-generator": "cd generator && cargo build --release --lib --target wasm32-unknown-emscripten && cd .. && mkdir -p src/generator && cp generator/target/wasm32-unknown-emscripten/release/deps/cspuz_gen.js src/generator/cspuz_gen.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "npx prettier --write src/ && cd generator && cargo fmt",
-    "format-check": "npx prettier --check src/ && cd generator && cargo fmt --check"
+    "format": "prettier --write src/ && cd generator && cargo fmt",
+    "format-check": "prettier --check src/ && cd generator && cargo fmt --check"
   },
   "dependencies": {
     "react": "^19.1.1",
