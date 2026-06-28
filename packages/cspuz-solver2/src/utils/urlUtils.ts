@@ -1,7 +1,10 @@
 import { inflateBase64 } from "../zlib";
 
 export const isPenpaEditUrl = (url: string): boolean => {
-  return url.startsWith("https://opt-pan.github.io/penpa-edit/");
+  return (
+    url.startsWith("https://opt-pan.github.io/penpa-edit/") ||
+    url.startsWith("https://swaroopg92.github.io/penpa-edit/")
+  );
 };
 
 export const isNumberlinkUrl = (url: string): boolean => {
