@@ -2,9 +2,9 @@ use serde::Serialize;
 
 use crate::puzzle::{
     Arrow, Blocks, Consecutive, Diagonal, ExtraRegions, ForbiddenCandidates, GivenNumbers, Killer,
-    Kropki, NonConsecutive, OddEven, Palindrome, Puzzle, Skyscrapers, Thermo, XSums, KROPKI_BLACK,
-    KROPKI_NO_CONSTRAINT, KROPKI_WHITE, ODDEVEN_EVEN, ODDEVEN_NO_CONSTRAINT, ODDEVEN_ODD, XV,
-    XV_NO_CONSTRAINT, XV_V, XV_X,
+    Kropki, NonConsecutive, OddEven, Palindrome, Puzzle, Renban, Skyscrapers, Thermo, XSums,
+    KROPKI_BLACK, KROPKI_NO_CONSTRAINT, KROPKI_WHITE, ODDEVEN_EVEN, ODDEVEN_NO_CONSTRAINT,
+    ODDEVEN_ODD, XV, XV_NO_CONSTRAINT, XV_V, XV_X,
 };
 
 use cspuz_rs::complex_constraints::sum_all_different;
@@ -143,6 +143,10 @@ fn add_constraints(
 
     if let Some(palindrome_constraints) = &puzzle.palindrome {
         add_palindrome_constraints(solver, nums, palindrome_constraints, config);
+    }
+
+    if let Some(renban_constraints) = &puzzle.renban {
+        add_renban_constraints(solver, nums, renban_constraints, config);
     }
 
     if let Some(forbidden_candidates) = &puzzle.forbidden_candidates {
@@ -633,6 +637,31 @@ fn add_palindrome_constraints(
                 nums.at((line[i].y, line[i].x))
                     .eq(nums.at((line[n - 1 - i].y, line[n - 1 - i].x))),
             );
+        }
+    }
+}
+
+fn add_renban_constraints(
+    solver: &mut Solver,
+    nums: &IntVarArray2D,
+    renban: &Renban,
+    _config: SolverConfig,
+) {
+    let size = nums.shape().0;
+
+    for line in &renban.renbans {
+        let cells = line.iter().map(|cell| (cell.y, cell.x)).collect::<Vec<_>>();
+        let line_nums = nums.select(&cells);
+        solver.all_different(&line_nums);
+
+        if line.is_empty() || line.len() > size {
+            continue;
+        }
+
+        let min = solver.int_var(1, (size - line.len() + 1) as i32);
+        for i in 0..line_nums.len() {
+            solver.add_expr(line_nums.at(i).ge(&min));
+            solver.add_expr(line_nums.at(i).le(&min + line.len() as i32 - 1));
         }
     }
 }
