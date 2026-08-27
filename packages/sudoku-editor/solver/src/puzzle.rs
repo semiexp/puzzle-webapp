@@ -46,6 +46,9 @@ pub struct Puzzle {
     #[serde(rename = "palindrome")]
     pub palindrome: Option<Palindrome>,
 
+    #[serde(rename = "renban")]
+    pub renban: Option<Renban>,
+
     #[serde(rename = "forbiddenCandidates")]
     pub forbidden_candidates: Option<ForbiddenCandidates>,
 
@@ -174,6 +177,11 @@ pub struct ExtraRegions {
 #[derive(Debug, Clone, Deserialize)]
 pub struct Palindrome {
     pub palindromes: Vec<Vec<Pos>>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Renban {
+    pub renbans: Vec<Vec<Pos>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

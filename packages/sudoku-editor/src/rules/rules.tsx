@@ -15,6 +15,7 @@ import { skyscrapersRule } from "./skyscrapers";
 import { xSumsRule } from "./xSums";
 import { extraRegionsRule } from "./extraRegions";
 import { palindromeRule } from "./palindrome";
+import { renbanRule } from "./renban";
 import { forbiddenCandidatesRule } from "./forbiddenCandidates";
 import { antiKnightRule } from "./antiKnight";
 import { noTouchRule } from "./noTouch";
@@ -39,6 +40,7 @@ export const allRules: Rule<any, any>[] = [
   skyscrapersRule,
   xSumsRule,
   palindromeRule,
+  renbanRule,
   antiKnightRule,
   noTouchRule,
 ];
