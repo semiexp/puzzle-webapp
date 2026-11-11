@@ -2,4 +2,6 @@ packages:
   - 'packages/*'
 
 allowBuilds:
+  '@swc/core@1.13.21': true
   'esbuild@0.21.5': true
+  'esbuild@0.25.11': true
