@@ -360,8 +360,10 @@ fn add_xv_constraints(solver: &mut Solver, nums: &IntVarArray2D, xv: &XV, _confi
 
             match kind {
                 XV_NO_CONSTRAINT => {
-                    solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).ne(10));
-                    solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).ne(5));
+                    if xv.all_shown {
+                        solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).ne(10));
+                        solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).ne(5));
+                    }
                 }
                 XV_X => solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).eq(10)),
                 XV_V => solver.add_expr((nums.at((y, x)) + nums.at((y + 1, x))).eq(5)),
